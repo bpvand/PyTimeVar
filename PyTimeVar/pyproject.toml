@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "timevarmodels"
+version = "0.0.1"
+description = "A python package for Time Varying Models for Time Series"
+authors = ["Simeon <s.g.klumperbeek@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
