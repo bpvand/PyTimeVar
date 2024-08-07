@@ -1,10 +1,10 @@
-# TimeVarModels
+# PyTimeVar
 
 A Python package for Time Varying Models for Time Series
 
 ## Purpose of the Package
 
-The TimeVarModels package provides tools for analyzing and modeling time-varying properties in time series data. It is designed to facilitate the creation, evaluation, and visualization of time-varying models.
+The PyTimeVar package provides tools for analyzing and modeling time-varying properties in time series data. It is designed to facilitate the creation, evaluation, and visualization of time-varying models.
 
 ## Features
 
