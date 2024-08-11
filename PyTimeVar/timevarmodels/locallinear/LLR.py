@@ -592,7 +592,7 @@ class LocalLinearRegression:
     #### Bootstrap
     ############################################################################################################
 
-    def AR(self, zhat, T):
+    def AR(self, zhat, T, ic='aic'):
         """
         Estimate the AR model and compute residuals.
 
@@ -612,9 +612,12 @@ class LocalLinearRegression:
                 Maximum lag order.
             armodel : AutoReg
                 Fitted autoregressive model.
+            ic : string
+                Information criterion to select number of lagsy. Default criterion is AIC
+            
         """
         maxp = 10 * np.log10(T)
-        arm_selection = ar_select_order(zhat, ic="aic", trend="n", maxlag=int(maxp))
+        arm_selection = ar_select_order(zhat, ic, trend="n", maxlag=int(maxp))
 
         if arm_selection.ar_lags is None:
             armodel = AutoReg(zhat, trend="n", lags=0).fit()
@@ -709,7 +712,51 @@ class LocalLinearRegression:
         elif mX.ndim == 2:
             vYstar = (mX @ betatilde + zstar_array).diagonal()
             return vYstar
-        
+    
+    ######### Autoregressive Bootstrap #########
+    def AW_BT(
+    self,
+    zhat: np.ndarray, 
+    mX: np.ndarray, 
+    betatilde: np.ndarray,
+    T: int,
+    h: float,
+    gamma: float
+    ):
+        """
+        Autoregressive Wild Bootstrap
+        Compute a bootstrap sample using the autoregressive wild bootstrap.
+
+        Parameters
+        ----------
+        zhat : np.ndarray
+            Array of residuals.
+        mX : np.ndarray
+            Array of exogenous variables.
+        betatilde : np.ndarray
+            Array of estimated coefficients.
+        T : int
+            Total number of observations.
+
+        Returns
+        -------
+        np.ndarray
+            Transformed response variable.
+        """
+        # v_nv_star=np.random.normal(0,np.sqrt(1-gamma**2),200)
+        xi_star0 = np.random.normal(0, 1, 1)
+
+        v_xi_star = np.zeros(T)
+        v_xi_star[0] = xi_star0
+        for i in range(1, T):
+            v_xi_star[i] = gamma * v_xi_star[i - 1] + np.random.normal(0, np.sqrt(1 - gamma ** 2))
+
+        zstar = v_xi_star * np.array(zhat)
+
+        vYstar = (mX @ betatilde + zstar).diagonal()
+
+        return vYstar
+    
     def W_BT(
     self,
     zhat: np.ndarray,
@@ -717,6 +764,7 @@ class LocalLinearRegression:
     betatilde: np.ndarray,
     T: int,
     h: float, #not used
+    gamma: float
     ):
       """
       Wild Bootstrap
@@ -798,7 +846,7 @@ class LocalLinearRegression:
             return vYstar
     
     def LBW_BT(
-        self, zhat: np.ndarray, mX: np.ndarray, betatilde: np.ndarray, T: int, h: float
+        self, zhat: np.ndarray, mX: np.ndarray, betatilde: np.ndarray, T: int, h: float, gamma:float
     ):
         """
         Performs the local blockwise wild bootstrap algorithm to generate a bootstrap sample.
@@ -1120,7 +1168,7 @@ class LocalLinearRegression:
         mM = mX_tilde.T @ mX_tilde / (T * h)
         return mM
     
-    def MC_ZW(self, h, vY, mX, T):
+    def MC_ZW(self, alpha, h, vY, mX, T):
         """
         Perform the Multiplier Bootstrap bootstrap algorithm.
         Zhou, Z., & Wu, W. B. (2010). Simultaneous inference of linear models with time varying coefficients.
@@ -1145,7 +1193,6 @@ class LocalLinearRegression:
         if mX.ndim == 1:
             mX = mX.reshape(-1, 1)
         # Initialisation
-        alpha = 0.05
         B = 3000
         # Parameter specification
         iM = int((T) ** (2 / 7))
@@ -1196,14 +1243,21 @@ class LocalLinearRegression:
             
           
             
-    def construct_confidence_bands(self, bootstraptype: str, Gsubs: list = None):
+    def construct_confidence_bands(self, alpha: float, bootstraptype: str, gamma:float, ic:str, Gsubs: list = None):
       """
       Construct confidence bands using bootstrap methods.
 
       Parameters
       ----------
+      alpha : float
+          Significance level for quantiles.
       bootstraptype : str
-          Type of bootstrap to use ('SB', 'WB', 'SWB', 'MB', 'LBWB').
+          Type of bootstrap to use ('SB', 'WB', 'SWB', 'MB', 'LBWB, 'AWB').
+      gamma : float
+          Parameter value for Autoregressive Wild Bootstrap
+      ic : str
+          Type of information criterion to use for Sieve and Sieve Wild Bootstrap.
+          Possible values are: 'aic', 'hqic', 'bic'
       Gsubs : list of tuples, optional
           List of sub-ranges for G. Each sub-range is a tuple (start_index, end_index).
           Default is None, which uses the full range (0, T).
@@ -1240,19 +1294,26 @@ class LocalLinearRegression:
           Gsubs = [(0, T)]
 
       results = []
+      
+      if alpha <= 0 or alpha >= 1:
+          alpha=0.05
 
       # Determine the appropriate bootstrap function
       bootstrap_functions = {
           "SB": self.S_BT,
           "WB": self.W_BT,
           "SWB": self.SW_BT,
-          "LBWB": self.LBW_BT
+          "LBWB": self.LBW_BT,
+          "AWB": self.AWB_BT
       }
 
       if bootstraptype not in bootstrap_functions:
-          raise ValueError("Invalid bootstrap type. Choose one of 'SB','WB', 'SWB','MB' ,'LBWB'")
+          raise ValueError("Invalid bootstrap type. Choose one of 'SB','WB', 'SWB','MB' ,'LBWB', 'AWB'")
 
       bootstrap_function = bootstrap_functions[bootstraptype]
+      
+      if gamma <= 0 or gamma >= 1:
+          gamma=(0.01)**(1/(T**0.1))
 
       # Calculate betatilde and betahat once
       betatilde = self._est_betas(self.vY, self.mX, htilde, taut, taut, self.n_est)
@@ -1269,11 +1330,11 @@ class LocalLinearRegression:
       print(f"Calculating {bootstraptype} Bootstrap Samples")
       for i in tqdm(range(B)):
           if bootstraptype in ["SB", "SWB"]:
-              epsilonhat, max_lag, armodel = self.AR(zhat, T)
+              epsilonhat, max_lag, armodel = self.AR(zhat, T, ic)
               epsilontilde = epsilonhat - np.mean(epsilonhat)
-              vYstar = bootstrap_function(epsilontilde, max_lag, armodel, self.mX, betatilde, T)
+              vYstar = bootstrap_function(epsilontilde, max_lag, armodel, self.mX, betatilde, T)              
           else:
-              vYstar = bootstrap_function(zhat, self.mX, betatilde, T, self.h)
+              vYstar = bootstrap_function(zhat, self.mX, betatilde, T, self.h, gamma)
 
           for j, (start_index, end_index) in enumerate(Gsubs):
               G = taut[start_index:end_index]
@@ -1297,8 +1358,8 @@ class LocalLinearRegression:
           S_LB_beta = [betahat_G[i] - self._get_qtau(optimal_alphap_G[i], diff_beta_G[i], G)[1] for i in range(self.n_est)]
           S_UB_beta = [betahat_G[i] - self._get_qtau(optimal_alphap_G[i], diff_beta_G[i], G)[0] for i in range(self.n_est)]
 
-          P_LB_beta = [betahat_G[i] - self._get_qtau(0.05, diff_beta_G[i], G)[1] for i in range(self.n_est)]
-          P_UB_beta = [betahat_G[i] - self._get_qtau(0.05, diff_beta_G[i], G)[0] for i in range(self.n_est)]
+          P_LB_beta = [betahat_G[i] - self._get_qtau(alpha, diff_beta_G[i], G)[1] for i in range(self.n_est)]
+          P_UB_beta = [betahat_G[i] - self._get_qtau(alpha, diff_beta_G[i], G)[0] for i in range(self.n_est)]
 
           results.append((S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta))
       results.append(betahat)
