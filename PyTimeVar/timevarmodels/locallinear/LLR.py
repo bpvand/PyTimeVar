@@ -1243,7 +1243,7 @@ class LocalLinearRegression:
             
           
             
-    def construct_confidence_bands(self, alpha: float, bootstraptype: str, gamma:float, ic:str, Gsubs: list = None):
+    def construct_confidence_bands(self, alpha: float, bootstraptype: str, gamma:float, ic:str, Gsubs: list = None, Chtilde:float=None):
       """
       Construct confidence bands using bootstrap methods.
 
@@ -1254,13 +1254,16 @@ class LocalLinearRegression:
       bootstraptype : str
           Type of bootstrap to use ('SB', 'WB', 'SWB', 'MB', 'LBWB, 'AWB').
       gamma : float
-          Parameter value for Autoregressive Wild Bootstrap
+          Parameter value for Autoregressive Wild Bootstrap.
       ic : str
           Type of information criterion to use for Sieve and Sieve Wild Bootstrap.
           Possible values are: 'aic', 'hqic', 'bic'
       Gsubs : list of tuples, optional
           List of sub-ranges for G. Each sub-range is a tuple (start_index, end_index).
           Default is None, which uses the full range (0, T).
+      Chtilde : float, optional
+          Multiplication constant to determine size of oversmoothing bandwidth htilde.
+          Default is 2, if none or negative is specified.
 
       Returns
       -------
@@ -1284,8 +1287,11 @@ class LocalLinearRegression:
       if bootstraptype == "MB":
           print("Calculating Multiplier Bootstrap Samples")
           return self.MC_ZW(self.h, self.vY, self.mX, len(self.vY))
+      
+      if Chtilde is None or Chtilde<=0:
+          Chtilde=2
 
-      htilde = 2 * (self.h ** (5 / 9))
+      htilde = Chtilde * (self.h ** (5 / 9))
       T = len(self.vY)
       taut = np.arange(1 / T, (T + 1) / T, 1 / T)
       B = 1299
@@ -1313,7 +1319,8 @@ class LocalLinearRegression:
       bootstrap_function = bootstrap_functions[bootstraptype]
       
       if gamma <= 0 or gamma >= 1:
-          gamma=(0.01)**(1/(T**0.1))
+          l = int(4.5 * ((T * self.h) ** (0.25)))
+          gamma=(0.01)**(1/l)
 
       # Calculate betatilde and betahat once
       betatilde = self._est_betas(self.vY, self.mX, htilde, taut, taut, self.n_est)
