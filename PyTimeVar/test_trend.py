@@ -9,14 +9,18 @@ data = temperature.load(regions=['World'])
 vY = data['World'].values
 X = np.ones_like(vY)
 
+# HP filter
+HPmodel = BoostedHP(vY)
+HPtrend, HPresiduals = HPmodel.fit()
+
 # Boosted HP filter
-model = BoostedHP(vY)
-trend, residuals = model.fit()
+bHPmodel = BoostedHP(vY)
+bHPtrend, bHPresiduals = bHPmodel.fit()
 
 # Local Linear Regression filter
 LLRModel = LocalLinearRegression(vY, X, h=0.5795442)
 res = LLRModel.fit()
-trend2 = res.betas()[0]  # Extract the trend component
+LLRtrend = res.betas()[0]  # Extract the trend component
 
 # Kalman Filter
 Q = np.array([[0.03]])
@@ -27,14 +31,15 @@ smooth_trend = kalmanmodel.smoother(vY)[:,0]
 # tGAS
 model = tGAS(vY, model_type='local_linear_trend')
 result = model.fit()
-trend3 = model.mu
+tGAStrend = model.mu
 
 
 # Plotting
 plt.plot(data['Date'], data['World'], label='Original Series')
-plt.plot(data['Date'], trend, label='bHP', linestyle='--')
-plt.plot(data['Date'], trend2, label='LLR', linestyle='--')
-plt.plot(data['Date'], trend3, label='tGAS', linestyle='--')
+plt.plot(data['Date'], HPtrend, label='HP', linestyle='--')
+plt.plot(data['Date'], bHPtrend, label='bHP', linestyle='--')
+plt.plot(data['Date'], LLRtrend, label='LLR', linestyle='--')
+plt.plot(data['Date'], tGAStrend, label='tGAS', linestyle='--')
 plt.plot(data['Date'], smooth_trend, label='Kalman Smoother', linestyle='--')
 # plt.plot(data['Date'], smoothed, label='Spline', linestyle='--')
 plt.xlabel('Date')
