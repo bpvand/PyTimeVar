@@ -10,7 +10,7 @@ vY = data['World'].values
 X = np.ones_like(vY)
 
 # HP filter
-HPmodel = BoostedHP(vY, iMaxIter=1)
+HPmodel = BoostedHP(vY, boost=False)
 HPtrend, HPresiduals = HPmodel.fit()
 
 # Boosted HP filter
