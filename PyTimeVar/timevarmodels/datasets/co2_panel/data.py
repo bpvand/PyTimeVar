@@ -2,7 +2,7 @@ from timevarmodels.datasets.utils import load_csv
 import pandas as pd
 import numpy as np
 
-def load(start_date=None, end_date=None, country='United States'):
+def load(start_date=None, end_date=None, regions=None):
     """
     Load the CO2 emissions dataset and optionally filter by date range and/or countries.
     This dataset contains the emissions data from 1900 to 2017, for a range of countries.
@@ -13,12 +13,12 @@ def load(start_date=None, end_date=None, country='United States'):
         The start_year to filter the data. Format 'YYYY'. Minimum start year is 1900.
     end_date : str, optional
         The end_year to filter the data. Format 'YYYY'.
-    country : str, optional
-        The country to filter from data. Default is United States.
+    regions : list, optional
+        Regions to be selected from data. 
     Returns
     -------
     pandas.DataFrame
-        DataFrame containing the filtered data with columns 'Date' and 'CO2'.
+        DataFrame containing the filtered data with columns 'Date' and regions.
 
     Warnings
     --------
@@ -49,10 +49,17 @@ def load(start_date=None, end_date=None, country='United States'):
     data = data[data['Date'] <= pd.to_datetime(end_date)]
     
     # Select the 'Date' and variable columns
-    data = data[['Date', country]]
+    available_columns = data.columns
+    if regions:
+        selected_columns = regions
+        invalid_regions = [region for region in regions if region not in available_columns]
 
-    # Rename column to 'CO2'
-    data = data.rename(columns={country: 'CO2'})
+        if invalid_regions:
+            print(
+                f"Warning: The following regions are not available in the dataset and will be ignored: {invalid_regions}"
+            )
+
+        data = data[selected_columns]
   
     # Set 'Date' as the index
     data.set_index('Date', inplace=True)
@@ -62,6 +69,6 @@ def load(start_date=None, end_date=None, country='United States'):
 
 if __name__ == '__main__':
     # Test the load function
-    data = load(start_date='1900', end_date='2017', 'Austria')
+    data = load(start_date='1900', end_date='2017', ['Austria'])
     print(data.head())
     print(data.tail())
