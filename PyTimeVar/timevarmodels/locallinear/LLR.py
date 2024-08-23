@@ -1243,16 +1243,16 @@ class LocalLinearRegression:
             
           
             
-    def construct_confidence_bands(self, alpha: float, bootstraptype: str, gamma:float, ic:str, Gsubs: list = None, Chtilde:float=None):
+    def construct_confidence_bands(self, bootstraptype: str, alpha: float=None, gamma:float=None, ic:str=None, Gsubs: list = None, Chtilde:float=None):
       """
       Construct confidence bands using bootstrap methods.
 
       Parameters
       ----------
-      alpha : float
-          Significance level for quantiles.
       bootstraptype : str
           Type of bootstrap to use ('SB', 'WB', 'SWB', 'MB', 'LBWB, 'AWB').
+      alpha : float
+          Significance level for quantiles.                              
       gamma : float
           Parameter value for Autoregressive Wild Bootstrap.
       ic : str
@@ -1301,7 +1301,7 @@ class LocalLinearRegression:
 
       results = []
       
-      if alpha <= 0 or alpha >= 1:
+      if alpha is None or alpha <= 0 or alpha >= 1:
           alpha=0.05
 
       # Determine the appropriate bootstrap function
@@ -1310,7 +1310,7 @@ class LocalLinearRegression:
           "WB": self.W_BT,
           "SWB": self.SW_BT,
           "LBWB": self.LBW_BT,
-          "AWB": self.AWB_BT
+          "AWB": self.AW_BT
       }
 
       if bootstraptype not in bootstrap_functions:
@@ -1318,7 +1318,7 @@ class LocalLinearRegression:
 
       bootstrap_function = bootstrap_functions[bootstraptype]
       
-      if gamma <= 0 or gamma >= 1:
+      if gamma is None or gamma <= 0 or gamma >= 1:
           l = int(4.5 * ((T * self.h) ** (0.25)))
           gamma=(0.01)**(1/l)
 
@@ -1327,7 +1327,7 @@ class LocalLinearRegression:
       betahat = self._est_betas(self.vY, self.mX, self.h, taut, taut, self.n_est)
 
       if self.n_est == 1:
-          zhat = self.vY - (self.mX * betatilde[0])
+          zhat = (self.vY - (self.mX * betatilde[0])).diagonal()
       else:
           zhat = self.vY - (self.mX @ betatilde).diagonal()
 
