@@ -60,8 +60,56 @@ plt.show()
 
 # Figure 3
 # LLR and alternative trend estimates. Temperature and CO2 datasets are used here
+# Temperature
+HPmodel = BoostedHP(vY_temp)
+HPtrend, HPresiduals = HPmodel.fit(boost=False)
+bHPmodel = BoostedHP(vY_temp.flatten())
+bHPtrend, bHPresiduals = bHPmodel.fit()
+Q = np.array([[0.03]])
+kalmanmodel = Kalman(Q=Q)
+smooth_trend = kalmanmodel.smoother(vY_temp)
+model = tGAS(vY_temp.flatten(), model_type='local_linear_trend')
+result = model.fit()
+tGAStrend = model.mu
 
+data = temp_data
+plt.plot(data.index, data['World'], label='Original Series')
+plt.plot(data.index, HPtrend, label='HP', linestyle='--')
+plt.plot(data.index, bHPtrend, label='bHP', linestyle='--')
+plt.plot(data.index, res_temp.betas()[0], label='LLR', linestyle='--')
+plt.plot(data.index, tGAStrend, label='tGAS', linestyle='--')
+plt.plot(data.index, smooth_trend, label='Kalman Smoother', linestyle='--')
+plt.xlabel('Date')
+plt.ylabel('Temp change (°C)')
+plt.title('Temperature change in World')
+plt.legend()
+plt.show()
 
+# CO2
+HPmodel = BoostedHP(vY_co2)
+HPtrend, HPresiduals = HPmodel.fit(boost=False)
+bHPmodel = BoostedHP(vY_co2.flatten())
+bHPtrend, bHPresiduals = bHPmodel.fit()
+Q = np.array([[0.03]])
+kalmanmodel = Kalman(Q=Q)
+smooth_trend = kalmanmodel.smoother(vY_co2)
+model = tGAS(vY_co2.flatten(), model_type='local_linear_trend')
+result = model.fit()
+tGAStrend = model.mu
+
+# Plotting
+data = co2_data
+plt.plot(data.index, data['AUSTRIA'], label='Original Series')
+plt.plot(data.index, HPtrend, label='HP', linestyle='--')
+plt.plot(data.index, bHPtrend, label='bHP', linestyle='--')
+plt.plot(data.index, res_co2.betas()[0], label='LLR', linestyle='--')
+plt.plot(data.index, tGAStrend, label='tGAS', linestyle='--')
+plt.plot(data.index, smooth_trend, label='Kalman Smoother', linestyle='--')
+plt.xlabel('Date')
+plt.ylabel('CO2')
+plt.title('CO2 Emissions in Austria')
+plt.legend()
+plt.show()
 
 # Load data
 # data = temperature.load(regions=['World'])
