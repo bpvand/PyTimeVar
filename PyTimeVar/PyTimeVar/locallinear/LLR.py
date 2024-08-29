@@ -1108,7 +1108,7 @@ class LocalLinear:
 
         return np.abs((np.sum(np.where(check == len(tau), 1, 0)) / B) - 0.95)
 
-    def min_alphap(self, diff, tau):
+    def min_alphap(self, diff, tau, alpha):
         """
         Calculate the minimum alpha value for confidence bands.
 
@@ -1126,20 +1126,18 @@ class LocalLinear:
         """
         B = 1299
         last = self.ABS_value(self._get_qtau(1 / B, diff, tau), diff, tau)
-        for index, alphap in enumerate(np.arange(2, 1299) / 1299):
+        for index, alphap in enumerate(np.arange(2, B) / B):
             qtau = self._get_qtau(alphap, diff, tau)
             value = self.ABS_value(qtau, diff, tau)
             if value <= last:
                 last = value
-                if index == 63:
-                    return 0.05
+                if index == int(B * alpha) - 1:
+                    return alpha
             else:
                 if index == 0:
                     return (index + 1) / B
-                if index == 1:
-                    return (index) / B
                 else:
-                    return (index + 1) / B
+                    return (index) / B
     def K_ZW_Q(self, vTi_t, h):
         """
         Kernel function for Multiplier Bootstrap quantile.
@@ -1513,7 +1511,7 @@ class LocalLinear:
               for k in range(self.n_est):
                   diff_beta_G[k][i] = diff_G[k]
 
-          optimal_alphap_G = [self.min_alphap(diff_beta_G[i], G) for i in range(self.n_est)]
+          optimal_alphap_G = [self.min_alphap(diff_beta_G[i], G, alpha) for i in range(self.n_est)]
 
           S_LB_beta = [betahat_G[i] - self._get_qtau(optimal_alphap_G[i], diff_beta_G[i], G)[1] for i in range(self.n_est)]
           S_UB_beta = [betahat_G[i] - self._get_qtau(optimal_alphap_G[i], diff_beta_G[i], G)[0] for i in range(self.n_est)]
