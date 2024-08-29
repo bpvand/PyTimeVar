@@ -1081,7 +1081,7 @@ class LocalLinear:
             qtau[1, i] = np.quantile(diff[:, i], (1 - alphap / 2))
         return qtau
 
-    def ABS_value(self, qtau, diff, tau):
+    def ABS_value(self, qtau, diff, tau, alpha):
         """
         Calculate the absolute value for quantiles.
 
@@ -1106,7 +1106,7 @@ class LocalLinear:
             axis=1,
         )
 
-        return np.abs((np.sum(np.where(check == len(tau), 1, 0)) / B) - 0.95)
+        return np.abs((np.sum(np.where(check == len(tau), 1, 0)) / B) - (1 - alpha))
 
     def min_alphap(self, diff, tau, alpha):
         """
@@ -1125,10 +1125,10 @@ class LocalLinear:
             Minimum alpha value.
         """
         B = 1299
-        last = self.ABS_value(self._get_qtau(1 / B, diff, tau), diff, tau)
-        for index, alphap in enumerate(np.arange(2, B) / B):
+        last = self.ABS_value(self._get_qtau(1 / B, diff, tau), diff, tau, alpha)
+        for index, alphap in enumerate(np.arange(2, int(B * alpha) + 2) / B):
             qtau = self._get_qtau(alphap, diff, tau)
-            value = self.ABS_value(qtau, diff, tau)
+            value = self.ABS_value(qtau, diff, tau, alpha)
             if value <= last:
                 last = value
                 if index == int(B * alpha) - 1:
