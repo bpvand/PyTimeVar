@@ -742,7 +742,7 @@ class LocalLinear:
     #### Bootstrap
     ############################################################################################################
 
-    def AR(self, zhat, T, ic='aic'):
+    def AR(self, zhat, T, ic=None):
         """
         Estimate the AR model and compute residuals.
 
@@ -766,21 +766,21 @@ class LocalLinear:
                 Information criterion to select number of lagsy. Default criterion is AIC
             
         """
+        if ic is None:
+            ic = "aic"
         maxp = 10 * np.log10(T)
-        arm_selection = ar_select_order(zhat, ic, trend="n", maxlag=int(maxp))
+        arm_selection = ar_select_order(endog= zhat, maxlag=int(maxp), ic = ic, trend="n")
 
         if arm_selection.ar_lags is None:
             armodel = AutoReg(zhat, trend="n", lags=0).fit()
             max_lag = 0
             epsilonhat = zhat
-            epsilontilde = epsilonhat - np.mean(epsilonhat)
         else:
             armodel = arm_selection.model.fit()
             max_lag = max(arm_selection.ar_lags)
             epsilonhat = armodel.resid
-            epsilontilde = epsilonhat - np.mean(epsilonhat)
 
-        return epsilontilde, max_lag, armodel
+        return epsilonhat, max_lag, armodel
 
     def _get_Zstar_AR(self, max_lags, armodel, T, epsilonstar):
         """
@@ -1490,7 +1490,10 @@ class LocalLinear:
           if bootstraptype in ["SB", "SWB"]:
               epsilonhat, max_lag, armodel = self.AR(zhat, T, ic)
               epsilontilde = epsilonhat - np.mean(epsilonhat)
-              vYstar = bootstrap_function(epsilontilde, max_lag, armodel, self.mX, betatilde, T)              
+              if bootstraptype == 'SWB':
+                  vYstar = bootstrap_function(epsilonhat, max_lag, armodel, self.mX, betatilde, T)
+              elif bootstraptype == 'SB':
+                  vYstar = bootstrap_function(epsilontilde, max_lag, armodel, self.mX, betatilde, T)
           else:
               vYstar = bootstrap_function(zhat, self.mX, betatilde, T, self.h, gamma)
 
