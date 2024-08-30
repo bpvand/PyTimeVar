@@ -53,9 +53,9 @@ herd_data = herding.load(start_date='2015-01-05', end_date='2022-01-05')
 vY = herd_data[['CSAD_AVG']].values
 mX = herd_data[['AVG_RTN', 'RTN_ABS', 'RTN_2', 'Intercept']].values
 
-# gasmodel = GAS(vY, mX, 'student')
-# tGAStrend, tGASparams = gasmodel.fit()
-# gasmodel.plot(date_range=['2015-01-05', '2022-01-05'])
+gasmodel = GAS(vY, mX, 'student')
+tGAStrend, tGASparams = gasmodel.fit()
+gasmodel.plot(date_range=['2015-01-05', '2022-01-05'])
 
 kalmanmodel = Kalman(vY=vY, regressors=mX)
 smooth_trend = kalmanmodel.fit('smoother')
