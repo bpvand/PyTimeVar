@@ -4,6 +4,8 @@ Section 3: illustration of code on Temperature dataset
 
 '''
 # Download data
+import matplotlib.pyplot as plt
+from PyTimeVar import PowerLaw
 from PyTimeVar.datasets import herding
 from PyTimeVar import GAS
 from PyTimeVar import Kalman
@@ -11,6 +13,7 @@ from PyTimeVar import BoostedHP
 from PyTimeVar import LocalLinear
 from PyTimeVar.datasets import temperature
 import numpy as np
+
 data = temperature.load(
     regions=['World'], start_date='1961-01-01', end_date='2023-01-01')
 vY = data.values
@@ -49,15 +52,23 @@ gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot(date_range=['1980-01-01', '2000-01-01'])
 
-herd_data = herding.load(start_date='2015-01-05', end_date='2022-01-05')
-vY = herd_data[['CSAD_AVG']].values
-mX = herd_data[['AVG_RTN', 'RTN_ABS', 'RTN_2', 'Intercept']].values
+PwrLaw = PowerLaw(vY, n_powers=2)
+pwrTrend = PwrLaw.fit()
 
-gasmodel = GAS(vY, mX, 'student')
-tGAStrend, tGASparams = gasmodel.fit()
-gasmodel.plot(date_range=['2015-01-05', '2022-01-05'])
+plt.plot(pwrTrend, c='r')
+plt.plot(vY)
+plt.show()
 
-kalmanmodel = Kalman(vY=vY, regressors=mX)
-smooth_trend = kalmanmodel.fit('smoother')
-kalmanmodel.summary()
-kalmanmodel.plot(date_range=['2015-01-05', '2022-01-05'])
+
+# herd_data = herding.load(start_date='2015-01-05', end_date='2022-01-05')
+# vY = herd_data[['CSAD_AVG']].values
+# mX = herd_data[['AVG_RTN', 'RTN_ABS', 'RTN_2', 'Intercept']].values
+
+# gasmodel = GAS(vY, mX, 'student')
+# tGAStrend, tGASparams = gasmodel.fit()
+# gasmodel.plot(date_range=['2015-01-05', '2022-01-05'])
+
+# kalmanmodel = Kalman(vY=vY, regressors=mX)
+# smooth_trend = kalmanmodel.fit('smoother')
+# kalmanmodel.summary()
+# kalmanmodel.plot(date_range=['2015-01-05', '2022-01-05'])
