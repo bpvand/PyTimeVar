@@ -152,6 +152,17 @@ class GAS:
             lhVal = -0.5 * (dnu + 1) * lhVal / self.n + gammaln((dnu + 1) / 2) - gammaln(dnu / 2) - 0.5 * np.log(np.pi * dnu) - np.log(dsigmau)
     
         return lhVal
+    def _format_x_axis(self, ax, date_list):
+          def format_func(x, pos):
+              if len(date_list) > 0:
+                  index = int(x)
+                  if 0 <= index < len(date_list):
+                      date = date_list[index]
+                      if date_list[-1] - date_list[0] > pd.Timedelta(days=730):
+                          return date.strftime('%Y')
+                      else:
+                          return date.strftime('%b %Y')
+              return ax.xaxis.set_major_formatter(plt.FuncFormatter(format_func))
     
     def _generate_dates(self, length, start_date, end_date):
         # Calculate the total duration in days

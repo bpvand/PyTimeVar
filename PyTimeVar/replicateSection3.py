@@ -44,3 +44,15 @@ from PyTimeVar import GAS
 gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot(date_range=['1980-01-01', '2000-01-01'])
+
+from PyTimeVar.datasets import herding
+herd_data = herding.load(start_date='2015-01-05', end_date='2022-01-05')
+vY = herd_data[['CSAD_AVG']].values
+mX = herd_data[['AVG_RTN','RTN_ABS', 'RTN_2', 'Intercept']].values
+print(vY.shape)
+print(mX.shape)
+
+gasmodel = GAS(vY, mX, 'student')
+tGAStrend, tGASparams = gasmodel.fit()
+gasmodel.plot(date_range=['2015-01-05', '2022-01-05'])
+
