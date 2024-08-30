@@ -1690,9 +1690,9 @@ class LocalLinear:
 
           plt.show()
 
-      def plot_confidence_bands(self, bootstrap_type: str = 'LBWB', alpha: float=None, \
+      def confidence_bands(self, bootstrap_type: str = 'LBWB', alpha: float=None, \
                                 gamma:float=None, ic:str=None, Gsubs=None, date_range=None,\
-                                Chtilde:float=2, B: float=1299):
+                                Chtilde:float=2, B: float=1299, plots:bool=False):
           """
           Plot the beta coefficients with confidence bands over a normalized x-axis from 0 to 1.
 
@@ -1711,6 +1711,10 @@ class LocalLinear:
               confidence_bands_list = self.model.construct_confidence_bands(bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B)
               confidence_bands = confidence_bands_list[:-1][0]
               betahat = confidence_bands_list[-1]
+              S_LB=confidence_bands[0]
+              S_UB = confidence_bands[1]
+              P_LB = confidence_bands[2]
+              P_UB = confidence_bands[3]
               if date_range:
                   start_date, end_date = [datetime.strptime(date, "%Y-%m-%d") for date in date_range]
                   G_full = self._generate_dates(len(self.vY), start_date, end_date)
@@ -1725,64 +1729,69 @@ class LocalLinear:
                   G_full = self._generate_dates(len(self.vY), start_date, end_date)
               else:
                   G_full = np.linspace(0, 1, len(self.vY))
+              for i, (start_index, end_index) in enumerate(Gsubs):
+                  S_LB, S_UB, P_LB, P_UB = confidence_bands_list[i]
+
+          if plots == True:
+              # Number of beta coefficients
+              n_betas = self.betahat.shape[0]
+
+              # Plotting
+              if Gsubs is None:
+                  plt.figure(figsize=(6.5, 5 * n_betas))
+                  for j in range(n_betas):
+                      S_LB_beta = confidence_bands[0][j]
+                      S_UB_beta = confidence_bands[1][j]
+                      P_LB_beta = confidence_bands[2][j]
+                      P_UB_beta = confidence_bands[3][j]
+
+                      plt.subplot(n_betas, 1, j + 1)
+                      plt.plot(G_full, betahat[j], label=f'Estimated $\\beta_{j}$', color='black')
+                      plt.plot(G_full, S_LB_beta, 'r--', label='Simultaneous')
+                      plt.plot(G_full, S_UB_beta, 'r--')
+                      plt.fill_between(G_full, P_LB_beta, P_UB_beta, color='grey', alpha=0.3, label='Pointwise')
+                      # plt.title(f'{bootstrap_type} - beta {j}')
+                      plt.xlabel('Date' if date_range else '$t/n$')
+                      plt.legend()
+                      plt.grid(linestyle='dashed')
+                      if date_range:
+                          ax = plt.gca()
+                          self._format_x_axis(ax, G_full)
+
+                  plt.tight_layout()
+                  plt.show()
+              else:
+                  fig, axes = plt.subplots(n_betas, 1, figsize=(6.5, 5 * n_betas))
+
+                  if n_betas == 1:
+                      axes = [axes]
+
+                  # Plot betahat for the full range and confidence bands for each beta coefficient
+                  for j in range(n_betas):
+                      ax = axes[j]
+                      ax.plot(G_full, betahat[j], label=f'Estimated $\\beta_{j}$', color='black')
+
+                      for i, (start_index, end_index) in enumerate(Gsubs):
+                          G = G_full[start_index:end_index]
+                          S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta = confidence_bands_list[i]
+
+                          ax.plot(G, S_LB_beta[j], 'r--', label='Simultaneous' if i == 0 else "")
+                          ax.plot(G, S_UB_beta[j], 'r--')
+                          ax.fill_between(G, P_LB_beta[j], P_UB_beta[j], color='grey', alpha=0.3, label='Pointwise' if i == 0 else "")
+
+
+                      ax.set_xlabel('Date' if date_range else '$t/n$')
+
+                      ax.legend()
+                      ax.grid(linestyle='dashed')
+                      if date_range:
+                          self._format_x_axis(ax, G_full)
+
+                  plt.tight_layout()
+                  plt.show()
+                  
+          return  S_LB, S_UB, P_LB, P_UB
           
-          # Number of beta coefficients
-          n_betas = self.betahat.shape[0]
-
-          # Plotting
-          if Gsubs is None:
-              plt.figure(figsize=(6.5, 5 * n_betas))
-              for j in range(n_betas):
-                  S_LB_beta = confidence_bands[0][j]
-                  S_UB_beta = confidence_bands[1][j]
-                  P_LB_beta = confidence_bands[2][j]
-                  P_UB_beta = confidence_bands[3][j]
-
-                  plt.subplot(n_betas, 1, j + 1)
-                  plt.plot(G_full, betahat[j], label=f'Estimated beta {j}', color='black')
-                  plt.plot(G_full, S_LB_beta, 'r--', label='Simultaneous LB')
-                  plt.plot(G_full, S_UB_beta, 'r--', label='Simultaneous UB')
-                  plt.fill_between(G_full, P_LB_beta, P_UB_beta, color='grey', alpha=0.3, label='Pointwise CB')
-                  plt.title(f'{bootstrap_type} - beta {j}')
-                  plt.xlabel('Date' if date_range else 't/n')
-                  plt.ylabel('Beta')
-                  plt.legend()
-                  if date_range:
-                      ax = plt.gca()
-                      self._format_x_axis(ax, G_full)
-
-              plt.tight_layout()
-              plt.show()
-          else:
-              fig, axes = plt.subplots(n_betas, 1, figsize=(6.5, 5 * n_betas))
-
-              if n_betas == 1:
-                  axes = [axes]
-
-              # Plot betahat for the full range and confidence bands for each beta coefficient
-              for j in range(n_betas):
-                  ax = axes[j]
-                  ax.plot(G_full, betahat[j], label=f'beta {j} estimate', color='black')
-
-                  for i, (start_index, end_index) in enumerate(Gsubs):
-                      G = G_full[start_index:end_index]
-                      S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta = confidence_bands_list[i]
-
-                      ax.plot(G, S_LB_beta[j], 'r--', label='Simultaneous LB' if i == 0 else "")
-                      ax.plot(G, S_UB_beta[j], 'r--', label='Simultaneous UB' if i == 0 else "")
-                      ax.fill_between(G, P_LB_beta[j], P_UB_beta[j], color='grey', alpha=0.3, label='Pointwise CB' if i == 0 else "")
-
-                  ax.set_title(f'Beta {j} Estimates and Confidence Bands for {bootstrap_type}')
-                  ax.set_xlabel('Date' if date_range else 't/n')
-                  ax.set_ylabel('Beta')
-                  ax.legend()
-                  if date_range:
-                      self._format_x_axis(ax, G_full)
-
-              plt.tight_layout()
-              plt.show()
-          return confidence_bands_list
-
       def betas(self):
           """
           Get the estimated beta coefficients.
