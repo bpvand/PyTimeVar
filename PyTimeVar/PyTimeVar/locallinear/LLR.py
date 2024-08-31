@@ -94,10 +94,15 @@ class LocalLinear:
             self.tau = tau
         elif isinstance(tau, float):
             self.tau = np.array([tau])
-        if len(mX.shape) == 1:
+        
+        if mX.ndim == 1 :
             self.n_est = 1
-        else:
-            self.n_est = np.shape(mX)[1]
+        elif mX.ndim == 2:
+            if np.shape(mX)[1] == 1:
+                self.n_est = 1
+            else: 
+                self.n_est = np.shape(mX)[1]
+    
         self.kernel = kernel.lower()
         self.verbose = verbose
         self.bw_selection = bw_selection
