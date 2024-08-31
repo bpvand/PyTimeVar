@@ -1582,7 +1582,7 @@ class LocalLinear:
           print("Use the 'plot_betas()' method to plot the beta coefficients.")
           print("=" * 30)
           print("Use the 'get_confidence_bands()' method to get the confidence bands.")
-          print("Use the 'plot_confidence_bands()' method to plot the confidence bands.")
+          print("Use the 'confidence_bands()' method to obtain the confidence bands and plots.")
           print("You can choose out of 6 types of Bootstrap to construct confidence bands:")
           print("SB (Sieve Bootstrap), WB (Wild Bootstrap), SWB (Sieve Wild Bootstrap), MB (Multiplier Bootstrap), LBWB (Local Blockwise Wild Bootstrap), AWB (Autoregressive Wild Bootstrap)")
           print("=" * 30)
@@ -1633,6 +1633,7 @@ class LocalLinear:
               axs[i].set_xlabel("Date" if date_range else "t/n")
               axs[i].set_ylabel("Beta Value")
               axs[i].legend()
+              axs[i].grid(linestyle='dashed')
               if date_range:
                   self._format_x_axis(axs[i], x_vals)
 
@@ -1656,6 +1657,7 @@ class LocalLinear:
           plt.title("Actual vs Predicted Y")
           plt.xlabel("Date" if date_range else "t/n")
           plt.ylabel("Y Value")
+          plt.grid(linestyle='dashed')
           plt.legend()
 
           if date_range:
@@ -1680,6 +1682,7 @@ class LocalLinear:
           plt.title("Residuals")
           plt.xlabel("Date" if date_range else "t/n")
           plt.ylabel("Residual Value")
+          plt.grid(linestyle='dashed')
           plt.legend()
 
           if date_range:
