@@ -2,7 +2,7 @@ from PyTimeVar.datasets.utils import load_csv
 import pandas as pd
 import numpy as np
 
-def load(start_date=None, end_date=None):
+def load(start_date=None, end_date=None, data_replication=False):
     """
     Load the Herding dataset and optionally filter by date range.
     This dataset contains the herding data from Jan 5 2015 to Apr 29 2022.
@@ -55,7 +55,23 @@ def load(start_date=None, end_date=None):
     
     # Set 'Date' as the index
     data.set_index('Date', inplace=True)
-    
+    # For modelling gamma_3
+
+    if data_replication == True:
+        CSAD = data["CSAD_AVG"]
+        MRTN = data["AVG_RTN"]
+        MRTN_abs = np.abs(MRTN)
+        MRTN_2 = MRTN ** 2
+
+        mX = np.zeros(shape=(1777, 5))
+        mX[:, 0] = np.ones(1777)
+        mX[:, 1] = MRTN[1:]
+        mX[:, 2] = MRTN_abs[1:]
+        mX[:, 3] = MRTN_2[1:]
+        mX[:, 4] = CSAD[:1777]
+        vY = CSAD[1:]
+        return vY.values, mX
+
     
     return data
 
