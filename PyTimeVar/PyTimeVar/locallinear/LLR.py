@@ -498,7 +498,7 @@ class LocalLinear:
             b = self._omega(taut, one_tau)
 
             return np.sum(aa * b) / self.n
-        elif self.n_est == 2:
+        else:
             aa = (self.vY - (self.mX @ betahat_lmcv).diagonal()) ** 2
             b = self._omega(taut, one_tau)
 
