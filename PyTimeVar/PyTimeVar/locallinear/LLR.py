@@ -499,16 +499,11 @@ class LocalLinear:
         """
         
         taut = np.arange(1 / self.n, (self.n + 1) / self.n, 1 / self.n)
-        if self.n_est == 1:
-            aa = (self.vY - (self.mX * betahat_lmcv)) ** 2
-            b = self._omega(taut, one_tau)
+        
+        aa = (self.vY - (self.mX @ betahat_lmcv).diagonal()) ** 2
+        b = self._omega(taut, one_tau)
 
-            return np.sum(aa * b) / self.n
-        else:
-            aa = (self.vY - (self.mX @ betahat_lmcv).diagonal()) ** 2
-            b = self._omega(taut, one_tau)
-
-            return np.sum(aa * b) / self.n
+        return np.sum(aa * b) / self.n
 
     def _get_optimalh_lmcv(self, lmcv_type):
         """
@@ -1483,10 +1478,7 @@ class LocalLinear:
       betatilde = self._est_betas(self.vY, self.mX, htilde, taut, taut, self.n_est)
       betahat = self._est_betas(self.vY, self.mX, self.h, taut, taut, self.n_est)
 
-      if self.n_est == 1:
-          zhat = (self.vY - (self.mX * betatilde[0]))
-      else:
-          zhat = self.vY - (self.mX @ betatilde).diagonal()
+      zhat = self.vY - (self.mX @ betatilde).diagonal()
 
       # Initialize storage for bootstrap samples
       betahat_star_G_all = {i: np.zeros((B, self.n_est, end - start)) for i, (start, end) in enumerate(Gsubs)}
