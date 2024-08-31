@@ -95,7 +95,8 @@ class LocalLinear:
         elif isinstance(tau, float):
             self.tau = np.array([tau])
         
-        if mX.ndim == 1 :
+        if mX.ndim == 1:
+            self.mX = mX.reshape(-1, 1)
             self.n_est = 1
         elif mX.ndim == 2:
             if np.shape(mX)[1] == 1:
@@ -1483,7 +1484,7 @@ class LocalLinear:
       betahat = self._est_betas(self.vY, self.mX, self.h, taut, taut, self.n_est)
 
       if self.n_est == 1:
-          zhat = (self.vY - (self.mX * betatilde[0])).diagonal()
+          zhat = (self.vY - (self.mX * betatilde[0]))
       else:
           zhat = self.vY - (self.mX @ betatilde).diagonal()
 
