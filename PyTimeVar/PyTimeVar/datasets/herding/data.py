@@ -33,10 +33,10 @@ def load(start_date=None, end_date=None):
     
     # Ensure the minimum start date is Jan 5 2015
     if start_date is None:
-        start_date = '2015-05-01'
+        start_date = '2015-01-05'
     if end_date is None:
         end_date = '2022-04-29'
-    if pd.to_datetime(start_date) < pd.to_datetime('2015-05-01'):
+    if pd.to_datetime(start_date) < pd.to_datetime('2015-01-05'):
             print(f"Warning: The start_date {start_date} is earlier than the minimum year in the data 2015-05-01. Data starts at minimum date.")
             start_date = '2015-05-01'
     data = data[data['Date'] >= pd.to_datetime(start_date)]
@@ -61,6 +61,6 @@ def load(start_date=None, end_date=None):
 
 if __name__ == '__main__':
     # Test the load function
-    data = load(start_date='2015-01-05', end_date='2022-01-05')
+    data = load(start_date='2015-01-05', end_date='2022-04-29')
     print(data.head())
     print(data.tail())
