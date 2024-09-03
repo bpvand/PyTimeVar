@@ -260,8 +260,10 @@ class Kalman:
 
         if option.lower() == 'filter':
             self.filt = self.filter()
+            return self.filt
         elif option.lower() == 'smoother':
             self.smooth = self.smoother()
+            return self.smooth
         else:
             raise ValueError(
                 'Unknown option provided to fit(). Choose either filter or smoother')
