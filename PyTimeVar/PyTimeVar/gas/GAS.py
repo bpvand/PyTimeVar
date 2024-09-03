@@ -215,6 +215,7 @@ class GAS:
             axs[i].set_xlabel("Date" if date_range else "t/n")
             axs[i].set_ylabel(r"$\beta$ Value")
             axs[i].legend()
+            axs[i].grid(linestyle='dashed')
             if date_range:
                 self._format_x_axis(axs[i], x_vals)
 
@@ -267,5 +268,5 @@ if __name__ == "__main__":
         plt.grid(which='minor')
         plt.legend(fontsize=20, loc='best', frameon=False)
         plt.gca().tick_params(axis='both', which='major', labelsize=20)
-
+        plt.grid(linestyle='dashed')
         plt.show()

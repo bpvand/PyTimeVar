@@ -2,7 +2,7 @@ from PyTimeVar.datasets.utils import load_csv
 import pandas as pd
 import numpy as np
 
-def load(start_date=None, end_date=None):
+def load(start_date=None, end_date=None, data_replication=False):
     """
     Load the Herding dataset and optionally filter by date range.
     This dataset contains the herding data from Jan 5 2015 to Apr 29 2022.
@@ -33,10 +33,10 @@ def load(start_date=None, end_date=None):
     
     # Ensure the minimum start date is Jan 5 2015
     if start_date is None:
-        start_date = '2015-05-01'
+        start_date = '2015-01-05'
     if end_date is None:
         end_date = '2022-04-29'
-    if pd.to_datetime(start_date) < pd.to_datetime('2015-05-01'):
+    if pd.to_datetime(start_date) < pd.to_datetime('2015-01-05'):
             print(f"Warning: The start_date {start_date} is earlier than the minimum year in the data 2015-05-01. Data starts at minimum date.")
             start_date = '2015-05-01'
     data = data[data['Date'] >= pd.to_datetime(start_date)]
@@ -55,12 +55,28 @@ def load(start_date=None, end_date=None):
     
     # Set 'Date' as the index
     data.set_index('Date', inplace=True)
-    
+    # For modelling gamma_3
+
+    if data_replication == True:
+        CSAD = data["CSAD_AVG"]
+        MRTN = data["AVG_RTN"]
+        MRTN_abs = np.abs(MRTN)
+        MRTN_2 = MRTN ** 2
+
+        mX = np.zeros(shape=(1777, 5))
+        mX[:, 0] = np.ones(1777)
+        mX[:, 1] = MRTN[1:]
+        mX[:, 2] = MRTN_abs[1:]
+        mX[:, 3] = MRTN_2[1:]
+        mX[:, 4] = CSAD[:1777]
+        vY = CSAD[1:]
+        return vY.values, mX
+
     
     return data
 
 if __name__ == '__main__':
     # Test the load function
-    data = load(start_date='2015-01-05', end_date='2022-01-05')
+    data = load(start_date='2015-01-05', end_date='2022-04-29')
     print(data.head())
     print(data.tail())

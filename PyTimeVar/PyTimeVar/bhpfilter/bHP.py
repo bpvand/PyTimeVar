@@ -109,6 +109,7 @@ class BoostedHP:
         plt.plot(self.vY, label="Original Series")
         plt.plot(vBHP, label="Trend Component", linestyle="--")
         plt.legend()
+        plt.grid(linestyle='dashed')
         plt.show()
 
     def _bHP(self, vY, bBoost, dLambda, sStop, dAlpha, iMaxIter, verbose):
