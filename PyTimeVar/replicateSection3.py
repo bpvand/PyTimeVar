@@ -52,7 +52,7 @@ gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot(date_range=['1980-01-01', '2000-01-01'])
 
-PwrLaw = PowerLaw(vY, n_powers=2)
+PwrLaw = PowerLaw(vY, n_powers=3)
 pwrTrend = PwrLaw.fit()
 
 plt.plot(pwrTrend, c='r')

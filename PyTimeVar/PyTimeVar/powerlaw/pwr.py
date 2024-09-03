@@ -31,7 +31,7 @@ class PowerLaw():
 
         self.vgamma0 = np.arange(0, 0.01*self.p, 0.01)
         self.bounds = ((-0.495, 8),)*self.p
-        self.options = {'maxfun': 5E5}
+        self.options = {'maxiter': 5E5}
         self.cons = {'type': 'ineq', 'fun': self._nonlcon}
 
         self.trendHat = None
@@ -41,8 +41,7 @@ class PowerLaw():
     def fit(self):
 
         res = minimize(self._construct_pwrlaw_ssr, self.vgamma0,
-                       bounds=self.bounds, method='L-BFGS-B', constraints=self.cons, options=self.options)
-        print(res)
+                       bounds=self.bounds, method='Powell', constraints=self.cons, options=self.options)
         self.gammaHat = res.x.reshape(1, self.p)
 
         trend = np.arange(1, self.n+1, 1).reshape(self.n, 1)
@@ -58,11 +57,9 @@ class PowerLaw():
 
         vparams = np.array(vparams).reshape(1, self.p)
         mP = trend @ vparams
-
         coeff = np.linalg.pinv(mP.T @ mP) @ mP.T @ self.vY
-        print(coeff)
+
         ssr = np.sum((self.vY - mP @ coeff)**2)
-        print('ssr', ssr)
         return ssr
 
     def _nonlcon(self, params):
@@ -72,7 +69,6 @@ class PowerLaw():
             for id2 in range(id1+1, self.p):
                 c.append(params[id1] - params[id2] + epsilon)
         return c
-
 
         # In[]
 if __name__ == '__main__':
