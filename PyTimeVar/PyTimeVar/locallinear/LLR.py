@@ -78,12 +78,12 @@ class LocalLinear:
         vY: np.ndarray,
         mX: np.ndarray,
         h: float = 0,
-        bw_selection : str = None,
+        bw_selection: str = None,
         tau: np.ndarray = None,
         kernel: str = "epanechnikov",
         verbose: bool = False,
     ):
-        
+
         self.vY = vY
         self.mX = mX
         self.n = len(vY)
@@ -94,28 +94,36 @@ class LocalLinear:
             self.tau = tau
         elif isinstance(tau, float):
             self.tau = np.array([tau])
-        
+
         if mX.ndim == 1:
             self.mX = mX.reshape(-1, 1)
             self.n_est = 1
         elif mX.ndim == 2:
             if np.shape(mX)[1] == 1:
                 self.n_est = 1
-            else: 
+            else:
                 self.n_est = np.shape(mX)[1]
-    
+
         self.kernel = kernel.lower()
         self.verbose = verbose
         self.bw_selection = bw_selection
         if h == 0:
             if self.bw_selection is None:
-                print('No bandwidth or selection method is specified. \nAverage LMCV is used to determine the bandwidth.')
-                self.bw_selection = 'avg'
-            if self.bw_selection not in ['0', '2', '4', '6', 0,2,4,6, 'avg', 'aic', 'gcv']:
-                print('Error: bandwidth selection method is invalid. \nPlease provide an expression from the following options: [\'0\', \'2\',\'4\',\'6\', \'avg\', \'aic\', \'gcv\', 0, 2, 4, 6]')
+                print(
+                    'No bandwidth or selection method is specified. \Average bandwidth of all available selection criteria is used.')
+                self.bw_selection = 'all'
+            if self.bw_selection not in ['all', '0', '2', '4', '6', 0, 2, 4, 6, 'avg', 'aic', 'gcv']:
+                print(
+                    'Error: bandwidth selection method is invalid. \nPlease provide an expression from the following options: [\'all\',\'0\', \'2\',\'4\',\'6\', \'avg\', \'aic\', \'gcv\', 0, 2, 4, 6]')
                 exit(1)
-            self.h = self.bandwidth_selection()    
-            print('Optimal bandwidth using', self.bw_selection, 'is: ', self.h)
+
+            self.dict_bw = self.bandwidth_selection()
+            print('Optimal bandwidths are: \n', self.dict_bw)
+            self.dict_bw['all'] = np.array(list(self.dict_bw.values())).mean()
+
+            self.h = self.dict_bw[self.bw_selection]
+            print('Optimal bandwidth using',
+                  self.bw_selection, 'is: ', self.h)
         else:
             self.h = h
 
@@ -147,7 +155,6 @@ class LocalLinear:
             return np.where(np.abs(u) <= 1, (70/81) * (1 - np.abs(u)**3)**3, 0)
         else:
             raise ValueError(f"Unknown kernel: {self.kernel}")
-        
 
     def _compute_Sn(
         self, k: int, h: float, times: np.ndarray, tau: float, mX: np.ndarray
@@ -394,7 +401,7 @@ class LocalLinear:
         return self.Results(betahat, self.vY, predicted_y, self)
 
     ############################################################################################################
-    #### Bandwidth Selection
+    # Bandwidth Selection
     ############################################################################################################
 
     def _omega(self, x, tau):
@@ -497,9 +504,9 @@ class LocalLinear:
         float
             The LMCV score.
         """
-        
+
         taut = np.arange(1 / self.n, (self.n + 1) / self.n, 1 / self.n)
-        
+
         aa = (self.vY - (self.mX @ betahat_lmcv).diagonal()) ** 2
         b = self._omega(taut, one_tau)
 
@@ -532,7 +539,8 @@ class LocalLinear:
         betasss = np.zeros(shape=(len(vh), self.n_est, self.n))
         for index, h in enumerate(vh):
             # print(f"\r estimating for h = {h} ", end="")
-            betasss[index] = self._beta_estimation_lmcv(h, tau=self.times, lmcv_type=lmcv_type)
+            betasss[index] = self._beta_estimation_lmcv(
+                h, tau=self.times, lmcv_type=lmcv_type)
 
         for one_tau in self.times:
             contain = []
@@ -569,30 +577,30 @@ class LocalLinear:
         AVG = np.mean(h)
         h.append(AVG)
         return h
-    
+
     def AICmodx(self, s2, traceh):
         return np.log(s2) + 2*(traceh+1)/(self.n-traceh-2)
-    
-    def _get_loss_aic_gcv(self,h):
-        
+
+    def _get_loss_aic_gcv(self, h):
+
         vYhat = np.zeros(self.n)
-        traceh=0
+        traceh = 0
         for i in range(self.n):
             mS, mT = self._construct_S_matrix(
                 h, self.times, self.tau[i], self.mX, 2 * self.n_est
             ), self._construct_T_matrix(h, self.times, self.tau[i], self.mX, self.vY, 2 * self.n_est)
             mul = np.linalg.pinv(mS) @ mT
             betahath = mul[:self.n_est]
-            vYhat[i] = (self.mX[i,:]@betahath)[:]
-            
+            vYhat[i] = (self.mX[i, :]@betahath)[:]
+
             vE = self._get_vE_vector(h, self.tau[i], i)
             vHatMatSelect = np.linalg.pinv(mS) @ vE
-            traceh = traceh + self.mX[i,:] @ vHatMatSelect[:self.n_est]
-            
+            traceh = traceh + self.mX[i, :] @ vHatMatSelect[:self.n_est]
+
         s2 = np.mean((self.vY-vYhat)**2)
-        
+
         return s2, traceh
-        
+
     def _get_vE_vector(self, h, tau, i):
         """
         Constructs the vector vE for AIC and GCV bandwidth selection.
@@ -616,21 +624,20 @@ class LocalLinear:
         En1 = self._compute_En(1, h, self.times, tau, self.mX)
         size = En0.shape[0]
 
-        if self.n_est==1:
+        if self.n_est == 1:
             mE[:size, 0] = En0
             mE[size:, 0] = En1
         else:
             mE[:size, 0] = En0[:, 0]
             mE[size:, 0] = En1[:, 0]
-            
-        vEx = np.zeros((self.n,1))
+
+        vEx = np.zeros((self.n, 1))
         vEx[i] = 1
-            
+
         vE = (mE @ vEx).flatten()
 
-        
         return vE
-    
+
     def _compute_En(
         self,
         k: int,
@@ -668,8 +675,8 @@ class LocalLinear:
         if mX.ndim == 2:
             return np.sum(mX[:, :, None] * np.reshape((times[None, :] - tau) ** k * K_u, newshape=(len(times), 1, 1)), axis=0,) / (h)
         elif mX.ndim == 1:
-            return np.sum(mX[:, None]* np.reshape((times[None, :] - tau) ** k * K_u, newshape=(len(times), 1)),axis=0,) / (h)
-    
+            return np.sum(mX[:, None] * np.reshape((times[None, :] - tau) ** k * K_u, newshape=(len(times), 1)), axis=0,) / (h)
+
     def _get_aic_bandwidth(self):
         '''
         Calculates the LLR optimal bandwidth by minimizing modified AIC 
@@ -685,15 +692,14 @@ class LocalLinear:
         for j in range(len(vh)):
             s2, traceh = self._get_loss_aic_gcv(vh[j])
             vlossh[j] = self.AICmodx(s2, traceh)
-        
+
         h_opt = vh[np.argmin(vlossh)]
-        
-        
+
         return h_opt
-    
+
     def GCVmodx(self, s2, traceh):
         return s2/(1-traceh/self.n)**2
-        
+
     def _get_gcv_bandwidth(self):
         '''
         Calculates the LLR optimal bandwidth using Generalized CV (GCV)
@@ -704,15 +710,15 @@ class LocalLinear:
             Optimal bandwidth value
 
         '''
-        
+
         vh = np.arange(0.06, 0.2, 0.005)
         vlossh = np.zeros_like(vh)
         for j in range(len(vh)):
             s2, traceh = self._get_loss_aic_gcv(vh[j])
             vlossh[j] = self.GCVmodx(s2, traceh)
-        
+
         h_opt = vh[np.argmin(vlossh)]
-        
+
         return h_opt
 
     def bandwidth_selection(self):
@@ -724,23 +730,19 @@ class LocalLinear:
         list
             The optimal bandwidth self.bw_selection
         """
-        if self.bw_selection == 'aic':
-            return self._get_aic_bandwidth()
-        elif self.bw_selection == 'gcv':
-            return self._get_gcv_bandwidth()
-        elif self.bw_selection == 'avg':
-            return self._get_lmcv_bandwiths()[-1]
-        elif int(self.bw_selection) == 0:
-            return self._get_lmcv_bandwiths()[0]
-        elif int(self.bw_selection) == 2:
-            return self._get_lmcv_bandwiths()[1]
-        elif int(self.bw_selection) == 4:
-            return self._get_lmcv_bandwiths()[2]
-        elif int(self.bw_selection) == 6:
-            return self._get_lmcv_bandwiths(self.vY, self.mX, self.n_est)[3]
+        d = {}
+        d['aic'] = self._get_aic_bandwidth()
+        d['gcv'] = self._get_gcv_bandwidth()
+        list_h = self._get_lmcv_bandwiths()
+        d['0'] = list_h[0]
+        d['2'] = list_h[1]
+        d['4'] = list_h[2]
+        d['6'] = list_h[3]
+        d['avg'] = list_h[-1]
+        return d
 
     ############################################################################################################
-    #### Bootstrap
+    # Bootstrap
     ############################################################################################################
 
     def AR(self, zhat, T, ic=None):
@@ -765,12 +767,13 @@ class LocalLinear:
                 Fitted autoregressive model.
             ic : string
                 Information criterion to select number of lagsy. Default criterion is AIC
-            
+
         """
         if ic is None:
             ic = "aic"
         maxp = 10 * np.log10(T)
-        arm_selection = ar_select_order(endog= zhat, maxlag=int(maxp), ic = ic, trend="n")
+        arm_selection = ar_select_order(
+            endog=zhat, maxlag=int(maxp), ic=ic, trend="n")
 
         if arm_selection.ar_lags is None:
             armodel = AutoReg(zhat, trend="n", lags=0).fit()
@@ -863,16 +866,16 @@ class LocalLinear:
         elif mX.ndim == 2:
             vYstar = (mX @ betatilde + zstar_array).diagonal()
             return vYstar
-    
+
     ######### Autoregressive Bootstrap #########
     def AW_BT(
-    self,
-    zhat: np.ndarray, 
-    mX: np.ndarray, 
-    betatilde: np.ndarray,
-    T: int,
-    h: float,
-    gamma: float
+        self,
+        zhat: np.ndarray,
+        mX: np.ndarray,
+        betatilde: np.ndarray,
+        T: int,
+        h: float,
+        gamma: float
     ):
         """
         Autoregressive Wild Bootstrap
@@ -900,52 +903,53 @@ class LocalLinear:
         v_xi_star = np.zeros(T)
         v_xi_star[0] = xi_star0
         for i in range(1, T):
-            v_xi_star[i] = gamma * v_xi_star[i - 1] + np.random.normal(0, np.sqrt(1 - gamma ** 2))
+            v_xi_star[i] = gamma * v_xi_star[i - 1] + \
+                np.random.normal(0, np.sqrt(1 - gamma ** 2))
 
         zstar = v_xi_star * np.array(zhat)
 
         vYstar = (mX @ betatilde + zstar).diagonal()
 
         return vYstar
-    
+
     def W_BT(
-    self,
-    zhat: np.ndarray,
-    mX: np.ndarray,
-    betatilde: np.ndarray,
-    T: int,
-    h: float, #not used
-    gamma: float
+        self,
+        zhat: np.ndarray,
+        mX: np.ndarray,
+        betatilde: np.ndarray,
+        T: int,
+        h: float,  # not used
+        gamma: float
     ):
-      """
-      Wild Bootstrap
-      Calculate the transformed response variable using the local linear regression model.
+        """
+        Wild Bootstrap
+        Calculate the transformed response variable using the local linear regression model.
 
-      Parameters
-      ----------
-      zhat : np.ndarray
-          Array of residuals.
-      mX : np.ndarray
-          Array of exogenous variables.
-      betatilde : np.ndarray
-          Array of estimated coefficients.
-      T : int
-          Total number of observations.
+        Parameters
+        ----------
+        zhat : np.ndarray
+            Array of residuals.
+        mX : np.ndarray
+            Array of exogenous variables.
+        betatilde : np.ndarray
+            Array of estimated coefficients.
+        T : int
+            Total number of observations.
 
-      Returns
-      -------
-      np.ndarray
-          Transformed response variable.
-      """
-      #generate zstar by 
-      zstar =  zhat * np.random.normal(0, 1, T)
+        Returns
+        -------
+        np.ndarray
+            Transformed response variable.
+        """
+        # generate zstar by
+        zstar = zhat * np.random.normal(0, 1, T)
 
-      if mX.ndim == 1:
-          vYstar = mX * betatilde[0] + zstar
-          return vYstar
-      elif mX.ndim == 2:
-          vYstar = (mX @ betatilde + zstar).diagonal()
-          return vYstar
+        if mX.ndim == 1:
+            vYstar = mX * betatilde[0] + zstar
+            return vYstar
+        elif mX.ndim == 2:
+            vYstar = (mX @ betatilde + zstar).diagonal()
+            return vYstar
 
     def SW_BT(
         self,
@@ -995,9 +999,9 @@ class LocalLinear:
         elif mX.ndim == 2:
             vYstar = (mX @ betatilde + zstar_array).diagonal()
             return vYstar
-    
+
     def LBW_BT(
-        self, zhat: np.ndarray, mX: np.ndarray, betatilde: np.ndarray, T: int, h: float, gamma:float
+        self, zhat: np.ndarray, mX: np.ndarray, betatilde: np.ndarray, T: int, h: float, gamma: float
     ):
         """
         Performs the local blockwise wild bootstrap algorithm to generate a bootstrap sample.
@@ -1025,23 +1029,24 @@ class LocalLinear:
 
         overlapping_blocks = np.zeros(shape=(number_blocks, l, 1))
         for i in range(number_blocks):
-            overlapping_blocks[i] = np.array(zhat[i : i + l]).reshape(l, 1)
+            overlapping_blocks[i] = np.array(zhat[i: i + l]).reshape(l, 1)
 
         zstar = np.zeros(shape=(l * int(np.ceil(T / l)), 1))
         for tau in range(0, T, l):
             local_number_blocks = np.shape(
-                overlapping_blocks[max(tau - l, 0) : tau + l]
+                overlapping_blocks[max(tau - l, 0): tau + l]
             )[0]
 
-            random_choice = np.random.choice(np.arange(0, local_number_blocks), 1)
+            random_choice = np.random.choice(
+                np.arange(0, local_number_blocks), 1)
 
             vWild = np.repeat(np.random.normal(0, 1, 1), l)
 
-            overlapping_blocks_star = (overlapping_blocks[max(tau - l, 0) : tau + l])[
+            overlapping_blocks_star = (overlapping_blocks[max(tau - l, 0): tau + l])[
                 random_choice
             ]
 
-            zstar[tau : tau + l] = overlapping_blocks_star.reshape(
+            zstar[tau: tau + l] = overlapping_blocks_star.reshape(
                 l, 1
             ) * vWild.reshape(l, 1)
 
@@ -1053,9 +1058,9 @@ class LocalLinear:
         elif mX.ndim == 2:
             vYstar = (mX @ betatilde + zstar).diagonal()
             return vYstar
-        
+
         ############################################################################################################
-        #### Confidence Bands
+        # Confidence Bands
         ############################################################################################################
 
     def _get_qtau(self, alphap, diff, tau):
@@ -1126,7 +1131,8 @@ class LocalLinear:
             Minimum alpha value.
         """
         B = 1299
-        last = self.ABS_value(self._get_qtau(1 / B, diff, tau), diff, tau, alpha)
+        last = self.ABS_value(self._get_qtau(
+            1 / B, diff, tau), diff, tau, alpha)
         for index, alphap in enumerate(np.arange(2, int(B * alpha) + 2) / B):
             qtau = self._get_qtau(alphap, diff, tau)
             value = self.ABS_value(qtau, diff, tau, alpha)
@@ -1139,6 +1145,7 @@ class LocalLinear:
                     return (index + 1) / B
                 else:
                     return (index) / B
+
     def K_ZW_Q(self, vTi_t, h):
         """
         Kernel function for Multiplier Bootstrap quantile.
@@ -1156,7 +1163,7 @@ class LocalLinear:
             Array of kernel values.
         """
         return 2 * np.sqrt(2) * self._kernel(np.sqrt(2) * vTi_t / h) - self._kernel(vTi_t / h)
-    
+
     def getQ(self, B, T, taut, h, alpha):
         """
         Calculate quantile for Multiplier Bootstrap samples.
@@ -1179,14 +1186,14 @@ class LocalLinear:
         float
             Quantile value.
         """
-        h = h * 2 
+        h = h * 2
         mV = np.random.normal(0, 1, (T, B))
         vQ = np.zeros(B)
         mMu = np.zeros((T, B))
-        
+
         mTi_t = np.repeat(taut, T).reshape((-1, T)) - taut
         dDenum = T * h
-        
+
         for i in range(B):
             for t in range(1, T + 1):
                 vMu = mMu[:, i]
@@ -1196,8 +1203,8 @@ class LocalLinear:
                 vMu[t - 1] = vV @ vKernel
             vQ[i] = max(np.absolute(vMu)) / dDenum
         dQ = np.quantile(vQ, 1 - alpha)
-        return dQ   
-    
+        return dQ
+
     def getLambda(self, mmDelta, iN, iM, taut, dT, dTau, dGamma):
         """
         Calculate lambda values for Multiplier Bootstrap samples.
@@ -1230,13 +1237,13 @@ class LocalLinear:
             dT = 1 - dGamma
         vTi_t = taut - dT
         vKernel = self._kernel(vTi_t / dTau)
-        
+
         vWeights = vKernel / np.sum(vKernel)
         mLam = np.zeros((mmDelta.shape[0], mmDelta.shape[1]))
         for i in range(len(taut)):
             mLam = mLam + vWeights[i] * mmDelta[:, :, i]
-        return mLam   
-    
+        return mLam
+
     def getDelta(self, mX, vEps, iM):
         """
         Calculate delta values for Multiplier Bootstrap samples.
@@ -1264,11 +1271,12 @@ class LocalLinear:
         dDenum = 2 * iM + 1
         mmDelta = np.zeros((iP, iP, T))
         for i in range(0, T):
-            mQi = (np.sum(mL[max(0, i - iM):min(i + iM, T), :], axis=0)).reshape(-1, 1)
+            mQi = (
+                np.sum(mL[max(0, i - iM):min(i + iM, T), :], axis=0)).reshape(-1, 1)
             mDeltai = (mQi @ mQi.T) / dDenum
-            mmDelta[:, :, i] = mDeltai 
+            mmDelta[:, :, i] = mDeltai
         return mmDelta
-    
+
     def getSigma(self, mM, mLam):
         """
         Calculate sigma values for Multiplier Bootstrap samples.
@@ -1286,9 +1294,10 @@ class LocalLinear:
             Array of sigma values.
         """
         mM_inv = np.linalg.inv(mM)
-        vSigma = np.array([mM_inv[d, d] * np.sqrt(mLam[d, d]) for d in range(mLam.shape[0])])
+        vSigma = np.array([mM_inv[d, d] * np.sqrt(mLam[d, d])
+                          for d in range(mLam.shape[0])])
         return vSigma
-    
+
     def getM(self, mX, T, dT, h):
         """
         Calculate M values for Multiplier Bootstrap samples.
@@ -1316,7 +1325,7 @@ class LocalLinear:
         mX_tilde = mX * (np.sqrt(vKernel).reshape(-1, 1))
         mM = mX_tilde.T @ mX_tilde / (T * h)
         return mM
-    
+
     def MC_ZW(self, alpha, h, vY, mX, T):
         """
         Perform the Multiplier Bootstrap bootstrap algorithm.
@@ -1340,9 +1349,11 @@ class LocalLinear:
             Lower and upper confidence bands and beta coefficients.
         """
         if self.bw_selection != 'gcv':
-            print('Warning: the bandwidth selection used is different than the gcv (recommended)')
-            self.bw_selection = input('Please specify your BW selection method for the MB here: ')
-            
+            print(
+                'Warning: the bandwidth selection used is different than the gcv (recommended)')
+            self.bw_selection = input(
+                'Please confirm your BW selection method for the MB here: ').lower()
+
         if mX.ndim == 1:
             mX = mX.reshape(-1, 1)
         # Initialisation
@@ -1354,474 +1365,518 @@ class LocalLinear:
         taut = np.arange(1 / T, (T + 1) / T, 1 / T)
         # Estimation
         betahat = self._est_betas(vY, mX, h, taut, taut, self.n_est)
-        
+
         # Jackknife bias-corrected estimator
         h_jk = 2 * h
         betahat_j = self._est_betas(vY, mX, h, taut, taut, self.n_est)
         betahat_k = self._est_betas(vY, mX, h_jk, taut, taut, self.n_est)
         betahat_jk = 2 * betahat_k - betahat_j
-        
+
         # Simulation quantile
         dQ = self.getQ(B, T, taut, h, alpha)
-        
+
         vEps = vY - (mX @ betahat).diagonal()
-        mmDelta = self.getDelta(mX, vEps, iM)        
-        
+        mmDelta = self.getDelta(mX, vEps, iM)
+
         vT_star = np.maximum(np.array([h] * T), np.minimum(taut, 1 - h))
-        
+
         mmSCT = np.zeros((T, 2, mX.shape[1]))
-        
+
         for l in range(T):
             # Construct mMHat(tau)
             mM = self.getM(mX, T, vT_star[l], h)
-            
+
             # Construct mLambdaTilde(tau)
             mLam = self.getLambda(mmDelta, T, iM, taut, taut[l], dTau, dGamma)
-            
+
             # Construct LRV
             vSigma = self.getSigma(mM, mLam)
             for d in range(mX.shape[1]):
-                mmSCT[l, :, d] = betahat_jk[d, l] + vSigma[d] * dQ * np.array([-1, 1])
-        
+                mmSCT[l, :, d] = betahat_jk[d, l] + \
+                    vSigma[d] * dQ * np.array([-1, 1])
+
         S_LB_beta = [
-          mmSCT[:, 0, i] for i in range(self.n_est)
+            mmSCT[:, 0, i] for i in range(self.n_est)
         ]
         S_UB_beta = [
-          mmSCT[:, 1, i] for i in range(self.n_est)
+            mmSCT[:, 1, i] for i in range(self.n_est)
         ]
         P_LB_beta = S_LB_beta
         P_UB_beta = S_UB_beta
         return S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta, betahat
-          
-            
-          
-            
-    def construct_confidence_bands(self, bootstraptype: str, alpha: float=None, gamma:float=None, ic:str=None, Gsubs: list = None, Chtilde:float=None, B:float=1299):
-      """
-      Construct confidence bands using bootstrap methods.
 
-      Parameters
-      ----------
-      bootstraptype : str
-          Type of bootstrap to use ('SB', 'WB', 'SWB', 'MB', 'LBWB, 'AWB').
-      alpha : float
-          Significance level for quantiles.                              
-      gamma : float
-          Parameter value for Autoregressive Wild Bootstrap.
-      ic : str
-          Type of information criterion to use for Sieve and Sieve Wild Bootstrap.
-          Possible values are: 'aic', 'hqic', 'bic'
-      Gsubs : list of tuples, optional
-          List of sub-ranges for G. Each sub-range is a tuple (start_index, end_index).
-          Default is None, which uses the full range (0, T).
-      Chtilde : float, optional
-          Multiplication constant to determine size of oversmoothing bandwidth htilde.
-          Default is 2, if none or negative is specified.
+    def construct_confidence_bands(self, bootstraptype: str, alpha: float = None, gamma: float = None, ic: str = None, Gsubs: list = None, Chtilde: float = None, B: float = 1299, bw_selection: str = None):
+        """
+        Construct confidence bands using bootstrap methods.
 
-      Returns
-      -------
-      list of tuples
-          Each tuple contains simultaneous and pointwise lower and upper bands for each sub-range,
-          and beta coefficients for each sub-range.
+        Parameters
+        ----------
+        bootstraptype : str
+            Type of bootstrap to use ('SB', 'WB', 'SWB', 'MB', 'LBWB, 'AWB').
+        alpha : float
+            Significance level for quantiles.                              
+        gamma : float
+            Parameter value for Autoregressive Wild Bootstrap.
+        ic : str
+            Type of information criterion to use for Sieve and Sieve Wild Bootstrap.
+            Possible values are: 'aic', 'hqic', 'bic'
+        Gsubs : list of tuples, optional
+            List of sub-ranges for G. Each sub-range is a tuple (start_index, end_index).
+            Default is None, which uses the full range (0, T).
+        Chtilde : float, optional
+            Multiplication constant to determine size of oversmoothing bandwidth htilde.
+            Default is 2, if none or negative is specified.
 
-      Examples
-      --------
-      Construct confidence bands using the Sieve Bootstrap method for the full range:
-      >>> confidence_bands = model.construct_confidence_bands(bootstraptype='SB')
-      >>> S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta = confidence_bands[0]
-      >>> betahat = confidence_bands[1]
+        Returns
+        -------
+        list of tuples
+            Each tuple contains simultaneous and pointwise lower and upper bands for each sub-range,
+            and beta coefficients for each sub-range.
 
-      Construct confidence bands using the Local Blockwise Wild Bootstrap method for these ranges [(0, 50), (150, 200)]:
-      >>> confidence_bands = model.construct_confidence_bands(bootstraptype='LBWB', Gsubs=[(0, 50), (150, 200)])
-      >>> g1_S_LB_beta, g1_S_UB_beta, g1_P_LB_beta, g1_P_UB_beta = confidence_bands[0]
-      >>> g2_S_LB_beta, g2_S_UB_beta, g2_P_LB_beta, g2_P_UB_beta = confidence_bands[1]
-      >>> betahat = confidence_bands[2]
-      """
-      if bootstraptype == "MB":
-          print("Calculating Multiplier Bootstrap Samples")
-          return self.MC_ZW(self.h, self.vY, self.mX, len(self.vY))
-      
-      if Chtilde is None or Chtilde<=0:
-          Chtilde=2
+        Examples
+        --------
+        Construct confidence bands using the Sieve Bootstrap method for the full range:
+        >>> confidence_bands = model.construct_confidence_bands(bootstraptype='SB')
+        >>> S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta = confidence_bands[0]
+        >>> betahat = confidence_bands[1]
 
-      htilde = Chtilde * (self.h ** (5 / 9))
-      T = len(self.vY)
-      taut = np.arange(1 / T, (T + 1) / T, 1 / T)
+        Construct confidence bands using the Local Blockwise Wild Bootstrap method for these ranges [(0, 50), (150, 200)]:
+        >>> confidence_bands = model.construct_confidence_bands(bootstraptype='LBWB', Gsubs=[(0, 50), (150, 200)])
+        >>> g1_S_LB_beta, g1_S_UB_beta, g1_P_LB_beta, g1_P_UB_beta = confidence_bands[0]
+        >>> g2_S_LB_beta, g2_S_UB_beta, g2_P_LB_beta, g2_P_UB_beta = confidence_bands[1]
+        >>> betahat = confidence_bands[2]
+        """
 
-      if Gsubs is None:
-          Gsubs = [(0, T)]
+        if bw_selection is not None:
+            self.h = self.dict_bw[bw_selection]
+        else:
+            if bootstraptype == 'MB':
+                self.h = self.dict_bw['gcv']
+            else:
+                self.h = self.dict_bw['all']
 
-      results = []
-      
-      if alpha is None or alpha <= 0 or alpha >= 1:
-          alpha=0.05
+        if bootstraptype == "MB":
+            print("Calculating Multiplier Bootstrap Samples")
+            return self.MC_ZW(self.h, self.vY, self.mX, len(self.vY))
 
-      # Determine the appropriate bootstrap function
-      bootstrap_functions = {
-          "SB": self.S_BT,
-          "WB": self.W_BT,
-          "SWB": self.SW_BT,
-          "LBWB": self.LBW_BT,
-          "AWB": self.AW_BT
-      }
+        if Chtilde is None or Chtilde <= 0:
+            Chtilde = 2
 
-      if bootstraptype not in bootstrap_functions:
-          raise ValueError("Invalid bootstrap type. Choose one of 'SB','WB', 'SWB','MB' ,'LBWB', 'AWB'")
+        htilde = Chtilde * (self.h ** (5 / 9))
+        T = len(self.vY)
+        taut = np.arange(1 / T, (T + 1) / T, 1 / T)
 
-      bootstrap_function = bootstrap_functions[bootstraptype]
-      
-      if gamma is None or gamma <= 0 or gamma >= 1:
-          l = int(4.5 * ((T * self.h) ** (0.25)))
-          gamma=(0.01)**(1/l)
+        if Gsubs is None:
+            Gsubs = [(0, T)]
 
-      # Calculate betatilde and betahat once
-      betatilde = self._est_betas(self.vY, self.mX, htilde, taut, taut, self.n_est)
-      betahat = self._est_betas(self.vY, self.mX, self.h, taut, taut, self.n_est)
+        results = []
 
-      zhat = self.vY - (self.mX @ betatilde).diagonal()
+        if alpha is None or alpha <= 0 or alpha >= 1:
+            alpha = 0.05
 
-      # Initialize storage for bootstrap samples
-      betahat_star_G_all = {i: np.zeros((B, self.n_est, end - start)) for i, (start, end) in enumerate(Gsubs)}
+        # Determine the appropriate bootstrap function
+        bootstrap_functions = {
+            "SB": self.S_BT,
+            "WB": self.W_BT,
+            "SWB": self.SW_BT,
+            "LBWB": self.LBW_BT,
+            "AWB": self.AW_BT
+        }
 
-      print(f"Calculating {bootstraptype} Bootstrap Samples")
-      for i in tqdm(range(B)):
-          if bootstraptype in ["SB", "SWB"]:
-              epsilonhat, max_lag, armodel = self.AR(zhat, T, ic)
-              epsilontilde = epsilonhat - np.mean(epsilonhat)
-              if bootstraptype == 'SWB':
-                  vYstar = bootstrap_function(epsilonhat, max_lag, armodel, self.mX, betatilde, T)
-              elif bootstraptype == 'SB':
-                  vYstar = bootstrap_function(epsilontilde, max_lag, armodel, self.mX, betatilde, T)
-          else:
-              vYstar = bootstrap_function(zhat, self.mX, betatilde, T, self.h, gamma)
+        if bootstraptype not in bootstrap_functions:
+            raise ValueError(
+                "Invalid bootstrap type. Choose one of 'SB','WB', 'SWB','MB' ,'LBWB', 'AWB'")
 
-          for j, (start_index, end_index) in enumerate(Gsubs):
-              G = taut[start_index:end_index]
-              betahat_star_G_all[j][i] = self._est_betas(vYstar, self.mX, self.h, G, taut, self.n_est)
+        bootstrap_function = bootstrap_functions[bootstraptype]
 
-      for j, (start_index, end_index) in enumerate(Gsubs):
-          G = taut[start_index:end_index]
-          
-          betatilde_G = self._est_betas(self.vY, self.mX, htilde, G, taut, self.n_est)
-          betahat_G = self._est_betas(self.vY, self.mX, self.h, G, taut, self.n_est)
-          
-          diff_beta_G = np.zeros(shape=(self.n_est, B, len(G)))
+        if gamma is None or gamma <= 0 or gamma >= 1:
+            l = int(4.5 * ((T * self.h) ** (0.25)))
+            gamma = (0.01)**(1/l)
 
-          for i in range(B):
-              diff_G = betahat_star_G_all[j][i] - betatilde_G
-              for k in range(self.n_est):
-                  diff_beta_G[k][i] = diff_G[k]
+        # Calculate betatilde and betahat once
+        betatilde = self._est_betas(
+            self.vY, self.mX, htilde, taut, taut, self.n_est)
+        betahat = self._est_betas(
+            self.vY, self.mX, self.h, taut, taut, self.n_est)
 
-          optimal_alphap_G = [self.min_alphap(diff_beta_G[i], G, alpha) for i in range(self.n_est)]
+        zhat = self.vY - (self.mX @ betatilde).diagonal().reshape(-1, 1)
 
-          S_LB_beta = [betahat_G[i] - self._get_qtau(optimal_alphap_G[i], diff_beta_G[i], G)[1] for i in range(self.n_est)]
-          S_UB_beta = [betahat_G[i] - self._get_qtau(optimal_alphap_G[i], diff_beta_G[i], G)[0] for i in range(self.n_est)]
+        # Initialize storage for bootstrap samples
+        betahat_star_G_all = {i: np.zeros(
+            (B, self.n_est, end - start)) for i, (start, end) in enumerate(Gsubs)}
 
-          P_LB_beta = [betahat_G[i] - self._get_qtau(alpha, diff_beta_G[i], G)[1] for i in range(self.n_est)]
-          P_UB_beta = [betahat_G[i] - self._get_qtau(alpha, diff_beta_G[i], G)[0] for i in range(self.n_est)]
+        print(f"Calculating {bootstraptype} Bootstrap Samples")
+        for i in tqdm(range(B)):
+            if bootstraptype in ["SB", "SWB"]:
+                epsilonhat, max_lag, armodel = self.AR(zhat, T, ic)
+                epsilontilde = epsilonhat - np.mean(epsilonhat)
+                if bootstraptype == 'SWB':
+                    vYstar = bootstrap_function(
+                        epsilonhat, max_lag, armodel, self.mX, betatilde, T)
+                elif bootstraptype == 'SB':
+                    vYstar = bootstrap_function(
+                        epsilontilde, max_lag, armodel, self.mX, betatilde, T)
+            else:
+                vYstar = bootstrap_function(
+                    zhat, self.mX, betatilde, T, self.h, gamma)
 
-          results.append((S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta))
-      results.append(betahat)
-      return results
+            for j, (start_index, end_index) in enumerate(Gsubs):
+                G = taut[start_index:end_index]
+                betahat_star_G_all[j][i] = self._est_betas(
+                    vYstar, self.mX, self.h, G, taut, self.n_est)
+
+        for j, (start_index, end_index) in enumerate(Gsubs):
+            G = taut[start_index:end_index]
+
+            betatilde_G = self._est_betas(
+                self.vY, self.mX, htilde, G, taut, self.n_est)
+            betahat_G = self._est_betas(
+                self.vY, self.mX, self.h, G, taut, self.n_est)
+
+            diff_beta_G = np.zeros(shape=(self.n_est, B, len(G)))
+
+            for i in range(B):
+                diff_G = betahat_star_G_all[j][i] - betatilde_G
+                for k in range(self.n_est):
+                    diff_beta_G[k][i] = diff_G[k]
+
+            optimal_alphap_G = [self.min_alphap(
+                diff_beta_G[i], G, alpha) for i in range(self.n_est)]
+
+            S_LB_beta = [betahat_G[i] - self._get_qtau(optimal_alphap_G[i], diff_beta_G[i], G)[
+                1] for i in range(self.n_est)]
+            S_UB_beta = [betahat_G[i] - self._get_qtau(optimal_alphap_G[i], diff_beta_G[i], G)[
+                0] for i in range(self.n_est)]
+
+            P_LB_beta = [
+                betahat_G[i] - self._get_qtau(alpha, diff_beta_G[i], G)[1] for i in range(self.n_est)]
+            P_UB_beta = [
+                betahat_G[i] - self._get_qtau(alpha, diff_beta_G[i], G)[0] for i in range(self.n_est)]
+
+            results.append((S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta))
+        results.append(betahat)
+        return results
+
     class Results:
-      """
-      Class representing the results of a local linear regression model.
+        """
+        Class representing the results of a local linear regression model.
 
-      Attributes
-      ----------
-      model : LocalLinearRegression
-          The fitted local linear regression model.
-      betahat : np.ndarray
-          The estimated beta coefficients.
-      vY : np.ndarray
-          The actual values of the response variable.
-      predicted_y : np.ndarray
-          The predicted values of the response variable.
-      residuals : np.ndarray
-          The residuals of the model.
+        Attributes
+        ----------
+        model : LocalLinearRegression
+            The fitted local linear regression model.
+        betahat : np.ndarray
+            The estimated beta coefficients.
+        vY : np.ndarray
+            The actual values of the response variable.
+        predicted_y : np.ndarray
+            The predicted values of the response variable.
+        residuals : np.ndarray
+            The residuals of the model.
 
-      Methods
-      -------
-      summary()
-          Print a summary of the regression results.
-      plot_betas(date_range=None)
-          Plot the beta coefficients over tau.
-      plot_actual_vs_predicted(date_range=None)
-          Plot the actual values of Y against the predicted values of Y.
-      plot_residuals(date_range=None)
-          Plot the residuals.
-      plot()
-          Plot all the available plots (betas, actual vs predicted, residuals).
-      betas()
-          Get the estimated beta coefficients.
-      predicted()
-          Get the predicted values of the response variable.
-      residuals()
-          Get the residuals of the model.
-      """
+        Methods
+        -------
+        summary()
+            Print a summary of the regression results.
+        plot_betas(date_range=None)
+            Plot the beta coefficients over tau.
+        plot_actual_vs_predicted(date_range=None)
+            Plot the actual values of Y against the predicted values of Y.
+        plot_residuals(date_range=None)
+            Plot the residuals.
+        plot()
+            Plot all the available plots (betas, actual vs predicted, residuals).
+        betas()
+            Get the estimated beta coefficients.
+        predicted()
+            Get the predicted values of the response variable.
+        residuals()
+            Get the residuals of the model.
+        """
 
-      def __init__(self, betahat, vY, predicted_y, model):
-          self.model = model
-          self.betahat = betahat
-          self.vY = vY
-          self.predicted_y = predicted_y
-          self.residuals = vY - predicted_y
+        def __init__(self, betahat, vY, predicted_y, model):
+            self.model = model
+            self.betahat = betahat
+            self.vY = vY
+            self.predicted_y = predicted_y
+            self.residuals = vY - predicted_y
 
-      def summary(self):
-          """
-          Print a summary of the regression results.
-          """
-          print("Local Linear Regression Results")
-          print("=" * 30)
-          print(f"Bandwidth: {self.model.h}")
-          print(f"Number of observations: {len(self.vY)}")
-          print(f"Number of predictors: {self.betahat.shape[0]}")
-          print("=" * 30)
-          print(f"Beta coefficients (shape: {self.betahat.shape}):")
-          print("Use the 'betas()' method to get the beta coefficients.")
-          print("Use the 'plot_betas()' method to plot the beta coefficients.")
-          print("=" * 30)
-          print("Use the 'get_confidence_bands()' method to get the confidence bands.")
-          print("Use the 'confidence_bands()' method to obtain the confidence bands and plots.")
-          print("You can choose out of 6 types of Bootstrap to construct confidence bands:")
-          print("SB (Sieve Bootstrap), WB (Wild Bootstrap), SWB (Sieve Wild Bootstrap), MB (Multiplier Bootstrap), LBWB (Local Blockwise Wild Bootstrap), AWB (Autoregressive Wild Bootstrap)")
-          print("=" * 30)
-          print("Use the 'residuals()' method to get the residuals.")
-          print("Use the 'plot_residuals()' method to plot the residuals.")
+        def summary(self):
+            """
+            Print a summary of the regression results.
+            """
+            print("Local Linear Regression Results")
+            print("=" * 30)
+            print(f"Bandwidth: {self.model.h}")
+            print(f"Number of observations: {len(self.vY)}")
+            print(f"Number of predictors: {self.betahat.shape[0]}")
+            print("=" * 30)
+            print(f"Beta coefficients (shape: {self.betahat.shape}):")
+            print("Use the 'betas()' method to get the beta coefficients.")
+            print("Use the 'plot_betas()' method to plot the beta coefficients.")
+            print("=" * 30)
+            print("Use the 'get_confidence_bands()' method to get the confidence bands.")
+            print(
+                "Use the 'confidence_bands()' method to obtain the confidence bands and plots.")
+            print(
+                "You can choose out of 6 types of Bootstrap to construct confidence bands:")
+            print("SB (Sieve Bootstrap), WB (Wild Bootstrap), SWB (Sieve Wild Bootstrap), MB (Multiplier Bootstrap), LBWB (Local Blockwise Wild Bootstrap), AWB (Autoregressive Wild Bootstrap)")
+            print("=" * 30)
+            print("Use the 'residuals()' method to get the residuals.")
+            print("Use the 'plot_residuals()' method to plot the residuals.")
 
-      def _generate_dates(self, length, start_date, end_date):
-          # Calculate the total duration in days
-          total_days = (end_date - start_date).days
+        def _generate_dates(self, length, start_date, end_date):
+            # Calculate the total duration in days
+            total_days = (end_date - start_date).days
 
-          # Generate a date range with the appropriate number of periods
-          dates = pd.date_range(start=start_date, end=end_date, periods=length)
+            # Generate a date range with the appropriate number of periods
+            dates = pd.date_range(
+                start=start_date, end=end_date, periods=length)
 
-          return dates
+            return dates
 
-      def _format_x_axis(self, ax, date_list):
-          def format_func(x, pos):
-              if len(date_list) > 0:
-                  index = int(x)
-                  if 0 <= index < len(date_list):
-                      date = date_list[index]
-                      if date_list[-1] - date_list[0] > pd.Timedelta(days=730):
-                          return date.strftime('%Y')
-                      else:
-                          return date.strftime('%b %Y')
-              return ax.xaxis.set_major_formatter(plt.FuncFormatter(format_func))
+        def _format_x_axis(self, ax, date_list):
+            def format_func(x, pos):
+                if len(date_list) > 0:
+                    index = int(x)
+                    if 0 <= index < len(date_list):
+                        date = date_list[index]
+                        if date_list[-1] - date_list[0] > pd.Timedelta(days=730):
+                            return date.strftime('%Y')
+                        else:
+                            return date.strftime('%b %Y')
+                return ax.xaxis.set_major_formatter(plt.FuncFormatter(format_func))
 
-      def plot_betas(self, date_range=None):
-          """
-          Plot the beta coefficients over a normalized x-axis from 0 to 1.
-          """
-          num_betas = self.betahat.shape[0]
-          fig, axs = plt.subplots(num_betas, 1, figsize=(10, 6))
+        def plot_betas(self, date_range=None):
+            """
+            Plot the beta coefficients over a normalized x-axis from 0 to 1.
+            """
+            num_betas = self.betahat.shape[0]
+            fig, axs = plt.subplots(num_betas, 1, figsize=(10, 6))
 
-          # Ensure axs is always an array even if there's only one subplot
-          if num_betas == 1:
-              axs = [axs]
+            # Ensure axs is always an array even if there's only one subplot
+            if num_betas == 1:
+                axs = [axs]
 
-          if date_range:
-              start_date, end_date = [datetime.strptime(date, "%Y-%m-%d") for date in date_range]
-              x_vals = self._generate_dates(self.betahat.shape[1], start_date, end_date)
-          else:
-              x_vals = np.linspace(0, 1, self.betahat.shape[1])
+            if date_range:
+                start_date, end_date = [datetime.strptime(
+                    date, "%Y-%m-%d") for date in date_range]
+                x_vals = self._generate_dates(
+                    self.betahat.shape[1], start_date, end_date)
+            else:
+                x_vals = np.linspace(0, 1, self.betahat.shape[1])
 
-          for i in range(num_betas):
-              axs[i].plot(x_vals, self.betahat[i], label=f"Beta {i + 1}")
-              axs[i].set_title(f"Beta {i + 1}")
-              axs[i].set_xlabel("Date" if date_range else "t/n")
-              axs[i].set_ylabel("Beta Value")
-              axs[i].legend()
-              axs[i].grid(linestyle='dashed')
-              if date_range:
-                  self._format_x_axis(axs[i], x_vals)
+            for i in range(num_betas):
+                axs[i].plot(x_vals, self.betahat[i], label=f"Beta {i + 1}")
+                axs[i].set_title(f"Beta {i + 1}")
+                axs[i].set_xlabel("Date" if date_range else "t/n")
+                axs[i].set_ylabel("Beta Value")
+                axs[i].legend()
+                axs[i].grid(linestyle='dashed')
+                if date_range:
+                    self._format_x_axis(axs[i], x_vals)
 
-          plt.tight_layout()
-          plt.show()
+            plt.tight_layout()
+            plt.show()
 
-      def plot_actual_vs_predicted(self, date_range=None):
-          """
-          Plot the actual values of Y against the predicted values of Y over a normalized x-axis from 0 to 1.
-          """
-          plt.figure(figsize=(10, 6))
+        def plot_actual_vs_predicted(self, date_range=None):
+            """
+            Plot the actual values of Y against the predicted values of Y over a normalized x-axis from 0 to 1.
+            """
+            plt.figure(figsize=(10, 6))
 
-          if date_range:
-              start_date, end_date = [datetime.strptime(date, "%Y-%m-%d") for date in date_range]
-              x_vals = self._generate_dates(len(self.vY), start_date, end_date)
-          else:
-              x_vals = np.linspace(0, 1, len(self.vY))
+            if date_range:
+                start_date, end_date = [datetime.strptime(
+                    date, "%Y-%m-%d") for date in date_range]
+                x_vals = self._generate_dates(
+                    len(self.vY), start_date, end_date)
+            else:
+                x_vals = np.linspace(0, 1, len(self.vY))
 
-          plt.plot(x_vals, self.vY, label="Actual Y")
-          plt.plot(x_vals, self.predicted_y, label="Predicted Y")
-          plt.title("Actual vs Predicted Y")
-          plt.xlabel("Date" if date_range else "t/n")
-          plt.ylabel("Y Value")
-          plt.grid(linestyle='dashed')
-          plt.legend()
+            plt.plot(x_vals, self.vY, label="Actual Y")
+            plt.plot(x_vals, self.predicted_y, label="Predicted Y")
+            plt.title("Actual vs Predicted Y")
+            plt.xlabel("Date" if date_range else "t/n")
+            plt.ylabel("Y Value")
+            plt.grid(linestyle='dashed')
+            plt.legend()
 
-          if date_range:
-              ax = plt.gca()
-              self._format_x_axis(ax, x_vals)
+            if date_range:
+                ax = plt.gca()
+                self._format_x_axis(ax, x_vals)
 
-          plt.show()
+            plt.show()
 
-      def plot_residuals(self, date_range=None):
-          """
-          Plot the residuals over a normalized x-axis from 0 to 1.
-          """
-          plt.figure(figsize=(10, 6))
+        def plot_residuals(self, date_range=None):
+            """
+            Plot the residuals over a normalized x-axis from 0 to 1.
+            """
+            plt.figure(figsize=(10, 6))
 
-          if date_range:
-              start_date, end_date = [datetime.strptime(date, "%Y-%m-%d") for date in date_range]
-              x_vals = self._generate_dates(len(self.residuals), start_date, end_date)
-          else:
-              x_vals = np.linspace(0, 1, len(self.residuals))
+            if date_range:
+                start_date, end_date = [datetime.strptime(
+                    date, "%Y-%m-%d") for date in date_range]
+                x_vals = self._generate_dates(
+                    len(self.residuals), start_date, end_date)
+            else:
+                x_vals = np.linspace(0, 1, len(self.residuals))
 
-          plt.plot(x_vals, self.residuals, label="Residuals")
-          plt.title("Residuals")
-          plt.xlabel("Date" if date_range else "t/n")
-          plt.ylabel("Residual Value")
-          plt.grid(linestyle='dashed')
-          plt.legend()
+            plt.plot(x_vals, self.residuals, label="Residuals")
+            plt.title("Residuals")
+            plt.xlabel("Date" if date_range else "t/n")
+            plt.ylabel("Residual Value")
+            plt.grid(linestyle='dashed')
+            plt.legend()
 
-          if date_range:
-              ax = plt.gca()
-              self._format_x_axis(ax, x_vals)
+            if date_range:
+                ax = plt.gca()
+                self._format_x_axis(ax, x_vals)
 
-          plt.show()
+            plt.show()
 
-      def confidence_bands(self, bootstrap_type: str = 'LBWB', alpha: float=None, \
-                                gamma:float=None, ic:str=None, Gsubs=None, date_range=None,\
-                                Chtilde:float=2, B: float=1299, plots:bool=False):
-          """
-          Plot the beta coefficients with confidence bands over a normalized x-axis from 0 to 1.
+        def confidence_bands(self, bootstrap_type: str = 'LBWB', alpha: float = None,
+                             gamma: float = None, ic: str = None, Gsubs=None, date_range=None,
+                             Chtilde: float = 2, B: float = 1299, plots: bool = False):
+            """
+            Plot the beta coefficients with confidence bands over a normalized x-axis from 0 to 1.
 
-          Parameters
-          ----------
-          bootstrap_type : str, optional
-              The type of bootstrap to use for constructing confidence bands (default is 'LBWB').
-          Gsubs : list of tuples, optional
-              List of tuples specifying the subsample ranges for G. If None, plot for the whole sample.
-          date_range : tuple of str, optional
-              Tuple containing start and end dates in 'YYYY-MM-DD' format.
-          """
-          
-          # Construct confidence bands
-          if Gsubs is None:
-              confidence_bands_list = self.model.construct_confidence_bands(bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B)
-              confidence_bands = confidence_bands_list[:-1][0]
-              betahat = confidence_bands_list[-1]
-              S_LB=confidence_bands[0]
-              S_UB = confidence_bands[1]
-              P_LB = confidence_bands[2]
-              P_UB = confidence_bands[3]
-              if date_range:
-                  start_date, end_date = [datetime.strptime(date, "%Y-%m-%d") for date in date_range]
-                  G_full = self._generate_dates(len(self.vY), start_date, end_date)
-              else:
-                  G_full = np.linspace(0, 1, len(self.vY))
-          else:
-              confidence_bands_dict = self.model.construct_confidence_bands(bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Gsubs=Gsubs, Chtilde=Chtilde, B=B)
-              confidence_bands_list = confidence_bands_dict[:-1]
-              betahat = confidence_bands_dict[-1]
-              if date_range:
-                  start_date, end_date = [datetime.strptime(date, "%Y-%m-%d") for date in date_range]
-                  G_full = self._generate_dates(len(self.vY), start_date, end_date)
-              else:
-                  G_full = np.linspace(0, 1, len(self.vY))
-              for i, (start_index, end_index) in enumerate(Gsubs):
-                  S_LB, S_UB, P_LB, P_UB = confidence_bands_list[i]
+            Parameters
+            ----------
+            bootstrap_type : str, optional
+                The type of bootstrap to use for constructing confidence bands (default is 'LBWB').
+            Gsubs : list of tuples, optional
+                List of tuples specifying the subsample ranges for G. If None, plot for the whole sample.
+            date_range : tuple of str, optional
+                Tuple containing start and end dates in 'YYYY-MM-DD' format.
+            """
 
-          if plots == True:
-              # Number of beta coefficients
-              n_betas = self.betahat.shape[0]
+            # Construct confidence bands
+            if Gsubs is None:
+                confidence_bands_list = self.model.construct_confidence_bands(
+                    bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B)
+                confidence_bands = confidence_bands_list[:-1][0]
+                betahat = confidence_bands_list[-1]
+                S_LB = confidence_bands[0]
+                S_UB = confidence_bands[1]
+                P_LB = confidence_bands[2]
+                P_UB = confidence_bands[3]
+                if date_range:
+                    start_date, end_date = [datetime.strptime(
+                        date, "%Y-%m-%d") for date in date_range]
+                    G_full = self._generate_dates(
+                        len(self.vY), start_date, end_date)
+                else:
+                    G_full = np.linspace(0, 1, len(self.vY))
+            else:
+                confidence_bands_dict = self.model.construct_confidence_bands(
+                    bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Gsubs=Gsubs, Chtilde=Chtilde, B=B)
+                confidence_bands_list = confidence_bands_dict[:-1]
+                betahat = confidence_bands_dict[-1]
+                if date_range:
+                    start_date, end_date = [datetime.strptime(
+                        date, "%Y-%m-%d") for date in date_range]
+                    G_full = self._generate_dates(
+                        len(self.vY), start_date, end_date)
+                else:
+                    G_full = np.linspace(0, 1, len(self.vY))
+                for i, (start_index, end_index) in enumerate(Gsubs):
+                    S_LB, S_UB, P_LB, P_UB = confidence_bands_list[i]
 
-              # Plotting
-              if Gsubs is None:
-                  plt.figure(figsize=(6.5, 5 * n_betas))
-                  for j in range(n_betas):
-                      S_LB_beta = confidence_bands[0][j]
-                      S_UB_beta = confidence_bands[1][j]
-                      P_LB_beta = confidence_bands[2][j]
-                      P_UB_beta = confidence_bands[3][j]
+            if plots == True:
+                # Number of beta coefficients
+                n_betas = self.betahat.shape[0]
 
-                      plt.subplot(n_betas, 1, j + 1)
-                      plt.plot(G_full, betahat[j], label=f'Estimated $\\beta_{j}$', color='black')
-                      plt.plot(G_full, S_LB_beta, 'r--', label='Simultaneous')
-                      plt.plot(G_full, S_UB_beta, 'r--')
-                      plt.fill_between(G_full, P_LB_beta, P_UB_beta, color='grey', alpha=0.3, label='Pointwise')
-                      # plt.title(f'{bootstrap_type} - beta {j}')
-                      plt.xlabel('Date' if date_range else '$t/n$')
-                      plt.legend()
-                      plt.grid(linestyle='dashed')
-                      if date_range:
-                          ax = plt.gca()
-                          self._format_x_axis(ax, G_full)
+                # Plotting
+                if Gsubs is None:
+                    plt.figure(figsize=(6.5, 5 * n_betas))
+                    for j in range(n_betas):
+                        S_LB_beta = confidence_bands[0][j]
+                        S_UB_beta = confidence_bands[1][j]
+                        P_LB_beta = confidence_bands[2][j]
+                        P_UB_beta = confidence_bands[3][j]
 
-                  plt.tight_layout()
-                  plt.show()
-              else:
-                  fig, axes = plt.subplots(n_betas, 1, figsize=(6.5, 5 * n_betas))
+                        plt.subplot(n_betas, 1, j + 1)
+                        plt.plot(
+                            G_full, betahat[j], label=f'Estimated $\\beta_{j}$', color='black')
+                        plt.plot(G_full, S_LB_beta, 'r--',
+                                 label='Simultaneous')
+                        plt.plot(G_full, S_UB_beta, 'r--')
+                        plt.fill_between(
+                            G_full, P_LB_beta, P_UB_beta, color='grey', alpha=0.3, label='Pointwise')
+                        # plt.title(f'{bootstrap_type} - beta {j}')
+                        plt.xlabel('Date' if date_range else '$t/n$')
+                        plt.legend()
+                        plt.grid(linestyle='dashed')
+                        if date_range:
+                            ax = plt.gca()
+                            self._format_x_axis(ax, G_full)
 
-                  if n_betas == 1:
-                      axes = [axes]
+                    plt.tight_layout()
+                    plt.show()
+                else:
+                    fig, axes = plt.subplots(
+                        n_betas, 1, figsize=(6.5, 5 * n_betas))
 
-                  # Plot betahat for the full range and confidence bands for each beta coefficient
-                  for j in range(n_betas):
-                      ax = axes[j]
-                      ax.plot(G_full, betahat[j], label=f'Estimated $\\beta_{j}$', color='black')
+                    if n_betas == 1:
+                        axes = [axes]
 
-                      for i, (start_index, end_index) in enumerate(Gsubs):
-                          G = G_full[start_index:end_index]
-                          S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta = confidence_bands_list[i]
+                    # Plot betahat for the full range and confidence bands for each beta coefficient
+                    for j in range(n_betas):
+                        ax = axes[j]
+                        ax.plot(
+                            G_full, betahat[j], label=f'Estimated $\\beta_{j}$', color='black')
 
-                          ax.plot(G, S_LB_beta[j], 'r--', label='Simultaneous' if i == 0 else "")
-                          ax.plot(G, S_UB_beta[j], 'r--')
-                          ax.fill_between(G, P_LB_beta[j], P_UB_beta[j], color='grey', alpha=0.3, label='Pointwise' if i == 0 else "")
+                        for i, (start_index, end_index) in enumerate(Gsubs):
+                            G = G_full[start_index:end_index]
+                            S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta = confidence_bands_list[i]
 
+                            ax.plot(
+                                G, S_LB_beta[j], 'r--', label='Simultaneous' if i == 0 else "")
+                            ax.plot(G, S_UB_beta[j], 'r--')
+                            ax.fill_between(
+                                G, P_LB_beta[j], P_UB_beta[j], color='grey', alpha=0.3, label='Pointwise' if i == 0 else "")
 
-                      ax.set_xlabel('Date' if date_range else '$t/n$')
+                        ax.set_xlabel('Date' if date_range else '$t/n$')
 
-                      ax.legend()
-                      ax.grid(linestyle='dashed')
-                      if date_range:
-                          self._format_x_axis(ax, G_full)
+                        ax.legend()
+                        ax.grid(linestyle='dashed')
+                        if date_range:
+                            self._format_x_axis(ax, G_full)
 
-                  plt.tight_layout()
-                  plt.show()
-                  
-          return  S_LB, S_UB, P_LB, P_UB
-          
-      def betas(self):
-          """
-          Get the estimated beta coefficients.
+                    plt.tight_layout()
+                    plt.show()
 
-          Returns
-          -------
-          np.ndarray
-              The estimated beta coefficients.
-          """
-          return self.betahat
+            return S_LB, S_UB, P_LB, P_UB
 
-      def predicted(self):
-          """
-          Get the predicted values of the response variable.
+        def betas(self):
+            """
+            Get the estimated beta coefficients.
 
-          Returns
-          -------
-          np.ndarray
-              The predicted values of the response variable.
-          """
-          return self.predicted_y
+            Returns
+            -------
+            np.ndarray
+                The estimated beta coefficients.
+            """
+            return self.betahat
 
-      def residuals(self):
-          """
-          Get the residuals of the model.
+        def predicted(self):
+            """
+            Get the predicted values of the response variable.
 
-          Returns
-          -------
-          np.ndarray
-              The residuals of the model.
-          """
-          return self.residuals
+            Returns
+            -------
+            np.ndarray
+                The predicted values of the response variable.
+            """
+            return self.predicted_y
+
+        def residuals(self):
+            """
+            Get the residuals of the model.
+
+            Returns
+            -------
+            np.ndarray
+                The residuals of the model.
+            """
+            return self.residuals

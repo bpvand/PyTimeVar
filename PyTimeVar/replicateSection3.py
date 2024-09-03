@@ -33,8 +33,8 @@ res.betas()
 res.plot_actual_vs_predicted(date_range=["1980-01-01", "2000-01-01"])
 
 # plot confidence bands using LBWB
-cb = res.plot_confidence_bands(bootstrap_type='LBWB', date_range=[
-                               '1980-01-01', '2000-01-01'], Gsubs=None)
+cb = res.confidence_bands(bootstrap_type='LBWB', date_range=[
+    '1980-01-01', '2000-01-01'], Gsubs=None, plots=True)
 
 # illustrate boosted HP filter
 bHPmodel = BoostedHP(vY, dLambda=1600, iMaxIter=100)
