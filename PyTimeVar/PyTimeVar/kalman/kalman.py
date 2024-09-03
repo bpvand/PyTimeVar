@@ -236,6 +236,7 @@ class Kalman:
 
             a_s[t] = a[t] + P[t] @ r[t - 1]
             V_s[t] = P[t] - P[t] @ N[t - 1] @ P[t]
+
         return a_s, V_s
 
     def smoother(self):
@@ -317,9 +318,13 @@ class Kalman:
 
         for i in range(self.p_dim):
             if self.smooth is not None:
+                if self.p_dim == 1:
+                    self.smooth = self.smooth[..., np.newaxis]
                 axs[i].plot(x_vals, self.smooth[:, i],
                             label=r'$\alpha{{{:2d}}}$'.format(i+1))
             if self.filt is not None:
+                if self.p_dim == 1:
+                    self.fit = self.fit[..., np.newaxis]
                 axs[i].plot(x_vals, self.filt[:, i],
                             label=r'$\alpha{{{:2d}}}$'.format(i+1))
             axs[i].set_title(r'$\alpha{{{:2d}}}$'.format(i+1))
