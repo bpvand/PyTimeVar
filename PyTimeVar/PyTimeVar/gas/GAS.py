@@ -47,9 +47,9 @@ class GAS:
         vbeta0 = np.linalg.inv((self.mX[:dnInitial, :]).T @ (self.mX[:dnInitial, :])) @ (
             (self.mX[:dnInitial, :]).T @ self.vY[:dnInitial])
         LB = np.concatenate(([0.001], -10 * np.ones(self.n_est), -
-                            np.ones(self.n_est), -50 * np.ones(self.n_est)))
+                            np.ones(self.n_est), -10 * np.ones(self.n_est)))
         UB = np.concatenate(([100], 10 * np.ones(self.n_est),
-                            np.ones(self.n_est), 50 * np.ones(self.n_est)))
+                            np.ones(self.n_est), 10 * np.ones(self.n_est)))
 
         start_time = time.time()
 
@@ -191,7 +191,7 @@ class GAS:
                 vxt = self.mX[id, :].reshape(-1, 1)
                 yt = self.vY[id]
 
-                lhVal += ((yt - vbetaNow.T @ vxt) / dsigmau)**2
+                lhVal += np.log(1+dnu**(-1)*((yt - vbetaNow.T @ vxt) / dsigmau)**2)
 
                 temp1 = (1 + dnu**(-1)) * (1 + dnu**(-1) *
                                            ((yt - vbetaNow.T @ vxt) / dsigmau)**2)**(-1)
