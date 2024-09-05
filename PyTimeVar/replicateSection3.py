@@ -52,7 +52,9 @@ gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot(date_range=['1980-01-01', '2000-01-01'])
 
-PwrLaw = PowerLaw(vY, n_powers=3)
+herd_data = herding.load(start_date='2015-01-05', end_date='2022-01-05')
+vY = herd_data[['CSAD_AVG']].values
+PwrLaw = PowerLaw(vY, n_powers=2)
 pwrTrend = PwrLaw.fit()
 
 plt.plot(pwrTrend, c='r')
