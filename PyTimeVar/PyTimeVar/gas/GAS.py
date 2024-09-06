@@ -225,7 +225,7 @@ class GAS:
 
         return dates
 
-    def plot(self, date_range=None):
+    def plot_betas(self, date_range=None):
         """
         Plot the beta coefficients over a normalized x-axis from 0 to 1 or over a date range.
         """
