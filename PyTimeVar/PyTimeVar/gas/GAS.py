@@ -204,94 +204,77 @@ class GAS:
 
         return lhVal
 
-    def _format_x_axis(self, ax, date_list):
-        def format_func(x, pos):
-            if len(date_list) > 0:
-                index = int(x)
-                if 0 <= index < len(date_list):
-                    date = date_list[index]
-                    if date_list[-1] - date_list[0] > pd.Timedelta(days=730):
-                        return date.strftime('%Y')
-                    else:
-                        return date.strftime('%b %Y')
-            return ax.xaxis.set_major_formatter(plt.FuncFormatter(format_func))
-
-    def _generate_dates(self, length, start_date, end_date):
-        # Calculate the total duration in days
-        total_days = (end_date - start_date).days
-
-        # Generate a date range with the appropriate number of periods
-        dates = pd.date_range(start=start_date, end=end_date, periods=length)
-
-        return dates
 
     def plot_betas(self):
         """
         Plot the beta coefficients over a normalized x-axis from 0 to 1.
         """
-        fig, axs = plt.subplots(self.n_est, 1, figsize=(10, 6))
+                if self.n_est == 1:
+    
+            plt.figure(figsize=(12, 6))
+            plt.plot(self.vY, label="Original Series")
+            plt.plot(self.betas, label="GAS Trend", linestyle="--")
+            plt.legend()
+            plt.grid(linestyle='dashed')
+            plt.show()
 
-        # Ensure axs is always an array even if there's only one subplot
-        if self.n_est == 1:
-            axs = [axs]
-
-        for i in range(self.n_est):
-            axs[i].plot(self.betas[:, i],
-                        label=r'$\beta_{{{:2d}}}$'.format(i+1))
-            axs[i].set_title(r'$\beta_{{{:2d}}}$'.format(i+1))
-            axs[i].set_xlabel("$t/n$")
-            axs[i].set_ylabel(r"$\beta$ Value")
-            axs[i].legend()
-            axs[i].grid(linestyle='dashed')
-
-        plt.tight_layout()
-        plt.show()
+        else:
+            for i in range(self.n_est):
+                fig, axs = plt.subplots(self.n_est, 1, figsize=(12, 6))
+                axs[i].plot(self.betas[:, i],
+                            label=r'$\beta_{{{:2d}}}$'.format(i+1))
+                axs[i].set_title(r'$\beta_{{{:2d}}}$'.format(i+1))
+                axs[i].set_xlabel("$t/n$")
+                axs[i].set_ylabel(r"$\beta$ Value")
+                axs[i].legend()
+                axs[i].grid(linestyle='dashed')
+                axs.show()
 
 
-if __name__ == "__main__":
-    import matplotlib.pyplot as plt
-    # Parameter specification for simulating data
-    n = 2000
-    nu = 2.1
-    burnin = 20
-    sigmau = 0.1
-    mA = np.array([[0.3, 0.1], [0.1, 0.2]])
+# if __name__ == "__main__":
+#     import matplotlib.pyplot as plt
+#     # Parameter specification for simulating data
+#     n = 2000
+#     nu = 2.1
+#     burnin = 20
+#     sigmau = 0.1
+#     mA = np.array([[0.3, 0.1], [0.1, 0.2]])
 
-    # Simulate data
-    def beta0x(x): return -4 * x**3 + 9 * x**2 - 6 * x + 2
-    def beta1x(x): return 1.5 * np.exp(-10 * (x - 0.2)**2) + \
-        1.6 * np.exp(-8 * (x - 0.8)**2)
+#     # Simulate data
+#     def beta0x(x): return -4 * x**3 + 9 * x**2 - 6 * x + 2
+#     def beta1x(x): return 1.5 * np.exp(-10 * (x - 0.2)**2) + \
+#         1.6 * np.exp(-8 * (x - 0.8)**2)
 
-    def beta2x(x): return -0.5 * x - 0.5 * np.exp(-5 * (x - 0.8)**2)
-    trend = np.arange(1, n + 1) / n
-    mbeta = np.vstack([beta0x(trend), beta1x(trend), beta2x(trend)]).T
+#     def beta2x(x): return -0.5 * x - 0.5 * np.exp(-5 * (x - 0.8)**2)
+#     trend = np.arange(1, n + 1) / n
+#     mbeta = np.vstack([beta0x(trend), beta1x(trend), beta2x(trend)]).T
 
-    mXi = multivariate_normal.rvs(mean=np.zeros(
-        2), cov=np.eye(2), size=n + burnin).T
-    mX = np.zeros((2, n + burnin))
-    for i in range(1, n + burnin):
-        mX[:, i] = mA @ mX[:, i - 1] + mXi[:, i]
-    mX = np.hstack([np.ones((n, 1)), mX[:, -n:].T])
-    vu = sigmau * t.rvs(nu, size=n)
-    vy = np.sum(mbeta * mX, axis=1) + vu
+#     mXi = multivariate_normal.rvs(mean=np.zeros(
+#         2), cov=np.eye(2), size=n + burnin).T
+#     mX = np.zeros((2, n + burnin))
+#     for i in range(1, n + burnin):
+#         mX[:, i] = mA @ mX[:, i - 1] + mXi[:, i]
+#     mX = np.hstack([np.ones((n, 1)), mX[:, -n:].T])
+#     vu = sigmau * t.rvs(nu, size=n)
+#     vy = np.sum(mbeta * mX, axis=1) + vu
 
-    # MLE by Gaussian-GAS
-    gGAS = GAS(vy, mX, method='gaussian')
-    mBetaHat_gGAS, vparaHat_gGAS = gGAS.fit()
+#     # MLE by Gaussian-GAS
+#     gGAS = GAS(vy, mX, method='gaussian')
+#     mBetaHat_gGAS, vparaHat_gGAS = gGAS.fit()
 
-    # MLE by t-GAS
-    tGAS = GAS(vy, mX, method='student')
-    mBetaHat_tGAS, vparaHat_tGAS = tGAS.fit()
+#     # MLE by t-GAS
+#     tGAS = GAS(vy, mX, method='student')
+#     mBetaHat_tGAS, vparaHat_tGAS = tGAS.fit()
 
-    # Make plots
-    for id2 in range(mX.shape[1]):
-        plt.figure(figsize=(12, 6))
-        plt.plot(mbeta[:, id2], '-k', linewidth=3, label='true')
-        plt.plot(mBetaHat_gGAS[:, id2], '-.r',
-                 linewidth=3, label='$\\mathcal{N}$-GAS')
-        plt.plot(mBetaHat_tGAS[:, id2], '--b', linewidth=3, label='$t$-GAS')
-        plt.grid(which='minor')
-        plt.legend(fontsize=20, loc='best', frameon=False)
-        plt.gca().tick_params(axis='both', which='major', labelsize=20)
-        plt.grid(linestyle='dashed')
-        plt.show()
+#     # Make plots
+#     for id2 in range(mX.shape[1]):
+#         plt.figure(figsize=(12, 6))
+#         plt.plot(mbeta[:, id2], '-k', linewidth=3, label='true')
+#         plt.plot(mBetaHat_gGAS[:, id2], '-.r',
+#                  linewidth=3, label='$\\mathcal{N}$-GAS')
+#         plt.plot(mBetaHat_tGAS[:, id2], '--b', linewidth=3, label='$t$-GAS')
+#         plt.grid(which='minor')
+#         plt.legend(fontsize=20, loc='best', frameon=False)
+#         plt.gca().tick_params(axis='both', which='major', labelsize=20)
+#         plt.grid(linestyle='dashed')
+#         plt.show()
