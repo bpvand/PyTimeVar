@@ -96,7 +96,7 @@ class BoostedHP:
         print("\nBoosted HP Filter Output:")
         print(vBHP)
 
-    def plot(self):
+    def plot_trend(self):
         """
         Plots the original series and the trend component.
         """
