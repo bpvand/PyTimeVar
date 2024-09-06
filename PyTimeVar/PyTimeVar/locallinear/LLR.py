@@ -1085,7 +1085,7 @@ class LocalLinear:
             qtau[1, i] = np.quantile(diff[:, i], (1 - alphap / 2))
         return qtau
 
-    def ABS_value(self, qtau, diff, tau, alpha):
+    def ABS_value(self, qtau, diff, tau, alpha, B):
         """
         Calculate the absolute value for quantiles.
 
@@ -1103,7 +1103,7 @@ class LocalLinear:
         float
             Absolute value.
         """
-        B = 1299
+        
         check = np.sum(
             (qtau[0][:, None] < diff[:, :, None])
             & (diff[:, :, None] < qtau[1][:, None]),
@@ -1112,7 +1112,7 @@ class LocalLinear:
 
         return np.abs((np.sum(np.where(check == len(tau), 1, 0)) / B) - (1 - alpha))
 
-    def min_alphap(self, diff, tau, alpha):
+    def min_alphap(self, diff, tau, alpha, B):
         """
         Calculate the minimum alpha value for confidence bands.
 
@@ -1128,12 +1128,12 @@ class LocalLinear:
         float
             Minimum alpha value.
         """
-        B = 1299
+        
         last = self.ABS_value(self._get_qtau(
-            1 / B, diff, tau), diff, tau, alpha)
+            1 / B, diff, tau), diff, tau, alpha, B)
         for index, alphap in enumerate(np.arange(2, int(B * alpha) + 2) / B):
             qtau = self._get_qtau(alphap, diff, tau)
-            value = self.ABS_value(qtau, diff, tau, alpha)
+            value = self.ABS_value(qtau, diff, tau, alpha, B)
             if value <= last:
                 last = value
                 if index == int(B * alpha) - 1:
@@ -1539,7 +1539,7 @@ class LocalLinear:
                     diff_beta_G[k][i] = diff_G[k]
 
             optimal_alphap_G = [self.min_alphap(
-                diff_beta_G[i], G, alpha) for i in range(self.n_est)]
+                diff_beta_G[i], G, alpha, B) for i in range(self.n_est)]
 
             S_LB_beta = [betahat_G[i] - self._get_qtau(optimal_alphap_G[i], diff_beta_G[i], G)[
                 1] for i in range(self.n_est)]
