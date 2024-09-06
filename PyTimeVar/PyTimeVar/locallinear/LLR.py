@@ -1596,8 +1596,8 @@ class LocalLinear:
             self.model = model
             self.betahat = betahat
             self.vY = vY
-            self.predicted_y = predicted_y
-            self.residuals = vY - predicted_y
+            self.predicted_y = predicted_y.reshape(-1,1)
+            self.residuals = vY - predicted_y.reshape(-1,1)
 
         def summary(self):
             """
