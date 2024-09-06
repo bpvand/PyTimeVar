@@ -209,7 +209,7 @@ class GAS:
         """
         Plot the beta coefficients over a normalized x-axis from 0 to 1.
         """
-                if self.n_est == 1:
+        if self.n_est == 1:
     
             plt.figure(figsize=(12, 6))
             plt.plot(self.vY, label="Original Series")
@@ -219,17 +219,16 @@ class GAS:
             plt.show()
 
         else:
+            plt.figure(figsize=(6.5, 5 * self.n_est))
             for i in range(self.n_est):
-                fig, axs = plt.subplots(self.n_est, 1, figsize=(12, 6))
-                axs[i].plot(self.betas[:, i],
-                            label=r'$\beta_{{{:2d}}}$'.format(i+1))
-                axs[i].set_title(r'$\beta_{{{:2d}}}$'.format(i+1))
-                axs[i].set_xlabel("$t/n$")
-                axs[i].set_ylabel(r"$\beta$ Value")
-                axs[i].legend()
-                axs[i].grid(linestyle='dashed')
-                axs.show()
+                plt.subplot(self.n_est, 1, i + 1)
+                plt.plot(self.betas[:, i],
+                            label=f'Estimated $\\beta_{i}$', color='black')
 
+                plt.xlabel("$t/n$")
+                plt.legend()
+                plt.grid(linestyle='dashed')
+            plt.show()
 
 # if __name__ == "__main__":
 #     import matplotlib.pyplot as plt
