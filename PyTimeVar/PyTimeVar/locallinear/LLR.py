@@ -1645,92 +1645,104 @@ class LocalLinear:
                             return date.strftime('%b %Y')
                 return ax.xaxis.set_major_formatter(plt.FuncFormatter(format_func))
 
-        def plot_betas(self, date_range=None):
-            """
-            Plot the beta coefficients over a normalized x-axis from 0 to 1.
-            """
-            num_betas = self.betahat.shape[0]
-            fig, axs = plt.subplots(num_betas, 1, figsize=(10, 6))
+        def betas(self, date_range=None, plots: bool = False):
 
-            # Ensure axs is always an array even if there's only one subplot
-            if num_betas == 1:
-                axs = [axs]
-
-            if date_range:
-                start_date, end_date = [datetime.strptime(
-                    date, "%Y-%m-%d") for date in date_range]
-                x_vals = self._generate_dates(
-                    self.betahat.shape[1], start_date, end_date)
-            else:
-                x_vals = np.linspace(0, 1, self.betahat.shape[1])
-
-            for i in range(num_betas):
-                axs[i].plot(x_vals, self.betahat[i], label=f"Beta {i + 1}")
-                axs[i].set_title(f"Beta {i + 1}")
-                axs[i].set_xlabel("Date" if date_range else "t/n")
-                axs[i].set_ylabel("Beta Value")
-                axs[i].legend()
-                axs[i].grid(linestyle='dashed')
+            if plots == True:
+                """
+                Plot the beta coefficients over a normalized x-axis from 0 to 1.
+                """
+                num_betas = self.betahat.shape[0]
+                fig, axs = plt.subplots(num_betas, 1, figsize=(10, 6))
+    
+                # Ensure axs is always an array even if there's only one subplot
+                if num_betas == 1:
+                    axs = [axs]
+    
                 if date_range:
-                    self._format_x_axis(axs[i], x_vals)
+                    start_date, end_date = [datetime.strptime(
+                        date, "%Y-%m-%d") for date in date_range]
+                    x_vals = self._generate_dates(
+                        self.betahat.shape[1], start_date, end_date)
+                else:
+                    x_vals = np.linspace(0, 1, self.betahat.shape[1])
+    
+                for i in range(num_betas):
+                    axs[i].plot(x_vals, self.betahat[i], label=f"Beta {i + 1}")
+                    axs[i].set_title(f"Beta {i + 1}")
+                    axs[i].set_xlabel("Date" if date_range else "t/n")
+                    axs[i].set_ylabel("Beta Value")
+                    axs[i].legend()
+                    axs[i].grid(linestyle='dashed')
+                    if date_range:
+                        self._format_x_axis(axs[i], x_vals)
+    
+                plt.tight_layout()
+                plt.show()
+            
+            return self.predicted_y
+        def predicted(self, date_range=None, plots: bool = False):
 
-            plt.tight_layout()
-            plt.show()
+            if plots == True:
+                """
+                Plot the actual values of Y against the predicted values of Y over a normalized x-axis from 0 to 1.
+                """
+                plt.figure(figsize=(10, 6))
+    
+                if date_range:
+                    start_date, end_date = [datetime.strptime(
+                        date, "%Y-%m-%d") for date in date_range]
+                    x_vals = self._generate_dates(
+                        len(self.vY), start_date, end_date)
+                else:
+                    x_vals = np.linspace(0, 1, len(self.vY))
+    
+                plt.plot(x_vals, self.vY, label="Actual Y")
+                plt.plot(x_vals, self.predicted_y, label="Predicted Y")
+                plt.title("Actual vs Predicted Y")
+                plt.xlabel("Date" if date_range else "t/n")
+                plt.ylabel("Y Value")
+                plt.grid(linestyle='dashed')
+                plt.legend()
+    
+                if date_range:
+                    ax = plt.gca()
+                    self._format_x_axis(ax, x_vals)
+    
+                plt.show()
+                
+            return self.predicted_y
+        def residuals(self, date_range=None, plots: bool = False):
 
-        def plot_actual_vs_predicted(self, date_range=None):
-            """
-            Plot the actual values of Y against the predicted values of Y over a normalized x-axis from 0 to 1.
-            """
-            plt.figure(figsize=(10, 6))
+            if plots == True:
+                """
+                Plot the residuals over a normalized x-axis from 0 to 1.
+                """
+                plt.figure(figsize=(10, 6))
+    
+                if date_range:
+                    start_date, end_date = [datetime.strptime(
+                        date, "%Y-%m-%d") for date in date_range]
+                    x_vals = self._generate_dates(
+                        len(self.residuals), start_date, end_date)
+                else:
+                    x_vals = np.linspace(0, 1, len(self.residuals))
+    
+                plt.plot(x_vals, self.residuals, label="Residuals")
+                plt.title("Residuals")
+                plt.xlabel("Date" if date_range else "t/n")
+                plt.ylabel("Residual Value")
+                plt.grid(linestyle='dashed')
+                plt.legend()
+    
+                if date_range:
+                    ax = plt.gca()
+                    self._format_x_axis(ax, x_vals)
+    
+                plt.show()
 
-            if date_range:
-                start_date, end_date = [datetime.strptime(
-                    date, "%Y-%m-%d") for date in date_range]
-                x_vals = self._generate_dates(
-                    len(self.vY), start_date, end_date)
-            else:
-                x_vals = np.linspace(0, 1, len(self.vY))
+            return self.residuals
 
-            plt.plot(x_vals, self.vY, label="Actual Y")
-            plt.plot(x_vals, self.predicted_y, label="Predicted Y")
-            plt.title("Actual vs Predicted Y")
-            plt.xlabel("Date" if date_range else "t/n")
-            plt.ylabel("Y Value")
-            plt.grid(linestyle='dashed')
-            plt.legend()
-
-            if date_range:
-                ax = plt.gca()
-                self._format_x_axis(ax, x_vals)
-
-            plt.show()
-
-        def plot_residuals(self, date_range=None):
-            """
-            Plot the residuals over a normalized x-axis from 0 to 1.
-            """
-            plt.figure(figsize=(10, 6))
-
-            if date_range:
-                start_date, end_date = [datetime.strptime(
-                    date, "%Y-%m-%d") for date in date_range]
-                x_vals = self._generate_dates(
-                    len(self.residuals), start_date, end_date)
-            else:
-                x_vals = np.linspace(0, 1, len(self.residuals))
-
-            plt.plot(x_vals, self.residuals, label="Residuals")
-            plt.title("Residuals")
-            plt.xlabel("Date" if date_range else "t/n")
-            plt.ylabel("Residual Value")
-            plt.grid(linestyle='dashed')
-            plt.legend()
-
-            if date_range:
-                ax = plt.gca()
-                self._format_x_axis(ax, x_vals)
-
-            plt.show()
+        
 
         def confidence_bands(self, bootstrap_type: str = 'LBWB', alpha: float = None,
                              gamma: float = None, ic: str = None, Gsubs=None, date_range=None,
@@ -1846,35 +1858,35 @@ class LocalLinear:
 
             return S_LB, S_UB, P_LB, P_UB
 
-        def betas(self):
-            """
-            Get the estimated beta coefficients.
+        # def betas(self):
+        #     """
+        #     Get the estimated beta coefficients.
 
-            Returns
-            -------
-            np.ndarray
-                The estimated beta coefficients.
-            """
-            return self.betahat
+        #     Returns
+        #     -------
+        #     np.ndarray
+        #         The estimated beta coefficients.
+        #     """
+        #     return self.betahat
 
-        def predicted(self):
-            """
-            Get the predicted values of the response variable.
+        # def predicted(self):
+        #     """
+        #     Get the predicted values of the response variable.
 
-            Returns
-            -------
-            np.ndarray
-                The predicted values of the response variable.
-            """
-            return self.predicted_y
+        #     Returns
+        #     -------
+        #     np.ndarray
+        #         The predicted values of the response variable.
+        #     """
+        #     return self.predicted_y
 
-        def residuals(self):
-            """
-            Get the residuals of the model.
+        # def residuals(self):
+        #     """
+        #     Get the residuals of the model.
 
-            Returns
-            -------
-            np.ndarray
-                The residuals of the model.
-            """
-            return self.residuals
+        #     Returns
+        #     -------
+        #     np.ndarray
+        #         The residuals of the model.
+        #     """
+        #     return self.residuals
