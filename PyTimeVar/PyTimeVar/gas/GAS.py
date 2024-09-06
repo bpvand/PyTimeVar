@@ -219,16 +219,17 @@ class GAS:
             plt.plot(self.betas, label="GAS Trend", linestyle="--")
             plt.legend()
             plt.grid(linestyle='dashed')
-            plt.show()
-
-        for i in range(self.n_est):
-            axs[i].plot(self.betas[:, i],
-                        label=r'$\beta_{{{:2d}}}$'.format(i+1))
-            axs[i].set_title(r'$\beta_{{{:2d}}}$'.format(i+1))
-            axs[i].set_xlabel("$t/n$")
-            axs[i].set_ylabel(r"$\beta$ Value")
-            axs[i].legend()
-            axs[i].grid(linestyle='dashed')
+ 
+        else:
+            
+            for i in range(self.n_est):
+                axs[i].plot(self.betas[:, i],
+                            label=r'$\beta_{{{:2d}}}$'.format(i+1))
+                axs[i].set_title(r'$\beta_{{{:2d}}}$'.format(i+1))
+                axs[i].set_xlabel("$t/n$")
+                axs[i].set_ylabel(r"$\beta$ Value")
+                axs[i].legend()
+                axs[i].grid(linestyle='dashed')
 
         plt.tight_layout()
         plt.show()
