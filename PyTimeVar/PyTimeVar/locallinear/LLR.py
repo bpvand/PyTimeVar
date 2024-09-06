@@ -124,6 +124,10 @@ class LocalLinear:
                   self.bw_selection, 'is: ', self.h)
         else:
             self.h = h
+            
+        self.betahat = None
+        self.predicted_y = None
+        self.residuals = None
 
     def _kernel(self, u: np.ndarray) -> np.ndarray:
         """
@@ -395,8 +399,12 @@ class LocalLinear:
         else:
             # Multiple betas
             predicted_y = np.sum(betahat * self.mX.T, axis=0)
+            
+        self.betahat = betahat
+        self.predicted_y = predicted_y.reshape(-1,1)
+        self.residuals = self.vY - predicted_y.reshape(-1,1)
 
-        return self.Results(betahat, self.vY, predicted_y, self)
+        return self.betahat
 
     ############################################################################################################
     # Bandwidth Selection
@@ -1555,335 +1563,185 @@ class LocalLinear:
         results.append(betahat)
         return results
 
-    class Results:
+    def summary(self):
         """
-        Class representing the results of a local linear regression model.
-
-        Attributes
-        ----------
-        model : LocalLinearRegression
-            The fitted local linear regression model.
-        betahat : np.ndarray
-            The estimated beta coefficients.
-        vY : np.ndarray
-            The actual values of the response variable.
-        predicted_y : np.ndarray
-            The predicted values of the response variable.
-        residuals : np.ndarray
-            The residuals of the model.
-
-        Methods
-        -------
-        summary()
-            Print a summary of the regression results.
-        plot_betas(date_range=None)
-            Plot the beta coefficients over tau.
-        plot_actual_vs_predicted(date_range=None)
-            Plot the actual values of Y against the predicted values of Y.
-        plot_residuals(date_range=None)
-            Plot the residuals.
-        plot()
-            Plot all the available plots (betas, actual vs predicted, residuals).
-        betas()
-            Get the estimated beta coefficients.
-        predicted()
-            Get the predicted values of the response variable.
-        residuals()
-            Get the residuals of the model.
+        Print a summary of the regression results.
         """
+        print("Local Linear Regression Results")
+        print("=" * 30)
+        print(f"Bandwidth: {self.h}")
+        print(f"Number of observations: {len(self.vY)}")
+        print(f"Number of predictors: {self.betahat.shape[0]}")
+        print("=" * 30)
+        print(f"Beta coefficients (shape: {self.betahat.shape}):")
+        print("Use the 'plot_betas()' method to plot the beta coefficients.")
+        print("=" * 30)
+        print(
+            "Use the 'confidence_bands()' method to obtain the confidence bands and plots.")
+        print(
+            "You can choose out of 6 types of Bootstrap to construct confidence bands:")
+        print("SB, WB, SWB, MB, LBWB, AWB")
+        print("=" * 30)
+        print("Use the 'plot_residuals()' method to plot the residuals.")
 
-        def __init__(self, betahat, vY, predicted_y, model):
-            self.model = model
-            self.betahat = betahat
-            self.vY = vY
-            self.predicted_y = predicted_y.reshape(-1,1)
-            self.residuals = vY - predicted_y.reshape(-1,1)
 
-        def summary(self):
-            """
-            Print a summary of the regression results.
-            """
-            print("Local Linear Regression Results")
-            print("=" * 30)
-            print(f"Bandwidth: {self.model.h}")
-            print(f"Number of observations: {len(self.vY)}")
-            print(f"Number of predictors: {self.betahat.shape[0]}")
-            print("=" * 30)
-            print(f"Beta coefficients (shape: {self.betahat.shape}):")
-            print("Use the 'plot_betas()' method to plot the beta coefficients.")
-            print("=" * 30)
-            print(
-                "Use the 'confidence_bands()' method to obtain the confidence bands and plots.")
-            print(
-                "You can choose out of 6 types of Bootstrap to construct confidence bands:")
-            print("SB, WB, SWB, MB, LBWB, AWB")
-            print("=" * 30)
-            print("Use the 'plot_residuals()' method to plot the residuals.")
+    def plot_betas(self):
 
-        def _generate_dates(self, length, start_date, end_date):
-            # Calculate the total duration in days
-            total_days = (end_date - start_date).days
+        """
+        Plot the beta coefficients over a normalized x-axis from 0 to 1.
+        """
+        num_betas = self.betahat.shape[0]
+        fig, axs = plt.subplots(num_betas, 1, figsize=(12, 6))
 
-            # Generate a date range with the appropriate number of periods
-            dates = pd.date_range(
-                start=start_date, end=end_date, periods=length)
-
-            return dates
-
-        def _format_x_axis(self, ax, date_list):
-            def format_func(x, pos):
-                if len(date_list) > 0:
-                    index = int(x)
-                    if 0 <= index < len(date_list):
-                        date = date_list[index]
-                        if date_list[-1] - date_list[0] > pd.Timedelta(days=730):
-                            return date.strftime('%Y')
-                        else:
-                            return date.strftime('%b %Y')
-                return ax.xaxis.set_major_formatter(plt.FuncFormatter(format_func))
-
-        def plot_betas(self, date_range=None, plots: bool = False):
-
-            if plots == True:
-                """
-                Plot the beta coefficients over a normalized x-axis from 0 to 1.
-                """
-                num_betas = self.betahat.shape[0]
-                fig, axs = plt.subplots(num_betas, 1, figsize=(10, 6))
-    
-                # Ensure axs is always an array even if there's only one subplot
-                if num_betas == 1:
-                    axs = [axs]
-    
-                if date_range:
-                    start_date, end_date = [datetime.strptime(
-                        date, "%Y-%m-%d") for date in date_range]
-                    x_vals = self._generate_dates(
-                        self.betahat.shape[1], start_date, end_date)
-                else:
-                    x_vals = np.linspace(0, 1, self.betahat.shape[1])
-    
-                for i in range(num_betas):
-                    axs[i].plot(x_vals, self.betahat[i], label=f"Beta {i + 1}")
-                    axs[i].set_title(f"Beta {i + 1}")
-                    axs[i].set_xlabel("Date" if date_range else "t/n")
-                    axs[i].set_ylabel("Beta Value")
-                    axs[i].legend()
-                    axs[i].grid(linestyle='dashed')
-                    if date_range:
-                        self._format_x_axis(axs[i], x_vals)
-    
-                plt.tight_layout()
-                plt.show()
+        # Ensure axs is always an array even if there's only one subplot
+        if num_betas == 1:
+            axs = [axs]
             
-            return self.predicted_y
-        def plot_predicted(self, date_range=None, plots: bool = False):
+        x_vals = np.linspace(0, 1, self.betahat.shape[1])
 
-            if plots == True:
-                """
-                Plot the actual values of Y against the predicted values of Y over a normalized x-axis from 0 to 1.
-                """
-                plt.figure(figsize=(10, 6))
-    
-                if date_range:
-                    start_date, end_date = [datetime.strptime(
-                        date, "%Y-%m-%d") for date in date_range]
-                    x_vals = self._generate_dates(
-                        len(self.vY), start_date, end_date)
-                else:
-                    x_vals = np.linspace(0, 1, len(self.vY))
-    
-                plt.plot(x_vals, self.vY, label="Actual Y")
-                plt.plot(x_vals, self.predicted_y, label="Predicted Y")
-                plt.title("Actual vs Predicted Y")
-                plt.xlabel("Date" if date_range else "t/n")
-                plt.ylabel("Y Value")
-                plt.grid(linestyle='dashed')
-                plt.legend()
-    
-                if date_range:
-                    ax = plt.gca()
-                    self._format_x_axis(ax, x_vals)
-    
-                plt.show()
-                
-            return self.predicted_y
-        def plot_residuals(self, date_range=None, plots: bool = False):
+        for i in range(num_betas):
+            axs[i].plot(x_vals, self.betahat[i], label=f"Beta {i + 1}")
+            axs[i].set_title(f"Beta {i + 1}")
+            axs[i].set_xlabel("t/n")
+            axs[i].set_ylabel("Beta Value")
+            axs[i].legend()
+            axs[i].grid(linestyle='dashed')
 
-            if plots == True:
-                """
-                Plot the residuals over a normalized x-axis from 0 to 1.
-                """
-                plt.figure(figsize=(10, 6))
-    
-                if date_range:
-                    start_date, end_date = [datetime.strptime(
-                        date, "%Y-%m-%d") for date in date_range]
-                    x_vals = self._generate_dates(
-                        len(self.residuals), start_date, end_date)
-                else:
-                    x_vals = np.linspace(0, 1, len(self.residuals))
-    
-                plt.plot(x_vals, self.residuals, label="Residuals")
-                plt.title("Residuals")
-                plt.xlabel("Date" if date_range else "t/n")
-                plt.ylabel("Residual Value")
-                plt.grid(linestyle='dashed')
-                plt.legend()
-    
-                if date_range:
-                    ax = plt.gca()
-                    self._format_x_axis(ax, x_vals)
-    
-                plt.show()
-
-            return self.residuals
-
+        plt.show()
         
+    
+    def plot_predicted(self):
 
-        def confidence_bands(self, bootstrap_type: str = 'LBWB', alpha: float = None,
-                             gamma: float = None, ic: str = None, Gsubs=None, date_range=None,
-                             Chtilde: float = 2, B: float = 1299, plots: bool = False):
-            """
-            Plot the beta coefficients with confidence bands over a normalized x-axis from 0 to 1.
+        """
+        Plot the actual values of Y against the predicted values of Y over a normalized x-axis from 0 to 1.
+        """
+        plt.figure(figsize=(12, 6))
 
-            Parameters
-            ----------
-            bootstrap_type : str, optional
-                The type of bootstrap to use for constructing confidence bands (default is 'LBWB').
-            Gsubs : list of tuples, optional
-                List of tuples specifying the subsample ranges for G. If None, plot for the whole sample.
-            date_range : tuple of str, optional
-                Tuple containing start and end dates in 'YYYY-MM-DD' format.
-            """
+        x_vals = np.linspace(0, 1, len(self.vY))
 
-            # Construct confidence bands
+        plt.plot(x_vals, self.vY, label="Actual Y")
+        plt.plot(x_vals, self.predicted_y, label="Predicted Y")
+        plt.title("Actual vs Predicted Y")
+        plt.xlabel("t/n")
+        plt.ylabel("Y Value")
+        plt.grid(linestyle='dashed')
+        plt.legend()
+        
+        plt.show()
+
+    def plot_residuals(self):
+
+        """
+        Plot the residuals over a normalized x-axis from 0 to 1.
+        """
+        plt.figure(figsize=(10, 6))
+
+        x_vals = np.linspace(0, 1, len(self.residuals))
+
+        plt.plot(x_vals, self.residuals, label="Residuals")
+        plt.title("Residuals")
+        plt.xlabel("t/n")
+        plt.ylabel("Residual Value")
+        plt.grid(linestyle='dashed')
+        plt.legend()
+        
+        plt.show()
+
+        return self.residuals
+
+    
+
+    def confidence_bands(self, bootstrap_type: str = 'LBWB', alpha: float = None,
+                         gamma: float = None, ic: str = None, Gsubs=None,
+                         Chtilde: float = 2, B: float = 1299, plots: bool = False):
+        """
+        Plot the beta coefficients with confidence bands over a normalized x-axis from 0 to 1.
+
+        Parameters
+        ----------
+        bootstrap_type : str, optional
+            The type of bootstrap to use for constructing confidence bands (default is 'LBWB').
+        Gsubs : list of tuples, optional
+            List of tuples specifying the subsample ranges for G. If None, plot for the whole sample.
+        date_range : tuple of str, optional
+            Tuple containing start and end dates in 'YYYY-MM-DD' format.
+        """
+
+        # Construct confidence bands
+        if Gsubs is None:
+            confidence_bands_list = self.construct_confidence_bands(
+                bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B)
+            confidence_bands = confidence_bands_list[:-1][0]
+            betahat = confidence_bands_list[-1]
+            S_LB = confidence_bands[0]
+            S_UB = confidence_bands[1]
+            P_LB = confidence_bands[2]
+            P_UB = confidence_bands[3]
+            G_full = np.linspace(0, 1, len(self.vY))
+        else:
+            confidence_bands_dict = self.construct_confidence_bands(
+                bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Gsubs=Gsubs, Chtilde=Chtilde, B=B)
+            confidence_bands_list = confidence_bands_dict[:-1]
+            betahat = confidence_bands_dict[-1]
+            G_full = np.linspace(0, 1, len(self.vY))
+            for i, (start_index, end_index) in enumerate(Gsubs):
+                S_LB, S_UB, P_LB, P_UB = confidence_bands_list[i]
+
+        if plots == True:
+            # Number of beta coefficients
+            n_betas = self.betahat.shape[0]
+
+            # Plotting
             if Gsubs is None:
-                confidence_bands_list = self.model.construct_confidence_bands(
-                    bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B)
-                confidence_bands = confidence_bands_list[:-1][0]
-                betahat = confidence_bands_list[-1]
-                S_LB = confidence_bands[0]
-                S_UB = confidence_bands[1]
-                P_LB = confidence_bands[2]
-                P_UB = confidence_bands[3]
-                if date_range:
-                    start_date, end_date = [datetime.strptime(
-                        date, "%Y-%m-%d") for date in date_range]
-                    G_full = self._generate_dates(
-                        len(self.vY), start_date, end_date)
-                else:
-                    G_full = np.linspace(0, 1, len(self.vY))
+                plt.figure(figsize=(6.5, 5 * n_betas))
+                for j in range(n_betas):
+                    S_LB_beta = confidence_bands[0][j]
+                    S_UB_beta = confidence_bands[1][j]
+                    P_LB_beta = confidence_bands[2][j]
+                    P_UB_beta = confidence_bands[3][j]
+
+                    plt.subplot(n_betas, 1, j + 1)
+                    plt.plot(
+                        G_full, betahat[j], label=f'Estimated $\\beta_{j}$', color='black')
+                    plt.plot(G_full, S_LB_beta, 'r--',
+                             label='Simultaneous')
+                    plt.plot(G_full, S_UB_beta, 'r--')
+                    plt.fill_between(
+                        G_full, P_LB_beta, P_UB_beta, color='grey', alpha=0.3, label='Pointwise')
+                    # plt.title(f'{bootstrap_type} - beta {j}')
+                    plt.xlabel('t/n')
+                    plt.legend()
+                    plt.grid(linestyle='dashed')
+                    
+                plt.show()
             else:
-                confidence_bands_dict = self.model.construct_confidence_bands(
-                    bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Gsubs=Gsubs, Chtilde=Chtilde, B=B)
-                confidence_bands_list = confidence_bands_dict[:-1]
-                betahat = confidence_bands_dict[-1]
-                if date_range:
-                    start_date, end_date = [datetime.strptime(
-                        date, "%Y-%m-%d") for date in date_range]
-                    G_full = self._generate_dates(
-                        len(self.vY), start_date, end_date)
-                else:
-                    G_full = np.linspace(0, 1, len(self.vY))
-                for i, (start_index, end_index) in enumerate(Gsubs):
-                    S_LB, S_UB, P_LB, P_UB = confidence_bands_list[i]
+                fig, axes = plt.subplots(
+                    n_betas, 1, figsize=(6.5, 5 * n_betas))
 
-            if plots == True:
-                # Number of beta coefficients
-                n_betas = self.betahat.shape[0]
+                if n_betas == 1:
+                    axes = [axes]
 
-                # Plotting
-                if Gsubs is None:
-                    plt.figure(figsize=(6.5, 5 * n_betas))
-                    for j in range(n_betas):
-                        S_LB_beta = confidence_bands[0][j]
-                        S_UB_beta = confidence_bands[1][j]
-                        P_LB_beta = confidence_bands[2][j]
-                        P_UB_beta = confidence_bands[3][j]
+                # Plot betahat for the full range and confidence bands for each beta coefficient
+                for j in range(n_betas):
+                    ax = axes[j]
+                    ax.plot(
+                        G_full, betahat[j], label=f'Estimated $\\beta_{j}$', color='black')
 
-                        plt.subplot(n_betas, 1, j + 1)
-                        plt.plot(
-                            G_full, betahat[j], label=f'Estimated $\\beta_{j}$', color='black')
-                        plt.plot(G_full, S_LB_beta, 'r--',
-                                 label='Simultaneous')
-                        plt.plot(G_full, S_UB_beta, 'r--')
-                        plt.fill_between(
-                            G_full, P_LB_beta, P_UB_beta, color='grey', alpha=0.3, label='Pointwise')
-                        # plt.title(f'{bootstrap_type} - beta {j}')
-                        plt.xlabel('Date' if date_range else '$t/n$')
-                        plt.legend()
-                        plt.grid(linestyle='dashed')
-                        if date_range:
-                            ax = plt.gca()
-                            self._format_x_axis(ax, G_full)
+                    for i, (start_index, end_index) in enumerate(Gsubs):
+                        G = G_full[start_index:end_index]
+                        S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta = confidence_bands_list[i]
 
-                    plt.tight_layout()
-                    plt.show()
-                else:
-                    fig, axes = plt.subplots(
-                        n_betas, 1, figsize=(6.5, 5 * n_betas))
-
-                    if n_betas == 1:
-                        axes = [axes]
-
-                    # Plot betahat for the full range and confidence bands for each beta coefficient
-                    for j in range(n_betas):
-                        ax = axes[j]
                         ax.plot(
-                            G_full, betahat[j], label=f'Estimated $\\beta_{j}$', color='black')
+                            G, S_LB_beta[j], 'r--', label='Simultaneous' if i == 0 else "")
+                        ax.plot(G, S_UB_beta[j], 'r--')
+                        ax.fill_between(
+                            G, P_LB_beta[j], P_UB_beta[j], color='grey', alpha=0.3, label='Pointwise' if i == 0 else "")
 
-                        for i, (start_index, end_index) in enumerate(Gsubs):
-                            G = G_full[start_index:end_index]
-                            S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta = confidence_bands_list[i]
+                    ax.set_xlabel('t/n')
 
-                            ax.plot(
-                                G, S_LB_beta[j], 'r--', label='Simultaneous' if i == 0 else "")
-                            ax.plot(G, S_UB_beta[j], 'r--')
-                            ax.fill_between(
-                                G, P_LB_beta[j], P_UB_beta[j], color='grey', alpha=0.3, label='Pointwise' if i == 0 else "")
+                    ax.legend()
+                    ax.grid(linestyle='dashed')
 
-                        ax.set_xlabel('Date' if date_range else '$t/n$')
+                plt.show()
 
-                        ax.legend()
-                        ax.grid(linestyle='dashed')
-                        if date_range:
-                            self._format_x_axis(ax, G_full)
-
-                    plt.tight_layout()
-                    plt.show()
-
-            return S_LB, S_UB, P_LB, P_UB
-
-        # def betas(self):
-        #     """
-        #     Get the estimated beta coefficients.
-
-        #     Returns
-        #     -------
-        #     np.ndarray
-        #         The estimated beta coefficients.
-        #     """
-        #     return self.betahat
-
-        # def predicted(self):
-        #     """
-        #     Get the predicted values of the response variable.
-
-        #     Returns
-        #     -------
-        #     np.ndarray
-        #         The predicted values of the response variable.
-        #     """
-        #     return self.predicted_y
-
-        # def residuals(self):
-        #     """
-        #     Get the residuals of the model.
-
-        #     Returns
-        #     -------
-        #     np.ndarray
-        #         The residuals of the model.
-        #     """
-        #     return self.residuals
+        return S_LB, S_UB, P_LB, P_UB

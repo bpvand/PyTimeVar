@@ -16,17 +16,16 @@ X = np.ones_like(vY)
 # illustrate LLR
 from PyTimeVar import LocalLinear
 model = LocalLinear(vY, X)
-res = model.fit()
+betaHatLLR = model.fit()
 
 # print summary
-res.summary()
+model.summary()
 
 # plot trend and data
-res.plot_actual_vs_predicted(date_range=["1980-01-01", "2000-01-01"])
+model.plot_predicted()
 
 # plot confidence bands using LBWB
-cb = res.confidence_bands(bootstrap_type='LBWB', date_range=[
-    '1980-01-01', '2000-01-01'], Gsubs=None, plots=True)
+cb = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
 # illustrate boosted HP filter
 from PyTimeVar import BoostedHP

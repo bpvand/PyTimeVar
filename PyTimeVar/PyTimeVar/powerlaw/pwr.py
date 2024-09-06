@@ -65,14 +65,14 @@ class PowerLaw():
         
         def term(coef, power):
             coef = coef if coef != 1 else ''
-            coef, power = round(coef, 4), round(power, 4)
+            coef, power = round(coef, 3), round(power, 3)
             power = (f'^{power}') if power > 1 else ''
             return f'{coef} t{power}'
         terms = []
         for j in range(len(self.coeffHat)):
           if self.coeffHat[j][0] != 0:
             terms.append(term(self.coeffHat[j][0], self.gammaHat[0][j]))
-        print('y= ' + ' + '.join(terms))
+        print('yhat= ' + ' + '.join(terms))
 
     def fit(self):
 
