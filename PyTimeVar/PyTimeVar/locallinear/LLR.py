@@ -1610,17 +1610,14 @@ class LocalLinear:
             print(f"Number of predictors: {self.betahat.shape[0]}")
             print("=" * 30)
             print(f"Beta coefficients (shape: {self.betahat.shape}):")
-            print("Use the 'betas()' method to get the beta coefficients.")
             print("Use the 'plot_betas()' method to plot the beta coefficients.")
             print("=" * 30)
-            print("Use the 'get_confidence_bands()' method to get the confidence bands.")
             print(
                 "Use the 'confidence_bands()' method to obtain the confidence bands and plots.")
             print(
                 "You can choose out of 6 types of Bootstrap to construct confidence bands:")
-            print("SB (Sieve Bootstrap), WB (Wild Bootstrap), SWB (Sieve Wild Bootstrap), MB (Multiplier Bootstrap), LBWB (Local Blockwise Wild Bootstrap), AWB (Autoregressive Wild Bootstrap)")
+            print("SB, WB, SWB, MB, LBWB, AWB")
             print("=" * 30)
-            print("Use the 'residuals()' method to get the residuals.")
             print("Use the 'plot_residuals()' method to plot the residuals.")
 
         def _generate_dates(self, length, start_date, end_date):
@@ -1645,7 +1642,7 @@ class LocalLinear:
                             return date.strftime('%b %Y')
                 return ax.xaxis.set_major_formatter(plt.FuncFormatter(format_func))
 
-        def betas(self, date_range=None, plots: bool = False):
+        def plot_betas(self, date_range=None, plots: bool = False):
 
             if plots == True:
                 """
@@ -1680,7 +1677,7 @@ class LocalLinear:
                 plt.show()
             
             return self.predicted_y
-        def predicted(self, date_range=None, plots: bool = False):
+        def plot_predicted(self, date_range=None, plots: bool = False):
 
             if plots == True:
                 """
@@ -1711,7 +1708,7 @@ class LocalLinear:
                 plt.show()
                 
             return self.predicted_y
-        def residuals(self, date_range=None, plots: bool = False):
+        def plot_residuals(self, date_range=None, plots: bool = False):
 
             if plots == True:
                 """
