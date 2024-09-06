@@ -81,7 +81,6 @@ class LocalLinear:
         bw_selection: str = None,
         tau: np.ndarray = None,
         kernel: str = "epanechnikov",
-        verbose: bool = False,
     ):
 
         self.vY = vY
@@ -105,12 +104,11 @@ class LocalLinear:
                 self.n_est = np.shape(mX)[1]
 
         self.kernel = kernel.lower()
-        self.verbose = verbose
         self.bw_selection = bw_selection
         if h == 0:
             if self.bw_selection is None:
                 print(
-                    'No bandwidth or selection method is specified. \Average bandwidth of all available selection criteria is used.')
+                    'No bandwidth or selection method is specified. \nAverage bandwidth of all available selection criteria is used.')
                 self.bw_selection = 'all'
             if self.bw_selection not in ['all', '0', '2', '4', '6', 0, 2, 4, 6, 'avg', 'aic', 'gcv']:
                 print(

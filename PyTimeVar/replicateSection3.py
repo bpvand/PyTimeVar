@@ -4,22 +4,17 @@ Section 3: illustration of code on Temperature dataset
 
 '''
 # Download data
-import matplotlib.pyplot as plt
-from PyTimeVar import PowerLaw
-from PyTimeVar.datasets import herding
-from PyTimeVar import GAS
-from PyTimeVar import Kalman
-from PyTimeVar import BoostedHP
-from PyTimeVar import LocalLinear
+
 from PyTimeVar.datasets import temperature
 import numpy as np
-
 data = temperature.load(
     regions=['World'], start_date='1961-01-01', end_date='2023-01-01')
 vY = data.values
 X = np.ones_like(vY)
 
+
 # illustrate LLR
+from PyTimeVar import LocalLinear
 model = LocalLinear(vY, X)
 res = model.fit()
 
@@ -35,6 +30,13 @@ res.plot_actual_vs_predicted(date_range=["1980-01-01", "2000-01-01"])
 # plot confidence bands using LBWB
 cb = res.confidence_bands(bootstrap_type='LBWB', date_range=[
     '1980-01-01', '2000-01-01'], Gsubs=None, plots=True)
+
+from PyTimeVar import BoostedHP
+from PyTimeVar import Kalman
+from PyTimeVar import GAS
+from PyTimeVar.datasets import herding
+from PyTimeVar import PowerLaw
+import matplotlib.pyplot as plt
 
 # illustrate boosted HP filter
 bHPmodel = BoostedHP(vY, dLambda=1600, iMaxIter=100)
