@@ -209,20 +209,18 @@ class GAS:
         """
         Plot the beta coefficients over a normalized x-axis from 0 to 1.
         """
-        fig, axs = plt.subplots(self.n_est, 1, figsize=(12, 6))
-
-        
-        if self.n_est == 1:
+                if self.n_est == 1:
     
             plt.figure(figsize=(12, 6))
             plt.plot(self.vY, label="Original Series")
             plt.plot(self.betas, label="GAS Trend", linestyle="--")
             plt.legend()
             plt.grid(linestyle='dashed')
- 
+            plt.show()
+
         else:
-            
             for i in range(self.n_est):
+                fig, axs = plt.subplots(self.n_est, 1, figsize=(12, 6))
                 axs[i].plot(self.betas[:, i],
                             label=r'$\beta_{{{:2d}}}$'.format(i+1))
                 axs[i].set_title(r'$\beta_{{{:2d}}}$'.format(i+1))
@@ -230,9 +228,7 @@ class GAS:
                 axs[i].set_ylabel(r"$\beta$ Value")
                 axs[i].legend()
                 axs[i].grid(linestyle='dashed')
-
-        plt.tight_layout()
-        plt.show()
+                axs.show()
 
 
 # if __name__ == "__main__":
