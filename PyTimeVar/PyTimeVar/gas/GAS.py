@@ -241,7 +241,7 @@ class GAS:
             x_vals = self._generate_dates(
                 self.betas.shape[0], start_date, end_date)
         else:
-            x_vals = np.linspace(0, 1, self.betahat.shape[1])
+            x_vals = np.linspace(0, 1, self.betas.shape[1])
 
         for i in range(self.n_est):
             axs[i].plot(x_vals, self.betas[:, i],
