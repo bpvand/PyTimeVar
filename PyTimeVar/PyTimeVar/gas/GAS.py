@@ -225,7 +225,7 @@ class GAS:
 
         return dates
 
-    def plot_betas(self, date_range=None):
+    def plot_betas(self):
         """
         Plot the beta coefficients over a normalized x-axis from 0 to 1 or over a date range.
         """
@@ -235,19 +235,11 @@ class GAS:
         if self.n_est == 1:
             axs = [axs]
 
-        if date_range:
-            start_date, end_date = [datetime.strptime(
-                date, "%Y-%m-%d") for date in date_range]
-            x_vals = self._generate_dates(
-                self.betas.shape[0], start_date, end_date)
-        else:
-            x_vals = np.linspace(0, 1, self.betas.shape[1])
-
         for i in range(self.n_est):
-            axs[i].plot(x_vals, self.betas[:, i],
+            axs[i].plot(self.betas[:, i],
                         label=r'$\beta_{{{:2d}}}$'.format(i+1))
             axs[i].set_title(r'$\beta_{{{:2d}}}$'.format(i+1))
-            axs[i].set_xlabel("Date" if date_range else "t/n")
+            axs[i].set_xlabel("$t/n$")
             axs[i].set_ylabel(r"$\beta$ Value")
             axs[i].legend()
             axs[i].grid(linestyle='dashed')
