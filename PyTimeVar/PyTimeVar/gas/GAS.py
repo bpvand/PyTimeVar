@@ -227,7 +227,7 @@ class GAS:
 
     def plot_betas(self):
         """
-        Plot the beta coefficients over a normalized x-axis from 0 to 1 or over a date range.
+        Plot the beta coefficients over a normalized x-axis from 0 to 1.
         """
         fig, axs = plt.subplots(self.n_est, 1, figsize=(10, 6))
 
@@ -243,8 +243,6 @@ class GAS:
             axs[i].set_ylabel(r"$\beta$ Value")
             axs[i].legend()
             axs[i].grid(linestyle='dashed')
-            if date_range:
-                self._format_x_axis(axs[i], x_vals)
 
         plt.tight_layout()
         plt.show()
