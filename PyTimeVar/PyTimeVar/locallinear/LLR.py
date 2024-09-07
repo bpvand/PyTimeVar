@@ -118,7 +118,8 @@ class LocalLinear:
                     exit(1)
                 else:
                     self.bw_selection = self.bw_selection[5]
-                    self.lmcv_type = self.bw_selection
+                    if self.bw_selection not in ['0','2','4','6']:
+                        self.lmcv_type = self.bw_selection
             
             self.dict_bw = self.bandwidth_selection()
             print('-----------------------------------------------------------')
@@ -135,7 +136,11 @@ class LocalLinear:
             self.dict_bw['all'] = np.array(list(self.dict_bw.values())[:-1]).mean()
 
             self.h = self.dict_bw[self.bw_selection]
-            print('Optimal bandwidth used is',
+            if self.bw_selection not in ['aic', 'gcv']:
+                print('Optimal bandwidth used is LMCV-',
+                      self.bw_selection, 'is: ', self.h)
+            else:
+                print('Optimal bandwidth used is',
                   self.bw_selection, 'is: ', self.h)
         else:
             self.h = h
@@ -599,7 +604,7 @@ class LocalLinear:
         AVG = np.mean(h)
         h.append(AVG)
         if self.lmcv_type is not None:
-            h.append(self._get_optimalh_lmcv(self.lmcv_type))
+            h.append(self._get_optimalh_lmcv(int(self.lmcv_type)))
         return h
 
     def AICmodx(self, s2, traceh):
