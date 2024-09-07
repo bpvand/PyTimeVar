@@ -56,20 +56,3 @@ tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot()
 
 
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-from PyTimeVar import BoostedHP
-from PyTimeVar import LocalLinear
-from PyTimeVar import GAS
-from PyTimeVar import Kalman
-from PyTimeVar.datasets import herding
-
-vY,mX = herding.load(data_replication=True)
-#%%
-LLr_model = LocalLinear(vY=vY, mX=mX, h=0.0975)
-LLr_res = LLr_model.fit()
-#%%
-l,m,n,o=LLr_model.confidence_bands(plots=True, Gsubs=[(1459, len(vY))])
-
-

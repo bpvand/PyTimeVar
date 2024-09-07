@@ -105,26 +105,32 @@ class LocalLinear:
 
         self.kernel = kernel.lower()
         self.bw_selection = bw_selection
+        self.lmcv_type = None
         if h == 0:
             if self.bw_selection is None:
                 print(
                     'No bandwidth or selection method is specified.')
                 self.bw_selection = 'all'
-            if self.bw_selection not in ['all', '0', '2', '4', '6', 0, 2, 4, 6, 'avg', 'aic', 'gcv']:
-                print(
-                    'Error: bandwidth selection method is invalid. \nPlease provide an expression from the following options: [\'all\',\'0\', \'2\',\'4\',\'6\', \'avg\', \'aic\', \'gcv\', 0, 2, 4, 6]')
-                exit(1)
-
+            if self.bw_selection not in ['all', 'aic', 'gcv']:
+                if self.bw_selection[:4] != 'lmcv':
+                    print(
+                        'Error: bandwidth selection method is invalid. \nPlease provide an expression from the following options: [\'all\', \'aic\', \'gcv\'] or use \'lmcv_l\'')
+                    exit(1)
+                else:
+                    self.bw_selection = self.bw_selection[5]
+                    self.lmcv_type = self.bw_selection
+            
             self.dict_bw = self.bandwidth_selection()
             print('-----------------------------------------------------------')
             print('Optimal bandwidth selected by individual method:')
             print('- AIC method: ', self.dict_bw['aic'])
             print('- GCV method: ', self.dict_bw['gcv'])
-            print('- Leave-0-out method: ', self.dict_bw['0'])
-            print('- Leave-2-out method: ', self.dict_bw['2'])
-            print('- Leave-4-out method: ', self.dict_bw['4'])
-            print('- Leave-6-out method: ', self.dict_bw['6'])
-            print('- Average leave-l-out method: ', self.dict_bw['6'])
+            print('- LMCV-0 method: ', self.dict_bw['0'])
+            print('- LMCV-2 method: ', self.dict_bw['2'])
+            print('- LMCV-4 method: ', self.dict_bw['4'])
+            print('- LMCV-6 method: ', self.dict_bw['6'])
+            if self.lmcv_type is not None:
+                print(f'- LMCV-{self.lmcv_type} method: ', self.dict_bw[self.lmcv_type])
             print('-----------------------------------------------------------')
             self.dict_bw['all'] = np.array(list(self.dict_bw.values())[:-1]).mean()
 
@@ -586,11 +592,14 @@ class LocalLinear:
         list
             A list of bandwidths calculated using LMCV, including the average bandwidth.
         """
+        
         h = []
         for lmcv_type in [0, 2, 4, 6]:
             h.append(self._get_optimalh_lmcv(lmcv_type))
         AVG = np.mean(h)
         h.append(AVG)
+        if self.lmcv_type is not None:
+            h.append(self._get_optimalh_lmcv(self.lmcv_type))
         return h
 
     def AICmodx(self, s2, traceh):
@@ -753,7 +762,9 @@ class LocalLinear:
         d['2'] = list_h[1]
         d['4'] = list_h[2]
         d['6'] = list_h[3]
-        d['avg'] = list_h[-1]
+        if self.lmcv_type is not None:
+            d[self.lmcv_type] = list_h[4]
+
         return d
 
     ############################################################################################################
