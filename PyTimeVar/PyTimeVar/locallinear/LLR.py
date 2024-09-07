@@ -1696,7 +1696,8 @@ class LocalLinear:
         date_range : tuple of str, optional
             Tuple containing start and end dates in 'YYYY-MM-DD' format.
         """
-
+        bootstrap_type = bootstrap_type.upper()
+        
         # Construct confidence bands
         if Gsubs is None:
             confidence_bands_list = self.construct_confidence_bands(
