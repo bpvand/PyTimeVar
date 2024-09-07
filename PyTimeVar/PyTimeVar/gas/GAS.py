@@ -217,6 +217,7 @@ class GAS:
             plt.figure(figsize=(12, 6))
             plt.plot(x_vals, self.vY, label="Original Series")
             plt.plot(x_vals, self.betas, label="GAS Trend", linestyle="--")
+            plt.xlabel("$t/n$")
             plt.legend()
             plt.grid(linestyle='dashed')
             plt.show()
