@@ -49,11 +49,14 @@ class PowerLaw():
         x_vals = np.linspace(0, 1, self.n)
 
         plt.figure(figsize=(12, 6))
-        plt.plot(x_vals, self.vY, label="Original Series")
-        plt.plot(x_vals, self.trendHat, label="Power Law Trend", linestyle="--")
-        plt.legend()
-        plt.xlabel("$t/n$")
+        plt.plot(x_vals, self.vY, label="True data")
+        plt.plot(x_vals, self.trendHat, label="Estimated $\\beta_{0}$", linestyle="--")
+        
         plt.grid(linestyle='dashed')
+        plt.xlabel('$t/n$',fontsize="xx-large")
+
+        plt.tick_params(axis='both', labelsize=16)
+        plt.legend(fontsize="x-large")
         plt.show()   
         
     def summary(self):
