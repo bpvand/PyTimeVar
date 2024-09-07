@@ -1624,8 +1624,11 @@ class LocalLinear:
             plt.figure(figsize=(12, 6))
             plt.plot(x_vals, self.vY, label="Original Series")
             plt.plot(x_vals, self.betahat.reshape(-1,1), label="LLR Trend", linestyle="--")
-            plt.legend()
+            
             plt.grid(linestyle='dashed')
+            plt.xlabel('$t/n$',fontsize="xx-large")
+            plt.tick_params(axis='both', labelsize=16)
+            plt.legend(fontsize="x-large")
             plt.show()
 
         else:
@@ -1635,9 +1638,11 @@ class LocalLinear:
                 plt.plot(x_vals, self.betahat[i],
                             label=f'Estimated $\\beta_{i}$', color='black')
 
-                plt.xlabel("$t/n$")
-                plt.legend()
+                
                 plt.grid(linestyle='dashed')
+                plt.xlabel('$t/n$',fontsize="xx-large")
+                plt.tick_params(axis='both', labelsize=16)
+                plt.legend(fontsize="x-large")
             plt.show()
     
     def plot_predicted(self):
@@ -1652,10 +1657,12 @@ class LocalLinear:
         plt.plot(x_vals, self.vY, label="Actual Y")
         plt.plot(x_vals, self.predicted_y, label="Predicted Y")
         # plt.title("Actual vs Predicted Y")
-        plt.xlabel("$t/n$")
+        
         
         plt.grid(linestyle='dashed')
-        plt.legend()
+        plt.xlabel('$t/n$',fontsize="xx-large")
+        plt.tick_params(axis='both', labelsize=16)
+        plt.legend(fontsize="x-large")
         
         plt.show()
 
@@ -1670,10 +1677,12 @@ class LocalLinear:
 
         plt.plot(x_vals, self.residuals, label="Residuals")
         # plt.title("Residuals")
-        plt.xlabel("$t/n$")
+        
         
         plt.grid(linestyle='dashed')
-        plt.legend()
+        plt.xlabel('$t/n$',fontsize="xx-large")
+        plt.tick_params(axis='both', labelsize=16)
+        plt.legend(fontsize="x-large")
         
         plt.show()
 
@@ -1740,9 +1749,11 @@ class LocalLinear:
                     plt.fill_between(
                         G_full, P_LB_beta, P_UB_beta, color='grey', alpha=0.3, label='Pointwise')
                     # plt.title(f'{bootstrap_type} - beta {j}')
-                    plt.xlabel('$t/n$')
-                    plt.legend()
+                    
                     plt.grid(linestyle='dashed')
+                    plt.xlabel('$t/n$',fontsize="xx-large")
+                    plt.tick_params(axis='both', labelsize=16)
+                    plt.legend(fontsize="x-large")
                     
                 plt.show()
             else:
@@ -1768,9 +1779,9 @@ class LocalLinear:
                         ax.fill_between(
                             G, P_LB_beta[j], P_UB_beta[j], color='grey', alpha=0.3, label='Pointwise' if i == 0 else "")
 
-                    ax.set_xlabel('$t/n$')
-
-                    ax.legend()
+                    ax.set_xlabel('$t/n$',fontsize="xx-large")
+                    ax.tick_params(axis='both', labelsize=16)
+                    ax.legend(fontsize="x-large")
                     ax.grid(linestyle='dashed')
 
                 plt.show()
