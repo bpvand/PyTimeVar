@@ -1666,7 +1666,7 @@ class LocalLinear:
 
     
 
-    def confidence_bands(self, bootstrap_type: str = 'LBWB', alpha: float = None,
+    def confidence_bands(self, bootstrap_type: str = 'LBWB', h: float=None, alpha: float = None,
                          gamma: float = None, ic: str = None, Gsubs=None,
                          Chtilde: float = 2, B: float = 1299, plots: bool = False):
         """
@@ -1685,7 +1685,7 @@ class LocalLinear:
         # Construct confidence bands
         if Gsubs is None:
             confidence_bands_list = self.construct_confidence_bands(
-                bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B)
+                bootstrap_type, h=h, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B)
             confidence_bands = confidence_bands_list[:-1][0]
             betahat = confidence_bands_list[-1]
             S_LB = confidence_bands[0]
@@ -1695,7 +1695,7 @@ class LocalLinear:
             G_full = np.linspace(0, 1, len(self.vY))
         else:
             confidence_bands_dict = self.construct_confidence_bands(
-                bootstrap_type, alpha=alpha, gamma=gamma, ic=ic, Gsubs=Gsubs, Chtilde=Chtilde, B=B)
+                bootstrap_type, h=h, alpha=alpha, gamma=gamma, ic=ic, Gsubs=Gsubs, Chtilde=Chtilde, B=B)
             confidence_bands_list = confidence_bands_dict[:-1]
             betahat = confidence_bands_dict[-1]
             G_full = np.linspace(0, 1, len(self.vY))
