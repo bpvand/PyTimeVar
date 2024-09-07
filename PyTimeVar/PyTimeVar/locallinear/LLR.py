@@ -1608,7 +1608,7 @@ class LocalLinear:
     
             plt.figure(figsize=(12, 6))
             plt.plot(x_vals, self.vY, label="Original Series")
-            plt.plot(x_vals, self.betahat, label="LLR Trend", linestyle="--")
+            plt.plot(x_vals, self.betahat.reshape(-1,1), label="LLR Trend", linestyle="--")
             plt.legend()
             plt.grid(linestyle='dashed')
             plt.show()
@@ -1617,7 +1617,7 @@ class LocalLinear:
             plt.figure(figsize=(6.5, 5 * self.n_est))
             for i in range(self.n_est):
                 plt.subplot(self.n_est, 1, i + 1)
-                plt.plot(x_vals, self.betahat[:, i],
+                plt.plot(x_vals, self.betahat[i],
                             label=f'Estimated $\\beta_{i}$', color='black')
 
                 plt.xlabel("$t/n$")
