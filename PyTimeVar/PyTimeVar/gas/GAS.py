@@ -226,7 +226,7 @@ class GAS:
             plt.show()
 
         else:
-            plt.figure(figsize=(6.5, 5 * self.n_est))
+            plt.figure(figsize=(10, 6 * self.n_est))
             for i in range(self.n_est):
                 plt.subplot(self.n_est, 1, i + 1)
                 plt.plot(x_vals, self.betas[:, i],
