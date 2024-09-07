@@ -289,11 +289,11 @@ class Kalman:
         
         if self.p_dim == 1:
             plt.figure(figsize=(12, 6))
-            plt.plot(x_vals, self.vY, label="Original Series")
+            plt.plot(x_vals, self.vY, label="True data")
             if self.smooth is not None:
-                plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", c='o')
+                plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", color='tab:green')
             if self.filt is not None:
-                plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="-", c='k')
+                plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="-", color='tab:red')
             
             plt.grid(linestyle='dashed')
             plt.xlabel('$t/n$',fontsize="xx-large")
@@ -307,9 +307,9 @@ class Kalman:
             for i in range(self.p_dim):
                 plt.subplot(self.p_dim, 1, i + 1)
                 if self.smooth is not None:
-                    plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", c='o')
+                    plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--",  color='tab:green')
                 if self.filt is not None:
-                    plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-", c='k')
+                    plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-", color='tab:red')
 
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")
