@@ -1420,7 +1420,7 @@ class LocalLinear:
         P_UB_beta = S_UB_beta
         return S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta, betahat
 
-    def construct_confidence_bands(self, bootstraptype: str, h: flaot=None, alpha: float = None, gamma: float = None, ic: str = None, Gsubs: list = None, Chtilde: float = None, B: float = 1299, bw_selection: str = None):
+    def construct_confidence_bands(self, bootstraptype: str, h: float=None, alpha: float = None, gamma: float = None, ic: str = None, Gsubs: list = None, Chtilde: float = None, B: float = 1299, bw_selection: str = None):
         """
         Construct confidence bands using bootstrap methods.
 
