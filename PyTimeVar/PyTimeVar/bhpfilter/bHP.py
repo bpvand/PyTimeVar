@@ -93,8 +93,6 @@ class BoostedHP:
         print(f"Alpha: {self.dAlpha}")
         print("\nInformation Criteria Values:")
         print(vIC_values)
-        print("\nBoosted HP Filter Output:")
-        print(vBHP)
 
     def plot(self):
         """
