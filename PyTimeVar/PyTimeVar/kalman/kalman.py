@@ -295,6 +295,7 @@ class Kalman:
             if self.filt is not None:
                 plt.plot(x_vals, self.smooth[:], label="Kalman Filter", linestyle="-", c='k')
             plt.legend()
+            plt.xlabel("$t/n$")
             plt.grid(linestyle='dashed')
             plt.show()
             
