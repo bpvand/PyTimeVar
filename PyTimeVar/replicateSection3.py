@@ -37,7 +37,7 @@ bHPmodel.plot()
 
 # illustrate power-law trend
 from PyTimeVar import PowerLaw
-PwrLaw = PowerLaw(vY, n_powers=2)
+PwrLaw = PowerLaw(vY, n_powers=1)
 pwrTrend, pwrGamma = PwrLaw.fit()
 PwrLaw.summary()
 PwrLaw.plot()
@@ -53,4 +53,4 @@ kalmanmodel.plot()
 from PyTimeVar import GAS
 gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
-gasmodel.plot(date_range=['1980-01-01', '2000-01-01'])
+gasmodel.plot()

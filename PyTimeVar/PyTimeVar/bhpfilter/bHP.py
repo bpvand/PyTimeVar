@@ -96,19 +96,22 @@ class BoostedHP:
         print("\nBoosted HP Filter Output:")
         print(vBHP)
 
-    def plot_trend(self):
+    def plot(self):
         """
         Plots the original series and the trend component.
         """
         if self.results is None:
             print("Model is not fitted yet.")
             return
-
+        
+        x_vals = np.linspace(0, 1, len(self.vY))
+        
         _, _, _, _, vBHP = self.results
         plt.figure(figsize=(12, 6))
-        plt.plot(self.vY, label="Original Series")
-        plt.plot(vBHP, label="Trend Component", linestyle="--")
+        plt.plot(x_vals, self.vY, label="Original Series")
+        plt.plot(x_vals, vBHP, label="Trend Component", linestyle="--")
         plt.legend()
+        plt.xlabel("$t/n$")
         plt.grid(linestyle='dashed')
         plt.show()
 

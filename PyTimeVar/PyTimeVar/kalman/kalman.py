@@ -279,65 +279,39 @@ class Kalman:
         print(f"R: {self.R}")
         print(f"T: {self.T}")
 
-    def _format_x_axis(self, ax, date_list):
-        def format_func(x, pos):
-            if len(date_list) > 0:
-                index = int(x)
-                if 0 <= index < len(date_list):
-                    date = date_list[index]
-                    if date_list[-1] - date_list[0] > pd.Timedelta(days=730):
-                        return date.strftime('%Y')
-                    else:
-                        return date.strftime('%b %Y')
-            return ax.xaxis.set_major_formatter(plt.FuncFormatter(format_func))
 
-    def _generate_dates(self, length, start_date, end_date):
-        # Calculate the total duration in days
-        total_days = (end_date - start_date).days
-
-        # Generate a date range with the appropriate number of periods
-        dates = pd.date_range(start=start_date, end=end_date, periods=length)
-
-        return dates
-
-    def plot(self, date_range=None):
+    def plot(self):
         """
         Plot the beta coefficients over a normalized x-axis from 0 to 1 or over a date range.
         """
-        fig, axs = plt.subplots(self.p_dim, 1, figsize=(10, 6))
 
-        # Ensure axs is always an array even if there's only one subplot
+        x_vals = np.linspace(0, 1, self.n)
+        
         if self.p_dim == 1:
-            axs = [axs]
-
-        if date_range:
-            start_date, end_date = [datetime.strptime(
-                date, "%Y-%m-%d") for date in date_range]
-            x_vals = self._generate_dates(
-                self.n, start_date, end_date)
-        else:
-            x_vals = np.linspace(0, 1, self.n)
-
-        for i in range(self.p_dim):
+            plt.figure(figsize=(12, 6))
+            plt.plot(x_vals, self.vY, label="Original Series")
             if self.smooth is not None:
-                if self.p_dim == 1:
-                    self.smooth = self.smooth[..., np.newaxis]
-                axs[i].plot(x_vals, self.smooth[:, i],
-                            label=r'$\alpha{{{:2d}}}$'.format(i+1))
+                plt.plot(x_vals, self.smooth[:], label="Kalman Smoother", linestyle="--", c='r')
             if self.filt is not None:
-                if self.p_dim == 1:
-                    self.fit = self.fit[..., np.newaxis]
-                axs[i].plot(x_vals, self.filt[:, i],
-                            label=r'$\alpha{{{:2d}}}$'.format(i+1))
-            axs[i].set_title(r'$\alpha{{{:2d}}}$'.format(i+1))
-            axs[i].set_xlabel("Date" if date_range else "t/n")
-            axs[i].set_ylabel(r"$\alpha$ Value")
-            axs[i].legend()
-            if date_range:
-                self._format_x_axis(axs[i], x_vals)
+                plt.plot(x_vals, self.smooth[:], label="Kalman Filter", linestyle="-", c='k')
+            plt.legend()
+            plt.grid(linestyle='dashed')
+            plt.show()
+            
+        else:
+            plt.figure(figsize=(6.5, 5 * self.p_dim))
+            for i in range(self.p_dim):
+                plt.subplot(self.p_dim, 1, i + 1)
+                if self.smooth is not None:
+                    plt.plot(x_vals, self.smooth[:], label=r"Smooth $\\alpha_{i}$", linestyle="--", c='r')
+                if self.filt is not None:
+                    plt.plot(x_vals, self.smooth[:], label=r"Filter $\\alpha_{i}$", linestyle="-", c='k')
 
-        plt.tight_layout()
-        plt.show()
+                plt.xlabel("$t/n$")
+                plt.legend()
+                plt.grid(linestyle='dashed')
+            plt.show()
+
 
 
 if __name__ == "__main__":

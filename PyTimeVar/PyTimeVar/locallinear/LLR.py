@@ -1590,25 +1590,28 @@ class LocalLinear:
         """
         Plot the beta coefficients over a normalized x-axis from 0 to 1.
         """
-        num_betas = self.betahat.shape[0]
-        fig, axs = plt.subplots(num_betas, 1, figsize=(12, 6))
-
-        # Ensure axs is always an array even if there's only one subplot
-        if num_betas == 1:
-            axs = [axs]
-            
-        x_vals = np.linspace(0, 1, self.betahat.shape[1])
-
-        for i in range(num_betas):
-            axs[i].plot(x_vals, self.betahat[i], label=f"Beta {i + 1}")
-            axs[i].set_title(f"Beta {i + 1}")
-            axs[i].set_xlabel("t/n")
-            axs[i].set_ylabel("Beta Value")
-            axs[i].legend()
-            axs[i].grid(linestyle='dashed')
-
-        plt.show()
+        x_vals = np.linspace(0, 1, self.n)
         
+        if self.n_est == 1:
+    
+            plt.figure(figsize=(12, 6))
+            plt.plot(x_vals, self.vY, label="Original Series")
+            plt.plot(x_vals, self.betahat, label="LLR Trend", linestyle="--")
+            plt.legend()
+            plt.grid(linestyle='dashed')
+            plt.show()
+
+        else:
+            plt.figure(figsize=(6.5, 5 * self.n_est))
+            for i in range(self.n_est):
+                plt.subplot(self.n_est, 1, i + 1)
+                plt.plot(x_vals, self.betahat[:, i],
+                            label=f'Estimated $\\beta_{i}$', color='black')
+
+                plt.xlabel("$t/n$")
+                plt.legend()
+                plt.grid(linestyle='dashed')
+            plt.show()
     
     def plot_predicted(self):
 
@@ -1634,7 +1637,7 @@ class LocalLinear:
         """
         Plot the residuals over a normalized x-axis from 0 to 1.
         """
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(12, 6))
 
         x_vals = np.linspace(0, 1, len(self.residuals))
 

@@ -45,11 +45,14 @@ class PowerLaw():
         if self.trendHat is None:
             print("Model is not fitted yet.")
             return
+        
+        x_vals = np.linspace(0, 1, self.n)
 
         plt.figure(figsize=(12, 6))
-        plt.plot(self.vY, label="Original Series")
-        plt.plot(self.trendHat, label="Power Law Trend", linestyle="--")
+        plt.plot(x_vals, self.vY, label="Original Series")
+        plt.plot(x_vals, self.trendHat, label="Power Law Trend", linestyle="--")
         plt.legend()
+        plt.xlabel("$t/n$")
         plt.grid(linestyle='dashed')
         plt.show()   
         

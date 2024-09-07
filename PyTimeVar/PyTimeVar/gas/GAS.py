@@ -95,7 +95,7 @@ class GAS:
                     mBetaHat_gGAS[:, id] = vbetaNow
 
                 mmBeta[j, :, :] = mBetaHat_gGAS
-            print(vMSE)
+                
             mBetaHat = (mmBeta[np.argmin(vMSE), :, :]).T
             # mBetaHat = mBetaHat_gGAS.T
 
@@ -148,7 +148,7 @@ class GAS:
 
                     mBetaHat_tGAS[:, id] = vbetaNow
                 mmBeta[j, :, :] = mBetaHat_tGAS
-            print(vMSE)
+                
             mBetaHat = (mmBeta[np.argmin(vMSE), :, :]).T
             # mBetaHat = mBetaHat_tGAS.T
 
@@ -205,15 +205,18 @@ class GAS:
         return lhVal
 
 
-    def plot_betas(self):
+    def plot(self):
         """
         Plot the beta coefficients over a normalized x-axis from 0 to 1.
         """
+        
+        x_vals = np.linspace(0, 1, self.n)
+        
         if self.n_est == 1:
     
             plt.figure(figsize=(12, 6))
-            plt.plot(self.vY, label="Original Series")
-            plt.plot(self.betas, label="GAS Trend", linestyle="--")
+            plt.plot(x_vals, self.vY, label="Original Series")
+            plt.plot(x_vals, self.betas, label="GAS Trend", linestyle="--")
             plt.legend()
             plt.grid(linestyle='dashed')
             plt.show()
@@ -222,7 +225,7 @@ class GAS:
             plt.figure(figsize=(6.5, 5 * self.n_est))
             for i in range(self.n_est):
                 plt.subplot(self.n_est, 1, i + 1)
-                plt.plot(self.betas[:, i],
+                plt.plot(x_vals, self.betas[:, i],
                             label=f'Estimated $\\beta_{i}$', color='black')
 
                 plt.xlabel("$t/n$")
