@@ -1633,7 +1633,7 @@ class LocalLinear:
 
         plt.plot(x_vals, self.vY, label="Actual Y")
         plt.plot(x_vals, self.predicted_y, label="Predicted Y")
-        plt.title("Actual vs Predicted Y")
+        # plt.title("Actual vs Predicted Y")
         plt.xlabel("$t/n$")
         
         plt.grid(linestyle='dashed')
@@ -1651,7 +1651,7 @@ class LocalLinear:
         x_vals = np.linspace(0, 1, len(self.residuals))
 
         plt.plot(x_vals, self.residuals, label="Residuals")
-        plt.title("Residuals")
+        # plt.title("Residuals")
         plt.xlabel("$t/n$")
         
         plt.grid(linestyle='dashed')
