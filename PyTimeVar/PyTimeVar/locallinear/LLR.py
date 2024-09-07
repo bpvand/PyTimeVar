@@ -1420,7 +1420,7 @@ class LocalLinear:
         P_UB_beta = S_UB_beta
         return S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta, betahat
 
-    def construct_confidence_bands(self, bootstraptype: str, alpha: float = None, gamma: float = None, ic: str = None, Gsubs: list = None, Chtilde: float = None, B: float = 1299, bw_selection: str = None):
+    def construct_confidence_bands(self, bootstraptype: str, h: flaot=None, alpha: float = None, gamma: float = None, ic: str = None, Gsubs: list = None, Chtilde: float = None, B: float = 1299, bw_selection: str = None):
         """
         Construct confidence bands using bootstrap methods.
 
@@ -1461,14 +1461,17 @@ class LocalLinear:
         >>> g2_S_LB_beta, g2_S_UB_beta, g2_P_LB_beta, g2_P_UB_beta = confidence_bands[1]
         >>> betahat = confidence_bands[2]
         """
-
-        if bw_selection is not None:
-            self.h = self.dict_bw[bw_selection]
+        
+        if h is not None:
+            self.h = h
         else:
-            if bootstraptype == 'MB':
-                self.h = self.dict_bw['gcv']
+            if bw_selection is not None:
+                self.h = self.dict_bw[bw_selection]
             else:
-                self.h = self.dict_bw['all']
+                if bootstraptype == 'MB':
+                    self.h = self.dict_bw['gcv']
+                else:
+                    self.h = self.dict_bw['all']
 
         if bootstraptype == "MB":
             print("Calculating Multiplier Bootstrap Samples")
