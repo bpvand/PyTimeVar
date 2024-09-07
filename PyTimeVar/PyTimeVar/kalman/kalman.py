@@ -291,9 +291,9 @@ class Kalman:
             plt.figure(figsize=(12, 6))
             plt.plot(x_vals, self.vY, label="Original Series")
             if self.smooth is not None:
-                plt.plot(x_vals, self.smooth[:], label="Kalman Smoother", linestyle="--", c='r')
+                plt.plot(x_vals, self.smooth[:], label="Kalman Smoother", linestyle="--", c='o')
             if self.filt is not None:
-                plt.plot(x_vals, self.smooth[:], label="Kalman Filter", linestyle="-", c='k')
+                plt.plot(x_vals, self.filt[:], label="Kalman Filter", linestyle="-", c='k')
             plt.legend()
             plt.xlabel("$t/n$")
             plt.grid(linestyle='dashed')
@@ -304,9 +304,9 @@ class Kalman:
             for i in range(self.p_dim):
                 plt.subplot(self.p_dim, 1, i + 1)
                 if self.smooth is not None:
-                    plt.plot(x_vals, self.smooth[:], label=r"Smooth $\\alpha_{i}$", linestyle="--", c='r')
+                    plt.plot(x_vals, self.smooth[:, i], label=r"Smooth $\\alpha_{i}$", linestyle="--", c='o')
                 if self.filt is not None:
-                    plt.plot(x_vals, self.smooth[:], label=r"Filter $\\alpha_{i}$", linestyle="-", c='k')
+                    plt.plot(x_vals, self.filt[:, i], label=r"Filter $\\alpha_{i}$", linestyle="-", c='k')
 
                 plt.xlabel("$t/n$")
                 plt.legend()
