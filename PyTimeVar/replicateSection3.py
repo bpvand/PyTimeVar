@@ -15,7 +15,7 @@ X = np.ones_like(vY)
 
 # illustrate LLR
 from PyTimeVar import LocalLinear
-model = LocalLinear(vY, X, bw_selection='lmcv-8')
+model = LocalLinear(vY, X)
 betaHatLLR = model.fit()
 
 # print summary
