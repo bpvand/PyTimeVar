@@ -291,154 +291,159 @@ class Kalman:
             plt.figure(figsize=(12, 6))
             plt.plot(x_vals, self.vY, label="Original Series")
             if self.smooth is not None:
-                plt.plot(x_vals, self.smooth[:], label="Kalman Smoother", linestyle="--", c='o')
+                plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", c='o')
             if self.filt is not None:
-                plt.plot(x_vals, self.filt[:], label="Kalman Filter", linestyle="-", c='k')
-            plt.legend()
-            plt.xlabel("$t/n$")
+                plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="-", c='k')
+            
             plt.grid(linestyle='dashed')
+            plt.xlabel('$t/n$',fontsize="xx-large")
+
+            plt.tick_params(axis='both', labelsize=16)
+            plt.legend(fontsize="x-large")
             plt.show()
             
         else:
-            plt.figure(figsize=(6.5, 5 * self.p_dim))
+            plt.figure(figsize=(10, 6 * self.p_dim))
             for i in range(self.p_dim):
                 plt.subplot(self.p_dim, 1, i + 1)
                 if self.smooth is not None:
-                    plt.plot(x_vals, self.smooth[:, i], label=r"Smooth $\\alpha_{i}$", linestyle="--", c='o')
+                    plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", c='o')
                 if self.filt is not None:
-                    plt.plot(x_vals, self.filt[:, i], label=r"Filter $\\alpha_{i}$", linestyle="-", c='k')
+                    plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-", c='k')
 
-                plt.xlabel("$t/n$")
-                plt.legend()
                 plt.grid(linestyle='dashed')
+                plt.xlabel('$t/n$',fontsize="xx-large")
+
+                plt.tick_params(axis='both', labelsize=16)
+                plt.legend(fontsize="x-large")
             plt.show()
 
 
 
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib.pyplot as plt
+# if __name__ == "__main__":
+#     import numpy as np
+#     import matplotlib.pyplot as plt
 
-    def simulate_ar3_data(n_timesteps, phi, sigma):
-        # Generate AR(3) data
-        y = np.zeros(n_timesteps)
-        for t in range(3, n_timesteps):
-            y[t] = phi[0]*y[t-1] + phi[1]*y[t-2] + \
-                phi[2]*y[t-3] + np.random.normal(0, sigma)
-        return y
+#     def simulate_ar3_data(n_timesteps, phi, sigma):
+#         # Generate AR(3) data
+#         y = np.zeros(n_timesteps)
+#         for t in range(3, n_timesteps):
+#             y[t] = phi[0]*y[t-1] + phi[1]*y[t-2] + \
+#                 phi[2]*y[t-3] + np.random.normal(0, sigma)
+#         return y
 
-    def simulate_local_level_data(n_timesteps, sigma_w, sigma_v):
-        # Generate local level model data
-        x = np.zeros(n_timesteps)
-        y = np.zeros(n_timesteps)
-        for t in range(1, n_timesteps):
-            x[t] = x[t-1] + np.random.normal(0, sigma_w)
-            y[t] = x[t] + np.random.normal(0, sigma_v)
-        return y
+#     def simulate_local_level_data(n_timesteps, sigma_w, sigma_v):
+#         # Generate local level model data
+#         x = np.zeros(n_timesteps)
+#         y = np.zeros(n_timesteps)
+#         for t in range(1, n_timesteps):
+#             x[t] = x[t-1] + np.random.normal(0, sigma_w)
+#             y[t] = x[t] + np.random.normal(0, sigma_v)
+#         return y
 
-    def simulate_local_linear_trend_data(n_timesteps, sigma_w, sigma_v):
-        # Generate local linear trend model data
-        x = np.zeros(n_timesteps)
-        v = np.zeros(n_timesteps)
-        y = np.zeros(n_timesteps)
-        for t in range(1, n_timesteps):
-            v[t] = v[t-1] + np.random.normal(0, sigma_w)
-            x[t] = x[t-1] + v[t-1] + np.random.normal(0, sigma_w)
-            y[t] = x[t] + np.random.normal(0, sigma_v)
-        return y
+#     def simulate_local_linear_trend_data(n_timesteps, sigma_w, sigma_v):
+#         # Generate local linear trend model data
+#         x = np.zeros(n_timesteps)
+#         v = np.zeros(n_timesteps)
+#         y = np.zeros(n_timesteps)
+#         for t in range(1, n_timesteps):
+#             v[t] = v[t-1] + np.random.normal(0, sigma_w)
+#             x[t] = x[t-1] + v[t-1] + np.random.normal(0, sigma_w)
+#             y[t] = x[t] + np.random.normal(0, sigma_v)
+#         return y
 
-    # Parameters for the AR(3) model
-    phi = [0.5, -0.2, 0.1]
-    sigma_ar3 = 1.0
-    n_timesteps = 100
+#     # Parameters for the AR(3) model
+#     phi = [0.5, -0.2, 0.1]
+#     sigma_ar3 = 1.0
+#     n_timesteps = 100
 
-    # Parameters for the local level model
-    sigma_w_level = 0.1
-    sigma_v_level = 1.0
+#     # Parameters for the local level model
+#     sigma_w_level = 0.1
+#     sigma_v_level = 1.0
 
-    # Parameters for the local linear trend model
-    sigma_w_trend = 0.1
-    sigma_v_trend = 1.0
+#     # Parameters for the local linear trend model
+#     sigma_w_trend = 0.1
+#     sigma_v_trend = 1.0
 
-    # Simulate data
-    ar3_data = simulate_ar3_data(n_timesteps, phi, sigma_ar3)
-    local_level_data = simulate_local_level_data(
-        n_timesteps, sigma_w_level, sigma_v_level)
-    local_linear_trend_data = simulate_local_linear_trend_data(
-        n_timesteps, sigma_w_trend, sigma_v_trend)
+#     # Simulate data
+#     ar3_data = simulate_ar3_data(n_timesteps, phi, sigma_ar3)
+#     local_level_data = simulate_local_level_data(
+#         n_timesteps, sigma_w_level, sigma_v_level)
+#     local_linear_trend_data = simulate_local_linear_trend_data(
+#         n_timesteps, sigma_w_trend, sigma_v_trend)
 
-    # Define state space matrices for AR(3) model
-    T_ar3 = np.array([[phi[0], 1, 0],
-                      [phi[1], 0, 1],
-                      [phi[2], 0, 0]])
-    Z_ar3 = np.array([[1, 0, 0]])
-    Q_ar3 = np.eye(3) * sigma_ar3**2
-    H_ar3 = np.array([[1]])
-    a_1_ar3 = np.zeros(3)
-    P_1_ar3 = np.eye(3)
+#     # Define state space matrices for AR(3) model
+#     T_ar3 = np.array([[phi[0], 1, 0],
+#                       [phi[1], 0, 1],
+#                       [phi[2], 0, 0]])
+#     Z_ar3 = np.array([[1, 0, 0]])
+#     Q_ar3 = np.eye(3) * sigma_ar3**2
+#     H_ar3 = np.array([[1]])
+#     a_1_ar3 = np.zeros(3)
+#     P_1_ar3 = np.eye(3)
 
-    # Define state space matrices for local level model
-    T_level = np.array([[1]])
-    Z_level = np.array([[1]])
-    Q_level = np.array([[sigma_w_level**2]])
-    H_level = np.array([[sigma_v_level**2]])
-    a_1_level = np.array([0])
-    P_1_level = np.array([[10**7]])
+#     # Define state space matrices for local level model
+#     T_level = np.array([[1]])
+#     Z_level = np.array([[1]])
+#     Q_level = np.array([[sigma_w_level**2]])
+#     H_level = np.array([[sigma_v_level**2]])
+#     a_1_level = np.array([0])
+#     P_1_level = np.array([[10**7]])
 
-    # Define state space matrices for local linear trend model
-    T_trend = np.array([[1, 1],
-                        [0, 1]])
-    Z_trend = np.array([[1, 0]])
-    Q_trend = np.array([[sigma_w_trend**2, 0],
-                        [0, sigma_w_trend**2]])
-    H_trend = np.array([[sigma_v_trend**2]])
-    a_1_trend = np.array([0, 0])
-    P_1_trend = np.eye(2)
+#     # Define state space matrices for local linear trend model
+#     T_trend = np.array([[1, 1],
+#                         [0, 1]])
+#     Z_trend = np.array([[1, 0]])
+#     Q_trend = np.array([[sigma_w_trend**2, 0],
+#                         [0, sigma_w_trend**2]])
+#     H_trend = np.array([[sigma_v_trend**2]])
+#     a_1_trend = np.array([0, 0])
+#     P_1_trend = np.eye(2)
 
-    # Apply Kalman filter and smoother for AR(3) model
-    kalman_ar3 = Kalman(T=T_ar3, Z=Z_ar3, Q=Q_ar3,
-                        H=H_ar3, a_1=a_1_ar3, P_1=P_1_ar3)
-    filtered_ar3 = kalman_ar3.filter(ar3_data)
-    smoothed_ar3 = kalman_ar3.smoother(ar3_data)
+#     # Apply Kalman filter and smoother for AR(3) model
+#     kalman_ar3 = Kalman(T=T_ar3, Z=Z_ar3, Q=Q_ar3,
+#                         H=H_ar3, a_1=a_1_ar3, P_1=P_1_ar3)
+#     filtered_ar3 = kalman_ar3.filter(ar3_data)
+#     smoothed_ar3 = kalman_ar3.smoother(ar3_data)
 
-    # Apply Kalman filter and smoother for local level model
-    kalman_level = Kalman(T=T_level, Z=Z_level, Q=Q_level,
-                          H=H_level, a_1=a_1_level, P_1=P_1_level)
-    filtered_level = kalman_level.filter(local_level_data)
-    smoothed_level = kalman_level.smoother(local_level_data)
+#     # Apply Kalman filter and smoother for local level model
+#     kalman_level = Kalman(T=T_level, Z=Z_level, Q=Q_level,
+#                           H=H_level, a_1=a_1_level, P_1=P_1_level)
+#     filtered_level = kalman_level.filter(local_level_data)
+#     smoothed_level = kalman_level.smoother(local_level_data)
 
-    # Apply Kalman filter and smoother for local linear trend model
-    kalman_trend = Kalman(T=T_trend, Z=Z_trend, Q=Q_trend,
-                          H=H_trend, a_1=a_1_trend, P_1=P_1_trend)
-    filtered_trend = kalman_trend.filter(local_linear_trend_data)
-    smoothed_trend = kalman_trend.smoother(local_linear_trend_data)
+#     # Apply Kalman filter and smoother for local linear trend model
+#     kalman_trend = Kalman(T=T_trend, Z=Z_trend, Q=Q_trend,
+#                           H=H_trend, a_1=a_1_trend, P_1=P_1_trend)
+#     filtered_trend = kalman_trend.filter(local_linear_trend_data)
+#     smoothed_trend = kalman_trend.smoother(local_linear_trend_data)
 
-    # Plot the results
-    plt.figure(figsize=(12, 8))
+#     # Plot the results
+#     plt.figure(figsize=(12, 8))
 
-    # AR(3) model
-    plt.subplot(3, 1, 1)
-    plt.plot(ar3_data, label='AR(3) Data')
-    plt.plot(filtered_ar3, label='Filtered')
-    plt.plot(smoothed_ar3, label='Smoothed')
-    plt.legend()
-    plt.title('AR(3) Model')
+#     # AR(3) model
+#     plt.subplot(3, 1, 1)
+#     plt.plot(ar3_data, label='AR(3) Data')
+#     plt.plot(filtered_ar3, label='Filtered')
+#     plt.plot(smoothed_ar3, label='Smoothed')
+#     plt.legend()
+#     plt.title('AR(3) Model')
 
-    # Local level model
-    plt.subplot(3, 1, 2)
-    plt.plot(local_level_data, label='Local Level Data')
-    plt.plot(filtered_level, label='Filtered')
-    plt.plot(smoothed_level, label='Smoothed')
-    plt.legend()
-    plt.title('Local Level Model')
+#     # Local level model
+#     plt.subplot(3, 1, 2)
+#     plt.plot(local_level_data, label='Local Level Data')
+#     plt.plot(filtered_level, label='Filtered')
+#     plt.plot(smoothed_level, label='Smoothed')
+#     plt.legend()
+#     plt.title('Local Level Model')
 
-    # Local linear trend model
-    plt.subplot(3, 1, 3)
-    plt.plot(local_linear_trend_data, label='Local Linear Trend Data')
-    plt.plot(filtered_trend, label='Filtered')
-    plt.plot(smoothed_trend, label='Smoothed')
-    plt.legend()
-    plt.title('Local Linear Trend Model')
+#     # Local linear trend model
+#     plt.subplot(3, 1, 3)
+#     plt.plot(local_linear_trend_data, label='Local Linear Trend Data')
+#     plt.plot(filtered_trend, label='Filtered')
+#     plt.plot(smoothed_trend, label='Smoothed')
+#     plt.legend()
+#     plt.title('Local Linear Trend Model')
 
-    plt.tight_layout()
-    plt.show()
+#     plt.tight_layout()
+#     plt.show()
