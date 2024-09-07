@@ -216,9 +216,9 @@ class GAS:
     
             plt.figure(figsize=(12, 6))
             plt.plot(x_vals, self.vY, label="True data")
-            if self.method='student':
+            if self.method=='student':
                 plt.plot(x_vals, self.betas, label="Estimated $\\beta_{0}$ - tGAS", linestyle="--")
-            elif self.method='gaussian':
+            elif self.method=='gaussian':
                 plt.plot(x_vals, self.betas, label="Estimated $\\beta_{0}$ - gGAS", linestyle="--")
          
             plt.grid(linestyle='dashed')
@@ -232,10 +232,10 @@ class GAS:
             plt.figure(figsize=(10, 6 * self.n_est))
             for i in range(self.n_est):
                 plt.subplot(self.n_est, 1, i + 1)
-                if self.method='student':
+                if self.method=='student':
                     plt.plot(x_vals, self.betas[:, i],
                             label=f'Estimated $\\beta_{i} - tGAS$', color='black')
-                elif self.method='gaussian':
+                elif self.method=='gaussian':
                     plt.plot(x_vals, self.betas[:, i],
                             label=f'Estimated $\\beta_{i} - GGAS$', color='black')
                 
