@@ -108,7 +108,7 @@ class LocalLinear:
         if h == 0:
             if self.bw_selection is None:
                 print(
-                    'No bandwidth or selection method is specified. \nAverage bandwidth of all available selection criteria is used.')
+                    'No bandwidth or selection method is specified.')
                 self.bw_selection = 'all'
             if self.bw_selection not in ['all', '0', '2', '4', '6', 0, 2, 4, 6, 'avg', 'aic', 'gcv']:
                 print(
@@ -116,11 +116,20 @@ class LocalLinear:
                 exit(1)
 
             self.dict_bw = self.bandwidth_selection()
-            print('Optimal bandwidths are: \n', self.dict_bw)
-            self.dict_bw['all'] = np.array(list(self.dict_bw.values())).mean()
+            print('-----------------------------------------------------------')
+            print('Optimal bandwidth selected by individual method:')
+            print('- AIC method: ', self.dict_bw['aic'])
+            print('- GCV method: ', self.dict_bw['gcv'])
+            print('- Leave-0-out method: ', self.dict_bw['0'])
+            print('- Leave-2-out method: ', self.dict_bw['2'])
+            print('- Leave-4-out method: ', self.dict_bw['4'])
+            print('- Leave-6-out method: ', self.dict_bw['6'])
+            print('- Average leave-l-out method: ', self.dict_bw['6'])
+            print('-----------------------------------------------------------')
+            self.dict_bw['all'] = np.array(list(self.dict_bw.values())[:-1]).mean()
 
             self.h = self.dict_bw[self.bw_selection]
-            print('Optimal bandwidth using',
+            print('Optimal bandwidth used is',
                   self.bw_selection, 'is: ', self.h)
         else:
             self.h = h
