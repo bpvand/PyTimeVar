@@ -25,7 +25,7 @@ model.summary()
 model.plot_predicted()
 
 # plot confidence bands using LBWB
-cb = model.confidence_bands(bootstrap_type='LBWB', h=0.2, Gsubs=None, plots=True)
+cb = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
 # illustrate boosted HP filter
 from PyTimeVar import BoostedHP
