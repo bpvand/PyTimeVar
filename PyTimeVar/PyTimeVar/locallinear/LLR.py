@@ -1634,8 +1634,8 @@ class LocalLinear:
         plt.plot(x_vals, self.vY, label="Actual Y")
         plt.plot(x_vals, self.predicted_y, label="Predicted Y")
         plt.title("Actual vs Predicted Y")
-        plt.xlabel("t/n")
-        plt.ylabel("Y Value")
+        plt.xlabel("$t/n$")
+        
         plt.grid(linestyle='dashed')
         plt.legend()
         
@@ -1652,8 +1652,8 @@ class LocalLinear:
 
         plt.plot(x_vals, self.residuals, label="Residuals")
         plt.title("Residuals")
-        plt.xlabel("t/n")
-        plt.ylabel("Residual Value")
+        plt.xlabel("$t/n$")
+        
         plt.grid(linestyle='dashed')
         plt.legend()
         
@@ -1721,7 +1721,7 @@ class LocalLinear:
                     plt.fill_between(
                         G_full, P_LB_beta, P_UB_beta, color='grey', alpha=0.3, label='Pointwise')
                     # plt.title(f'{bootstrap_type} - beta {j}')
-                    plt.xlabel('t/n')
+                    plt.xlabel('$t/n$')
                     plt.legend()
                     plt.grid(linestyle='dashed')
                     
@@ -1749,7 +1749,7 @@ class LocalLinear:
                         ax.fill_between(
                             G, P_LB_beta[j], P_UB_beta[j], color='grey', alpha=0.3, label='Pointwise' if i == 0 else "")
 
-                    ax.set_xlabel('t/n')
+                    ax.set_xlabel('$t/n$')
 
                     ax.legend()
                     ax.grid(linestyle='dashed')
