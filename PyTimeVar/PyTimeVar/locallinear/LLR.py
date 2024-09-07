@@ -83,7 +83,7 @@ class LocalLinear:
         kernel: str = "epanechnikov",
     ):
 
-        self.vY = vY
+        self.vY = vY.reshape(-1,1)
         self.mX = mX
         self.n = len(vY)
         self.times = np.linspace(0, 1, self.n)
@@ -1462,16 +1462,15 @@ class LocalLinear:
         >>> betahat = confidence_bands[2]
         """
         
-        if h is not None:
-            self.h = h
+        if bw_selection is not None:
+            self.h = self.dict_bw[bw_selection]
+        if self.bw_selection is None:
+            self.h = self.h
         else:
-            if bw_selection is not None:
-                self.h = self.dict_bw[bw_selection]
+            if bootstraptype == 'MB':
+                self.h = self.dict_bw['gcv']
             else:
-                if bootstraptype == 'MB':
-                    self.h = self.dict_bw['gcv']
-                else:
-                    self.h = self.dict_bw['all']
+                self.h = self.dict_bw['all']
 
         if bootstraptype == "MB":
             print("Calculating Multiplier Bootstrap Samples")
