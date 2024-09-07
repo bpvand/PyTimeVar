@@ -215,11 +215,14 @@ class GAS:
         if self.n_est == 1:
     
             plt.figure(figsize=(12, 6))
-            plt.plot(x_vals, self.vY, label="Original Series")
-            plt.plot(x_vals, self.betas, label="GAS Trend", linestyle="--")
-            plt.xlabel("$t/n$")
-            plt.legend()
+            plt.plot(x_vals, self.vY, label="True data")
+            plt.plot(x_vals, self.betas, label="Estimated $\\beta_{0}$", linestyle="--")
+         
             plt.grid(linestyle='dashed')
+            plt.xlabel('$t/n$',fontsize="xx-large")
+
+            plt.tick_params(axis='both', labelsize=16)
+            plt.legend(fontsize="x-large")
             plt.show()
 
         else:
@@ -229,9 +232,12 @@ class GAS:
                 plt.plot(x_vals, self.betas[:, i],
                             label=f'Estimated $\\beta_{i}$', color='black')
 
-                plt.xlabel("$t/n$")
-                plt.legend()
+                
                 plt.grid(linestyle='dashed')
+                plt.xlabel('$t/n$',fontsize="xx-large")
+
+                plt.tick_params(axis='both', labelsize=16)
+                plt.legend(fontsize="x-large")
             plt.show()
 
 # if __name__ == "__main__":
