@@ -128,7 +128,7 @@ class Kalman:
         for t in range(self.n):
             dLL = dLL - 0.5 * \
                 (np.linalg.det(F[t, :, :]) + v[t, :, :].T @
-                 np.linalg.inv(F[t, :, :]@v[t, :, :]))
+                 np.linalg.inv(F[t, :, :])@v[t, :, :])
 
         return -dLL
 
@@ -163,7 +163,6 @@ class Kalman:
             if self.isReg:
                 self.Z = self.Z_reg[t].reshape(1, -1)
             v[t] = self.vY[t] - self.Z @ a[t]
-
             F[t] = self.Z @ P[t] @ self.Z.T + self.H
 
             if not np.isnan(self.vY[t]):
@@ -320,46 +319,46 @@ class Kalman:
 
 
 
-# if __name__ == "__main__":
-#     import numpy as np
-#     import matplotlib.pyplot as plt
+if __name__ == "__main__":
+    import numpy as np
+    import matplotlib.pyplot as plt
 
-#     def simulate_ar3_data(n_timesteps, phi, sigma):
-#         # Generate AR(3) data
-#         y = np.zeros(n_timesteps)
-#         for t in range(3, n_timesteps):
-#             y[t] = phi[0]*y[t-1] + phi[1]*y[t-2] + \
-#                 phi[2]*y[t-3] + np.random.normal(0, sigma)
-#         return y
+    def simulate_ar3_data(n_timesteps, phi, sigma):
+        # Generate AR(3) data
+        y = np.zeros(n_timesteps)
+        for t in range(3, n_timesteps):
+            y[t] = phi[0]*y[t-1] + phi[1]*y[t-2] + \
+                phi[2]*y[t-3] + np.random.normal(0, sigma)
+        return y
 
-#     def simulate_local_level_data(n_timesteps, sigma_w, sigma_v):
-#         # Generate local level model data
-#         x = np.zeros(n_timesteps)
-#         y = np.zeros(n_timesteps)
-#         for t in range(1, n_timesteps):
-#             x[t] = x[t-1] + np.random.normal(0, sigma_w)
-#             y[t] = x[t] + np.random.normal(0, sigma_v)
-#         return y
+    def simulate_local_level_data(n_timesteps, sigma_w, sigma_v):
+        # Generate local level model data
+        x = np.zeros(n_timesteps)
+        y = np.zeros(n_timesteps)
+        for t in range(1, n_timesteps):
+            x[t] = x[t-1] + np.random.normal(0, sigma_w)
+            y[t] = x[t] + np.random.normal(0, sigma_v)
+        return y
 
-#     def simulate_local_linear_trend_data(n_timesteps, sigma_w, sigma_v):
-#         # Generate local linear trend model data
-#         x = np.zeros(n_timesteps)
-#         v = np.zeros(n_timesteps)
-#         y = np.zeros(n_timesteps)
-#         for t in range(1, n_timesteps):
-#             v[t] = v[t-1] + np.random.normal(0, sigma_w)
-#             x[t] = x[t-1] + v[t-1] + np.random.normal(0, sigma_w)
-#             y[t] = x[t] + np.random.normal(0, sigma_v)
-#         return y
+    def simulate_local_linear_trend_data(n_timesteps, sigma_w, sigma_v):
+        # Generate local linear trend model data
+        x = np.zeros(n_timesteps)
+        v = np.zeros(n_timesteps)
+        y = np.zeros(n_timesteps)
+        for t in range(1, n_timesteps):
+            v[t] = v[t-1] + np.random.normal(0, sigma_w)
+            x[t] = x[t-1] + v[t-1] + np.random.normal(0, sigma_w)
+            y[t] = x[t] + np.random.normal(0, sigma_v)
+        return y
 
 #     # Parameters for the AR(3) model
 #     phi = [0.5, -0.2, 0.1]
 #     sigma_ar3 = 1.0
-#     n_timesteps = 100
+    n_timesteps = 100
 
-#     # Parameters for the local level model
-#     sigma_w_level = 0.1
-#     sigma_v_level = 1.0
+    # Parameters for the local level model
+    sigma_w_level = 0.1
+    sigma_v_level = 1.0
 
 #     # Parameters for the local linear trend model
 #     sigma_w_trend = 0.1
@@ -367,8 +366,9 @@ class Kalman:
 
 #     # Simulate data
 #     ar3_data = simulate_ar3_data(n_timesteps, phi, sigma_ar3)
-#     local_level_data = simulate_local_level_data(
-#         n_timesteps, sigma_w_level, sigma_v_level)
+    local_level_data = simulate_local_level_data(
+        n_timesteps, sigma_w_level, sigma_v_level)
+    
 #     local_linear_trend_data = simulate_local_linear_trend_data(
 #         n_timesteps, sigma_w_trend, sigma_v_trend)
 
@@ -383,12 +383,12 @@ class Kalman:
 #     P_1_ar3 = np.eye(3)
 
 #     # Define state space matrices for local level model
-#     T_level = np.array([[1]])
-#     Z_level = np.array([[1]])
-#     Q_level = np.array([[sigma_w_level**2]])
-#     H_level = np.array([[sigma_v_level**2]])
-#     a_1_level = np.array([0])
-#     P_1_level = np.array([[10**7]])
+    T_level = np.array([[1]])
+    Z_level = np.array([[1]])
+    Q_level = np.array([[sigma_w_level**2]])
+    H_level = np.array([[sigma_v_level**2]])
+    a_1_level = np.array([0])
+    P_1_level = np.array([[10**7]])
 
 #     # Define state space matrices for local linear trend model
 #     T_trend = np.array([[1, 1],
@@ -407,9 +407,10 @@ class Kalman:
 #     smoothed_ar3 = kalman_ar3.smoother(ar3_data)
 
 #     # Apply Kalman filter and smoother for local level model
-#     kalman_level = Kalman(T=T_level, Z=Z_level, Q=Q_level,
-#                           H=H_level, a_1=a_1_level, P_1=P_1_level)
-#     filtered_level = kalman_level.filter(local_level_data)
+    
+    kalmanmodel = Kalman(vY = local_level_data, T=T_level, Z= Z_level, a_1=a_1_level, P_1 = P_1_level)
+    kalmanmodel.summary()
+    
 #     smoothed_level = kalman_level.smoother(local_level_data)
 
 #     # Apply Kalman filter and smoother for local linear trend model
