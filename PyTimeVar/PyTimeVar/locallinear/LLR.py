@@ -1622,8 +1622,8 @@ class LocalLinear:
         if self.n_est == 1:
     
             plt.figure(figsize=(12, 6))
-            plt.plot(x_vals, self.vY, label="True data")
-            plt.plot(x_vals, self.betahat.reshape(-1,1), label="Estimated $\\beta_{0}$", linestyle="--")
+            plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
+            plt.plot(x_vals, self.betahat.reshape(-1,1), label="Estimated $\\beta_{0}$", linestyle="--", linewidth=2)
             
             plt.grid(linestyle='dashed')
             plt.xlabel('$t/n$',fontsize="xx-large")
@@ -1654,8 +1654,8 @@ class LocalLinear:
 
         x_vals = np.linspace(0, 1, len(self.vY))
 
-        plt.plot(x_vals, self.vY, label="True data")
-        plt.plot(x_vals, self.predicted_y, label="Fit")
+        plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
+        plt.plot(x_vals, self.predicted_y, label="Fit", linewidth=2)
         # plt.title("Actual vs Predicted Y")
         
         
