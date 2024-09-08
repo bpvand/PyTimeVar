@@ -1733,7 +1733,7 @@ class LocalLinear:
 
             # Plotting
             if Gsubs is None:
-                plt.figure(figsize=(6.5, 5 * n_betas))
+                plt.figure(figsize=(10, 6 * n_betas))
                 for j in range(n_betas):
                     S_LB_beta = confidence_bands[0][j]
                     S_UB_beta = confidence_bands[1][j]
