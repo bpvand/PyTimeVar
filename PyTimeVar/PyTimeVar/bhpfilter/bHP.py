@@ -106,7 +106,7 @@ class BoostedHP:
         
         _, _, _, _, vBHP = self.results
         plt.figure(figsize=(12, 6))
-        plt.plot(x_vals, self.vY, label="True data", linewidth=2, color= 'black)
+        plt.plot(x_vals, self.vY, label="True data", linewidth=2, color= 'black')
         plt.plot(x_vals, vBHP, label="Estimated $\\beta_{0}$", linestyle="--", linewidth=2)
         
         plt.grid(linestyle='dashed')
