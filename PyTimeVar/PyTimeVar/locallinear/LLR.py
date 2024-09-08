@@ -111,6 +111,8 @@ class LocalLinear:
                 print(
                     'No bandwidth or selection method is specified.')
                 self.bw_selection = 'all'
+            else:
+                self.bw_selection= self.bw_selection.lower()
             if self.bw_selection not in ['all', 'aic', 'gcv']:
                 if self.bw_selection[:4] != 'lmcv':
                     print(
@@ -124,24 +126,24 @@ class LocalLinear:
             self.dict_bw = self.bandwidth_selection()
             print('-----------------------------------------------------------')
             print('Optimal bandwidth selected by individual method:')
-            print('- AIC method: ', self.dict_bw['aic'])
-            print('- GCV method: ', self.dict_bw['gcv'])
-            print('- LMCV-0 method: ', self.dict_bw['0'])
-            print('- LMCV-2 method: ', self.dict_bw['2'])
-            print('- LMCV-4 method: ', self.dict_bw['4'])
-            print('- LMCV-6 method: ', self.dict_bw['6'])
+            print('- AIC method: ', np.round(self.dict_bw['aic'],3))
+            print('- GCV method: ', np.round(self.dict_bw['gcv'],3))
+            print('- LMCV-0 method: ', np.round(self.dict_bw['0'],3))
+            print('- LMCV-2 method: ', np.round(self.dict_bw['2'],3))
+            print('- LMCV-4 method: ', np.round(self.dict_bw['4'],3))
+            print('- LMCV-6 method: ', np.round(self.dict_bw['6'],3))
             if self.lmcv_type is not None:
-                print(f'- LMCV-{self.lmcv_type} method: ', self.dict_bw[self.lmcv_type])
+                print(f'- LMCV-{self.lmcv_type} method: ', np.round(self.dict_bw[self.lmcv_type],3))
             print('-----------------------------------------------------------')
             self.dict_bw['all'] = np.array(list(self.dict_bw.values())[:-1]).mean()
 
             self.h = self.dict_bw[self.bw_selection]
             if self.bw_selection not in ['aic', 'gcv']:
                 print('Optimal bandwidth used is LMCV-',
-                      self.bw_selection, 'is: ', self.h)
+                      self.bw_selection, ': ', np.round(self.h,3))
             else:
                 print('Optimal bandwidth used is',
-                  self.bw_selection, 'is: ', self.h)
+                  self.bw_selection, ': ', np.round(self.h,3))
         else:
             self.h = h
             
@@ -768,7 +770,7 @@ class LocalLinear:
         d['4'] = list_h[2]
         d['6'] = list_h[3]
         if self.lmcv_type is not None:
-            d[self.lmcv_type] = list_h[4]
+            d[self.lmcv_type] = list_h[-1]
 
         return d
 

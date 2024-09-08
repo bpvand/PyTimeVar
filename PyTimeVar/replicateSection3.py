@@ -27,6 +27,9 @@ model.plot_predicted()
 # plot confidence bands using LBWB
 cb = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
+# auxiliary LLR model to illustrate kernel and bandwidth selection
+model2LLR = LocalLinear(vY, X, kernel='Gaussian', bw_selection='lmcv_8')
+
 # illustrate boosted HP filter
 from PyTimeVar import BoostedHP
 bHPmodel = BoostedHP(vY, dLambda=1600, iMaxIter=100)
@@ -41,6 +44,13 @@ PwrLaw = PowerLaw(vY, n_powers=1)
 pwrTrend, pwrGamma = PwrLaw.fit()
 PwrLaw.summary()
 PwrLaw.plot()
+
+# auxiliary power-law model to illustrate options
+vgamma0 = np.arange(0, 0.1, 0.1)
+options = {'maxiter': 5E5, 'disp': False}
+auxPwr = PowerLaw(vY, n_powers=1, vgamma0=vgamma0, options=options)
+auxPwrTrend, auxPwrGamma = auxPwr.fit()
+auxPwr.summary()
 
 # illustrate Kalman smoother
 from PyTimeVar import Kalman
