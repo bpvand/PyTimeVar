@@ -215,11 +215,11 @@ class GAS:
         if self.n_est == 1:
     
             plt.figure(figsize=(12, 6))
-            plt.plot(x_vals, self.vY, label="True data")
+            plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
             if self.method=='student':
-                plt.plot(x_vals, self.betas, label="Estimated $\\beta_{0}$ - tGAS", linestyle="--")
+                plt.plot(x_vals, self.betas, label="Estimated $\\beta_{0}$ - tGAS", linestyle="--", linewidth=2)
             elif self.method=='gaussian':
-                plt.plot(x_vals, self.betas, label="Estimated $\\beta_{0}$ - gGAS", linestyle="--")
+                plt.plot(x_vals, self.betas, label="Estimated $\\beta_{0}$ - gGAS", linestyle="--", linewidth=2)
          
             plt.grid(linestyle='dashed')
             plt.xlabel('$t/n$',fontsize="xx-large")
@@ -234,10 +234,10 @@ class GAS:
                 plt.subplot(self.n_est, 1, i + 1)
                 if self.method=='student':
                     plt.plot(x_vals, self.betas[:, i],
-                            label=f'Estimated $\\beta_{i} - tGAS$', color='black')
+                            label=f'Estimated $\\beta_{i} - tGAS$', color='black', linewidth=2)
                 elif self.method=='gaussian':
                     plt.plot(x_vals, self.betas[:, i],
-                            label=f'Estimated $\\beta_{i} - GGAS$', color='black')
+                            label=f'Estimated $\\beta_{i} - GGAS$', color='black', linewidth=2)
                 
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")
