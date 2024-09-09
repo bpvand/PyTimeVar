@@ -27,8 +27,10 @@ model.plot_predicted()
 # plot confidence bands using LBWB
 cb = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
-# auxiliary LLR model to illustrate kernel and bandwidth selection
-model2LLR = LocalLinear(vY, X, kernel='Gaussian', bw_selection='lmcv_8')
+# auxiliary LLR model to illustrate kernel, bandwidth selection, and tau
+tau = np.linspace(0.1, 0.5, len(vY))
+model2LLR = LocalLinear(vY, X, kernel='Gaussian', bw_selection='lmcv_8', tau=tau)
+beta_hat_model2 = model2LLR.fit()
 
 # illustrate boosted HP filter
 from PyTimeVar import BoostedHP
@@ -65,4 +67,7 @@ gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot()
 
+
+from PyTimeVar import gold
+data_gold = gold.load(currencies=['USD'])
 

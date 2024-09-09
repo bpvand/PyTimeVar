@@ -124,26 +124,28 @@ class LocalLinear:
                         self.lmcv_type = self.bw_selection
             
             self.dict_bw = self.bandwidth_selection()
-            print('-----------------------------------------------------------')
-            print('Optimal bandwidth selected by individual method:')
-            print('- AIC method: ', np.round(self.dict_bw['aic'],3))
-            print('- GCV method: ', np.round(self.dict_bw['gcv'],3))
-            print('- LMCV-0 method: ', np.round(self.dict_bw['0'],3))
-            print('- LMCV-2 method: ', np.round(self.dict_bw['2'],3))
-            print('- LMCV-4 method: ', np.round(self.dict_bw['4'],3))
-            print('- LMCV-6 method: ', np.round(self.dict_bw['6'],3))
-            if self.lmcv_type is not None:
-                print(f'- LMCV-{self.lmcv_type} method: ', np.round(self.dict_bw[self.lmcv_type],3))
+            if bw_selection is None: 
+                print('-----------------------------------------------------------')
+                print('Optimal bandwidth selected by individual method:')
+                print('- AIC method:', np.round(self.dict_bw['aic'],3))
+                print('- GCV method: ', np.round(self.dict_bw['gcv'],3))
+                print('- LMCV-0 method: ', np.round(self.dict_bw['0'],3))
+                print('- LMCV-2 method: ', np.round(self.dict_bw['2'],3))
+                print('- LMCV-4 method: ', np.round(self.dict_bw['4'],3))
+                print('- LMCV-6 method: ', np.round(self.dict_bw['6'],3))
+                if self.lmcv_type is not None:
+                    print(f'- LMCV-{self.lmcv_type} method: ', np.round(self.dict_bw[self.lmcv_type],3))
             print('-----------------------------------------------------------')
             self.dict_bw['all'] = np.array(list(self.dict_bw.values())[:-1]).mean()
 
             self.h = self.dict_bw[self.bw_selection]
-            if self.bw_selection not in ['aic', 'gcv']:
-                print('Optimal bandwidth used is LMCV-',
-                      self.bw_selection, ': ', np.round(self.h,3))
+            if self.bw_selection not in ['all','aic', 'gcv']:
+                print(f'Optimal bandwidth used is LMCV-{self.bw_selection}: {np.round(self.h,3)}\n')
+                
+            elif self.bw_selection == 'all':
+                print(f'Optimal bandwidth used is the avg. of all methods: {np.round(self.h,3)}\n')
             else:
-                print('Optimal bandwidth used is',
-                  self.bw_selection, ': ', np.round(self.h,3))
+                print(f'Optimal bandwidth used is {self.bw_selection}: {np.round(self.h,3)}\n')
         else:
             self.h = h
             
