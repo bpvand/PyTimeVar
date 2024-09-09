@@ -34,7 +34,7 @@ class Kalman:
         Performs the smoothing step of the Kalman filter.
     """
 
-    def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, Z: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, H: np.ndarray = None, a_1: np.ndarray = None, P_1: np.ndarray = None, regressors: np.ndarray = None):
+    def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, Z: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, a_1: np.ndarray = None, P_1: np.ndarray = None, regressors: np.ndarray = None):
         self.vY = vY
         # data
         self.n = len(self.vY)
@@ -63,10 +63,12 @@ class Kalman:
         if self.Q is None:
             # Transition covariance matrix
             self.bEst_Q = True
-        self.H = H
+        self.H = sigma_u
         if self.H is None:
             # Observation covariance matrix
             self.bEst_H = True
+        else: 
+            self.H = np.array([sigma_u])
         self.a_1 = a_1 if a_1 is not None else np.zeros(
             self.T.shape[0])            # Initial state mean
         self.P_1 = P_1 if P_1 is not None else np.eye(

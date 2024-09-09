@@ -28,7 +28,7 @@ model.plot_predicted()
 cb = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
 # auxiliary LLR model to illustrate kernel, bandwidth selection, and tau
-tau = np.linspace(0.1, 0.5, len(vY))
+tau = np.linspace(0, 0.5, len(vY))
 model2LLR = LocalLinear(vY, X, kernel='Gaussian', bw_selection='lmcv_8', tau=tau)
 beta_hat_model2 = model2LLR.fit()
 
@@ -66,3 +66,11 @@ from PyTimeVar import GAS
 gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot()
+
+from PyTimeVar import LocalLinear
+from PyTimeVar.datasets import herding
+herd_data = herding.load(start_date='2015-01-05', end_date='2022-04-29')
+vY = herd_data[['CSAD_AVG']].values
+mX = herd_data[['Intercept']].values
+LLr_model = LocalLinear(vY=vY, mX=mX)
+LLr_betahat = LLr_model.fit()
