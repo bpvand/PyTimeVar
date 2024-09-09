@@ -34,7 +34,7 @@ class Kalman:
         Performs the smoothing step of the Kalman filter.
     """
 
-    def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, Z: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, a_1: np.ndarray = None, P_1: np.ndarray = None, regressors: np.ndarray = None):
+    def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, Z: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, b_1: np.ndarray = None, P_1: np.ndarray = None, regressors: np.ndarray = None):
         self.vY = vY
         # data
         self.n = len(self.vY)
@@ -57,7 +57,7 @@ class Kalman:
         self.T = self.T if self.T is not None else np.array(
             [[1]])                # Transition matrix
         self.Z = Z if Z is not None else np.array(
-            [[1]])                # Observation matrix
+            [[1]])                # Observation vector
         self.Q = Q
         self.bEst_Q, self.bEst_H = False, False
         if self.Q is None:
@@ -69,7 +69,7 @@ class Kalman:
             self.bEst_H = True
         else: 
             self.H = np.array([sigma_u])
-        self.a_1 = a_1 if a_1 is not None else np.zeros(
+        self.a_1 = b_1 if b_1 is not None else np.zeros(
             self.T.shape[0])            # Initial state mean
         self.P_1 = P_1 if P_1 is not None else np.eye(
             self.T.shape[0])*1000       # Initial state covariance
@@ -228,9 +228,9 @@ class Kalman:
                 self.Z = self.Z_reg[t].reshape(1, -1)
             L = self.T - K[t] @ self.Z
             if not np.isnan(self.vY[t]):
-                r[t - 1] = self.Z.T @ np.linalg.inv(F[t]) @ v[t] + L.T @ r[t]
+                r[t - 1] = self.Z @ np.linalg.inv(F[t]) @ v[t] + L.T @ r[t]
                 N[t -
-                    1] = self.Z.T @ np.linalg.inv(F[t]) @ self.Z + L.T @ N[t] @ L
+                    1] = self.Z @ np.linalg.inv(F[t]) @ self.Z + L.T @ N[t] @ L
             else:
                 r[t - 1] = r[t]
                 N[t - 1] = N[t]
