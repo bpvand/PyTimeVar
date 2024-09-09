@@ -66,4 +66,3 @@ from PyTimeVar import GAS
 gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot()
-
