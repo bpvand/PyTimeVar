@@ -67,7 +67,3 @@ gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot()
 
-
-from PyTimeVar.datasets import gold
-data_gold = gold.load(currencies=['USD'])
-

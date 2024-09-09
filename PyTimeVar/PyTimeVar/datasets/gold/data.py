@@ -28,7 +28,8 @@ def load(currencies=None, start_date=None, end_date=None):
     Prints warnings if any provided currencies are not found in the dataset.
     Prints warnings if the start_date is earlier than the minimum date in the data or the end_date is later than the maximum date in the data.
     """
-    data = load_csv(__file__, "gold.csv", sep=";")
+    data = load_csv(__file__, "gold.csv", sep=",")
+    print(data)
 
     # Convert Date column to datetime
     data["Date"] = to_datetime(data["Date"], dayfirst=True)
@@ -37,9 +38,9 @@ def load(currencies=None, start_date=None, end_date=None):
     for column in data.columns:
         if column != "Date":
             data[column] = data[column].replace("#N/A", np.nan)
-            data[column] = (
-                data[column].str.replace(".", "").str.replace(",", ".").astype(float)
-            )
+            # data[column] = (
+            #     data[column].str.replace(".", "").str.replace(",", ".").astype(float)
+            # )
 
     min_date = data["Date"].min()
     max_date = data["Date"].max()
