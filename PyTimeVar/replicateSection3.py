@@ -66,11 +66,3 @@ from PyTimeVar import GAS
 gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot()
-
-from PyTimeVar import LocalLinear
-from PyTimeVar.datasets import herding
-herd_data = herding.load(start_date='2015-01-05', end_date='2022-04-29')
-vY = herd_data[['CSAD_AVG']].values
-mX = herd_data[['Intercept']].values
-LLr_model = LocalLinear(vY=vY, mX=mX)
-LLr_betahat = LLr_model.fit()

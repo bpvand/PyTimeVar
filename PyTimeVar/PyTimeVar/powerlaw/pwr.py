@@ -1,26 +1,55 @@
-# -*- coding: utf-8 -*-
-"""
-Title: 
-    
-Project: 
-    
-Author(s):
-    
-Date modified:
-    
-"""
-# In[]
-# Imports
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
 
 class PowerLaw():
-    '''
-    Class for implementing the Power Law.
-    '''
+    """
+    Class for implementing the Power-Law method.
+    
+    Parameters
+    ----------
+    vY : np.ndarray
+        The dependent variable (response) array.
+    n_powers : int
+        The number of powers.
+    vgamma0 : np.ndarray
+        The initial parameter vector.
+    options : dict
+        Stopping criteria for optimization.
+        
+    Attributes
+    ----------
+    vY : np.ndarray
+        The dependent variable (response) array.
+    n : int
+        The length of vY.
+    p : int
+        The number of powers. Default is set to 2.
+    vgamma0 : np.ndarray
+        The initial parameter vector.
+    bounds : list
+        List to define parameter space.
+    cons : dict
+        Dictionary to define constraints.
+    trendHat : np.ndarray
+        The estimated trend.
+    gammaHat : np.ndarray
+        The estimated power parameters.
+    coeffHat : np.ndarray
+        The estimated coefficients.
+        
+        
+    Methods
+    -------
+    fit()
+       Fit by power-law model and return trend estimates and parameter estimates .
+    summary()
+        Print fitted prediction equation.
+    plot()
+        Plot true data against estimated trend
+    
+    """
 
     def __init__(self, vY: np.ndarray, n_powers: float = None, vgamma0: np.ndarray=None, options: dict=None):
         self.vY = vY
@@ -63,10 +92,6 @@ class PowerLaw():
         """
         Print the mathematical equation for the fitted model
 
-        Returns
-        -------
-        None.
-
         """
         
         def term(coef, power):
@@ -81,6 +106,17 @@ class PowerLaw():
         print('yhat= ' + ' + '.join(terms))
 
     def fit(self):
+        '''
+        
+
+        Returns
+        -------
+        self.trendHat : np.ndarray
+            The estimated trend.
+        self.gammaHat : np.ndarray
+            The estimated power parameters.
+
+        '''
 
         res = minimize(self._construct_pwrlaw_ssr, self.vgamma0,
                        bounds=self.bounds, constraints=self.cons, options=self.options)
@@ -95,6 +131,20 @@ class PowerLaw():
         return self.trendHat, self.gammaHat
 
     def _construct_pwrlaw_ssr(self, vparams):
+        '''
+        Compute sum of squared residuals for a given parameter vector.
+
+        Parameters
+        ----------
+        vparams : np.ndarray
+            The parameter vector.
+
+        Returns
+        -------
+        ssr : float
+            Sum of squared residuals.
+
+        '''
         trend = np.arange(1, self.n+1, 1).reshape(self.n, 1)
 
         vparams = np.array(vparams).reshape(1, self.p)
@@ -104,6 +154,20 @@ class PowerLaw():
         return ssr
 
     def _nonlcon(self, params):
+        '''
+        Construct the nonlinear constraints for identification.
+
+        Parameters
+        ----------
+        params : np.ndarray
+            The parameter vector.
+
+        Returns
+        -------
+        c : list
+            List of parameter constraints.
+
+        '''
         epsilon = 0.005
         c = []
         for id1 in range(self.p-1):
@@ -112,6 +176,3 @@ class PowerLaw():
         return c
 
 
-        # In[]
-if __name__ == '__main__':
-    print('hello')

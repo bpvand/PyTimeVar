@@ -2,22 +2,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy
 from tqdm import tqdm
-import time
-import pandas as pd
 from statsmodels.tsa.ar_model import ar_select_order
 from statsmodels.tsa.ar_model import AutoReg
-from datetime import datetime, timedelta
 
 
 class LocalLinear:
     """
-    Class for performing local linear regression.
+    Class for performing local linear regression (LLR).
 
-    Local linear regression is a non-parametric regression method that
-    fits linear models to localized subsets of the data to form a
-    regression function. This class uses the Epanechnikov kernel for
-    weighting observations.
-    Based on the code provided by Yicong Lin [1] and the estimation is based on the methods discussed by Chai [2].
+    Local linear regression is a non-parametric regression method that fits linear models to localized subsets of the data to form a
+    regression function. The code is based on the code provided by Lin et al. [1].
 
     Parameters
     ----------
@@ -27,50 +21,78 @@ class LocalLinear:
         The independent variable (predictor) matrix.
     h : float
         The bandwidth parameter controlling the size of the local neighborhood.
+        If not provided, it is estimated as the average of all methods in the package.
+    bw_selection : string
+        The name of the bandwidth selection method to be used.
+        Choice between 'aic', 'gcv', 'lmcv-l' with l=0,2,4,6,etc., or 'all'.
+        If not provided, it is set to 'all'.
     tau : np.ndarray, optional
-        The array of points at which predictions are made. If not provided,
-        it is set to a linear space between 0 and 1 with the same length as `vY`.
+        The array of points at which predictions are made. 
+        If not provided, it is set to a linear space between 0 and 1 with the same length as `vY`.
+    kernel : string
+        The name of the kernel function used for estimation.
+        If not provided, it is set to 'epanechnikov' for the Epanechnikov kernel.
 
     Attributes
     ----------
-    h : float
-        The bandwidth used for the kernel function.
-    times : np.ndarray
-        Linearly spaced time points for the local regression.
     vY : np.ndarray
         The response variable array.
     mX : np.ndarray
         The predictor matrix.
+    n : int
+        The length of vY.
+    times : np.ndarray
+        Linearly spaced time points for the local regression.
     tau : np.ndarray
         Points at which the regression is evaluated.
     n_est : int
-        The number of estimated coefficients.
+        The number of coefficients.
+    kernel : string
+        The name of the kernel function.
+    bw_selection : string
+        The name of the bandwidth selection.
+    lmcv_type : float
+        If LMCV is used for bandwidth selection, this attribute denotes the l in leave-2*l+1-out.
+    dict_bw : dict
+        The dictionary that contains the optimnal bandwidth values for each individual method.
+    h : float
+        The bandwidth used for local linear regression.
+    betahat : np.ndarray
+        The estimated coefficients.
+    predicted_y : np.ndarray
+        The fitted values for the response variable.
+    residuals : np.ndarray
+        The residuals resulting from the local linear regression.
+    
+    
 
     Methods
     -------
     fit()
-        Estimates the coefficients for the local linear regression model.
+        Fit the model by local linear estimation and return estimated coefficients.
+    summary()
+        Print a summary of local linear regression results, including bandwidth, number of observations, and beta coefficients.
+    plot_betas()
+        Plot estimated coefficients curve over a normalized x-axis from 0 to 1.
+    plot_predicted()
+        Plot true data against fitted values.
+    plot_residuals()
+        Plot residuals.
+    confidence_bands()
+        Construct and plot bootstrap confidence intervals/bands for each coefficient curve.
 
     Notes
     -----
-    This class uses the Epanechnikov kernel function for local smoothing.
     The local linear regression is computed at each point specified in `tau`.
     The bandwidth `h` controls the degree of smoothing.
 
     References
     ----------
-    [1] Yicong Lin, "Local Linear Regression",
-    [2] Zongwu Cai,
-        Trending time-varying coefficient time series models with serially correlated errors,
-        Journal of Econometrics,
-        Volume 136, Issue 1,
-        2007,
-        Pages 163-188,
-        ISSN 0304-4076,
-        https://doi.org/10.1016/j.jeconom.2005.08.004.
+    [1] Lin Y, Song M, van der Sluis B (2024), 
+        Bootstrap inference for linear time-varying coefficient models in locally stationary time series,
+        Journal of Computational and Graphical Statistics,
+        Forthcoming.
 
-    Examples
-    --------
     """
 
     def __init__(
@@ -155,7 +177,7 @@ class LocalLinear:
 
     def _kernel(self, u: np.ndarray) -> np.ndarray:
         """
-        Epanechnikov Kernel function for local linear regression.
+        Kernel function for local linear regression.
 
         Parameters
         ----------
@@ -165,7 +187,7 @@ class LocalLinear:
         Returns
         -------
         np.ndarray
-            Weighted values computed using the Epanechnikov kernel.
+            Weighted values computed using the self.kernel function.
         """
         if self.kernel == "epanechnikov":
             return np.where(np.abs(u) <= 1, 0.75 * (1 - u**2), 0)
@@ -382,7 +404,7 @@ class LocalLinear:
         h : float
             The bandwidth parameter.
         tau : np.ndarray
-            Where to evaluate the regression.
+            Array of points where to evaluate the regression.
         times : np.ndarray
             The time points.
         n_est : int
@@ -410,8 +432,8 @@ class LocalLinear:
 
         Returns
         -------
-        Results
-            An instance of the Results class containing the fitted model results.
+        self.betahat : np.ndarray
+            The estimated coefficients.
         """
         betahat = self._est_betas(
             self.vY, self.mX, self.h, self.tau, self.times, self.n_est
@@ -436,7 +458,7 @@ class LocalLinear:
 
     def _omega(self, x, tau):
         """
-        Calculate the weight for a given data point based on the local linear regression model.
+        Calculate the LMCV weight for a given data point based on the local linear regression model.
 
         Parameters
         ----------
@@ -448,30 +470,22 @@ class LocalLinear:
         Returns
         -------
         float
-            The weight for the given data point.
+            The LMCV weight for the given data point.
         """
         return scipy.stats.norm.pdf(x, loc=tau, scale=np.sqrt(0.025))
 
     def _beta_estimation_lmcv(self, h, tau, lmcv_type) -> np.ndarray:
         """
-        Estimate the beta coefficients using the Local Linear Regression method with Leave-Multiple-Covariates-Out (LMCV).
+        Estimate the beta coefficients using the Local Linear Regression method with Local-Modified-Cross-Validation (LMCV).
 
         Parameters
         ----------
-        vY : np.ndarray
-            The dependent variable vector.
-        mX : np.ndarray
-            The independent variable matrix.
         h : float
             The bandwidth parameter.
         tau : np.ndarray
-            The quantile levels.
-        times : np.ndarray
-            The time points.
-        n_est : int
-            The number of beta coefficients to estimate.
+            The quantile levels that are evaluated.
         lmcv_type : int
-            The type of LMCV method to use (0 for LMCV-0, 1 for LMCV-1, etc.).
+            The type of LMCV method to use (0 for LMCV-0, 2 for LMCV-2, etc.).
 
         Returns
         -------
@@ -516,18 +530,14 @@ class LocalLinear:
 
     def _compute_LMCV_score(self, betahat_lmcv: np.ndarray, one_tau: float):
         """
-        Calculate the Leave-One-Out Modified Cross-Validation (LMCV) score.
+        Calculate the Local-Modified-Cross-Validation (LMCV) score.
 
         Parameters
         ----------
         betahat_lmcv : np.ndarray
-            The estimated coefficients.
-        mX : np.ndarray
-            The design matrix.
-        vY : np.ndarray
-            The response variable.
+            The estimated coefficients using LMCV.
         one_tau : float
-            The bandwidth parameter.
+            The time point.
 
         Returns
         -------
@@ -544,18 +554,12 @@ class LocalLinear:
 
     def _get_optimalh_lmcv(self, lmcv_type):
         """
-        Calculates the optimal value of h for local linear regression using Leave-One-Out Cross Validation (LMCV).
+        Calculates the optimal value of h for local linear regression using Local-Modified-Cross-Validation (LMCV).
 
         Parameters
         ----------
-        vY : np.ndarray
-            The dependent variable vector.
-        mX : np.ndarray
-            The independent variable matrix.
         lmcv_type : int
             The type of LMCV to use.
-        n_est : int
-            The number of estimations to perform.
 
         Returns
         -------
@@ -585,20 +589,11 @@ class LocalLinear:
 
     def _get_lmcv_bandwiths(self):
         """
-        Calculates the local linear regression bandwidths using Leave-One-Out Cross Validation (LMCV).
-
-        Parameters
-        ----------
-        vY : np.ndarray
-            The dependent variable vector.
-        mX : np.ndarray
-            The independent variable matrix.
-        n_est : int
-            The number of estimations to perform.
+        Calculates the local linear regression bandwidths using Local-Modified-Cross-Validation (LMCV-l) for different values of l.
 
         Returns
         -------
-        list
+        h : list
             A list of bandwidths calculated using LMCV, including the average bandwidth.
         """
         
@@ -612,9 +607,41 @@ class LocalLinear:
         return h
 
     def AICmodx(self, s2, traceh):
+        '''
+        Computes the AIC value for a given mean squared error and trace.
+
+        Parameters
+        ----------
+        s2 : float
+            The sample variance of residuals.
+        traceh : float
+            The trace of projection matrix Q_h in yhat(h) = Q_h y.
+
+        Returns
+        -------
+        float
+            AIC value.
+
+        '''
         return np.log(s2) + 2*(traceh+1)/(self.n-traceh-2)
 
     def _get_loss_aic_gcv(self, h):
+        '''
+        Computes the mean squared error and corresponding trace, for a given bandwidth.
+
+        Parameters
+        ----------
+        h : float
+            The bandwidth parameter.
+
+        Returns
+        -------
+        s2 : float
+            The sample variance of residuals.
+        traceh : float
+            The trace of projection matrix Q_h in yhat(h) = Q_h y.
+
+        '''
 
         vYhat = np.zeros(self.n)
         traceh = 0
@@ -650,7 +677,7 @@ class LocalLinear:
         Returns
         -------
         np.ndarray
-            The constructed E matrix.
+            The constructed E vector.
         """
         mE = np.zeros(shape=(2*self.n_est, self.n))
         En0 = self._compute_En(0, h, self.times, tau, self.mX)
@@ -680,7 +707,7 @@ class LocalLinear:
         mX: np.ndarray,
     ) -> np.ndarray:
         """
-        Compute the T_n matrix for local linear regression.
+        Compute the E_n vector for AIC and GCV bandwidth selection.
 
         Parameters
         ----------
@@ -694,13 +721,11 @@ class LocalLinear:
             The point at which the regression is evaluated.
         mX : np.ndarray
             The matrix of regressors.
-        vY : np.ndarray
-            The response variable.
 
         Returns
         -------
         np.ndarray
-            The calculated T_n matrix.
+            The calculated E_n vector.
         """
         u = (times[None, :] - tau) / h
         K_u = self._kernel(u)
@@ -712,7 +737,7 @@ class LocalLinear:
 
     def _get_aic_bandwidth(self):
         '''
-        Calculates the LLR optimal bandwidth by minimizing modified AIC 
+        Calculates the LLR optimal bandwidth by minimizing modified AIC. 
 
         Returns
         -------
@@ -731,6 +756,22 @@ class LocalLinear:
         return h_opt
 
     def GCVmodx(self, s2, traceh):
+        '''
+        Computes the GCV value for a given mean squared error and trace.
+
+        Parameters
+        ----------
+        s2 : float
+            The sample variance of residuals.
+        traceh : float
+            The trace of projection matrix Q_h in yhat(h) = Q_h y.
+
+        Returns
+        -------
+        float
+            GCV value.
+
+        '''
         return s2/(1-traceh/self.n)**2
 
     def _get_gcv_bandwidth(self):
@@ -756,12 +797,12 @@ class LocalLinear:
 
     def bandwidth_selection(self):
         """
-        Calculate the optimal bandwidth for the local linear regression model using Leave-Multiple-Covariates-Out (LMCV).
+        Calculate the optimal bandwidth for the local linear regression model using LMCV, AIC and GCV.
 
         Returns
         -------
-        list
-            The optimal bandwidth self.bw_selection
+        dict
+            The optimal bandwidths for each individual method.
         """
         d = {}
         d['aic'] = self._get_aic_bandwidth()
@@ -790,18 +831,17 @@ class LocalLinear:
             Array of predicted values.
         T : int
             Number of observations.
+        ic : string
+            Information criterion to select number of lags. Default criterion is AIC
 
         Returns
         -------
-        tuple
-            epsilontilde : np.ndarray
-                Array of residuals.
-            max_lag : int
-                Maximum lag order.
-            armodel : AutoReg
-                Fitted autoregressive model.
-            ic : string
-                Information criterion to select number of lagsy. Default criterion is AIC
+        epsilonhat: np.ndarray
+            Array of residuals.
+        max_lag : int
+            Maximum lag order.
+        armodel : AutoReg
+            Fitted autoregressive model.
 
         """
         if ic is None:
@@ -838,7 +878,7 @@ class LocalLinear:
 
         Returns
         -------
-        np.ndarray
+        zstar : np.ndarray
             Array of Z* values.
         """
         zstar = np.zeros(len(max_lags))
@@ -884,7 +924,7 @@ class LocalLinear:
 
         Returns
         -------
-        np.ndarray
+        vYstar : np.ndarray
             Transformed response variable.
         """
         epsilonstar = np.random.choice(epsilontilde, T - max_lag + 50)
@@ -926,10 +966,14 @@ class LocalLinear:
             Array of estimated coefficients.
         T : int
             Total number of observations.
+        h : float
+            The bandwidth parameter.
+        gamma : float
+            The AR(1) coefficient and the standard deviation of the wild component in the AWB.
 
         Returns
         -------
-        np.ndarray
+        vYstar : np.ndarray
             Transformed response variable.
         """
         # v_nv_star=np.random.normal(0,np.sqrt(1-gamma**2),200)
@@ -970,10 +1014,14 @@ class LocalLinear:
             Array of estimated coefficients.
         T : int
             Total number of observations.
+        h : float
+            The bandwidth parameter.
+        gamma : float
+            The AR(1) coefficient and the standard deviation of the wild component in the AWB.    
 
         Returns
         -------
-        np.ndarray
+        vYstar : np.ndarray
             Transformed response variable.
         """
         # generate zstar by
@@ -1016,7 +1064,7 @@ class LocalLinear:
 
         Returns
         -------
-        np.ndarray
+        vYstar : np.ndarray
             Transformed response variable.
         """
         epsilonstar = epsilontilde * np.random.normal(0, 1, T - max_lag)
@@ -1039,6 +1087,7 @@ class LocalLinear:
         self, zhat: np.ndarray, mX: np.ndarray, betatilde: np.ndarray, T: int, h: float, gamma: float
     ):
         """
+        Local Blockwise Wild Bootstrap
         Performs the local blockwise wild bootstrap algorithm to generate a bootstrap sample.
 
         Parameters
@@ -1053,10 +1102,12 @@ class LocalLinear:
             The number of observations.
         h : float
             The bandwidth parameter.
+        gamma : float
+            The AR(1) coefficient and the standard deviation of the wild component in the AWB.
 
         Returns
         -------
-        np.ndarray
+        vYstar : np.ndarray
             The bootstrap sample generated by the LBW_BT algorithm.
         """
         l = int(4.5 * ((T * h) ** (0.25)))
@@ -1134,11 +1185,15 @@ class LocalLinear:
             Difference array.
         tau : np.ndarray
             Array of tau values.
-
+        alpha : float
+            The significance level.
+        B : int
+            The number of bootstrap samples.
+        
         Returns
         -------
         float
-            Absolute value.
+            Absolute value for quantiles.
         """
         
         check = np.sum(
@@ -1159,7 +1214,11 @@ class LocalLinear:
             Difference array.
         tau : np.ndarray
             Array of tau values.
-
+        alpha : float
+            The significance level.
+        B : int
+            The number of bootstrap samples.
+        
         Returns
         -------
         float
@@ -1188,9 +1247,9 @@ class LocalLinear:
         Parameters
         ----------
         vTi_t : np.ndarray
-            Array of time indices.
+            The array of time indices.
         h : float
-            Bandwidth parameter.
+            The bandwidth parameter.
 
         Returns
         -------
@@ -1206,11 +1265,11 @@ class LocalLinear:
         Parameters
         ----------
         B : int
-            Number of bootstrap samples.
+            The number of bootstrap samples.
         T : int
-            Number of observations.
+            the number of observations.
         taut : np.ndarray
-            Array of tau values.
+            The points at which the regression is evaluated.
         h : float
             Bandwidth parameter.
         alpha : float
@@ -1218,7 +1277,7 @@ class LocalLinear:
 
         Returns
         -------
-        float
+        dQ : float
             Quantile value.
         """
         h = h * 2
@@ -1369,6 +1428,8 @@ class LocalLinear:
 
         Parameters
         ----------
+        alpha : 
+            The significance level for the bootstrap.
         h : float
             Bandwidth parameter.
         vY : np.ndarray
@@ -1448,6 +1509,8 @@ class LocalLinear:
         ----------
         bootstraptype : str
             Type of bootstrap to use ('SB', 'WB', 'SWB', 'MB', 'LBWB, 'AWB').
+        h : float
+            The bandwidth parameter.
         alpha : float
             Significance level for quantiles.                              
         gamma : float
@@ -1455,31 +1518,26 @@ class LocalLinear:
         ic : str
             Type of information criterion to use for Sieve and Sieve Wild Bootstrap.
             Possible values are: 'aic', 'hqic', 'bic'
-        Gsubs : list of tuples, optional
+        Gsubs : list of tuples
             List of sub-ranges for G. Each sub-range is a tuple (start_index, end_index).
             Default is None, which uses the full range (0, T).
-        Chtilde : float, optional
+        Chtilde : float
             Multiplication constant to determine size of oversmoothing bandwidth htilde.
             Default is 2, if none or negative is specified.
+        B : int
+            The number of bootstrap samples.
+            Deafult is 1299, if not provided by the user.
+        bw_selection ; string
+            The name of the bandwidth selection method to be used for the bootstrap.
+            Choice between 'aic', 'gcv', 'lmcv-l' with l=0,2,4,6,etc., or 'all'.
+            GCV is recommended for MB bootstrap.
+            If not provided, it is set to the method used for estimation.
 
         Returns
         -------
         list of tuples
             Each tuple contains simultaneous and pointwise lower and upper bands for each sub-range,
             and beta coefficients for each sub-range.
-
-        Examples
-        --------
-        Construct confidence bands using the Sieve Bootstrap method for the full range:
-        >>> confidence_bands = model.construct_confidence_bands(bootstraptype='SB')
-        >>> S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta = confidence_bands[0]
-        >>> betahat = confidence_bands[1]
-
-        Construct confidence bands using the Local Blockwise Wild Bootstrap method for these ranges [(0, 50), (150, 200)]:
-        >>> confidence_bands = model.construct_confidence_bands(bootstraptype='LBWB', Gsubs=[(0, 50), (150, 200)])
-        >>> g1_S_LB_beta, g1_S_UB_beta, g1_P_LB_beta, g1_P_UB_beta = confidence_bands[0]
-        >>> g2_S_LB_beta, g2_S_UB_beta, g2_P_LB_beta, g2_P_UB_beta = confidence_bands[1]
-        >>> betahat = confidence_bands[2]
         """
         
         if bw_selection is not None:
@@ -1671,10 +1729,15 @@ class LocalLinear:
         plt.show()
 
     def plot_residuals(self):
-
-        """
+        '''
         Plot the residuals over a normalized x-axis from 0 to 1.
-        """
+
+        Returns
+        -------
+        self.residuals : np.ndarray
+            Array of residuals.
+
+        '''
         plt.figure(figsize=(12, 6))
 
         x_vals = np.linspace(0, 1, len(self.residuals))
@@ -1696,25 +1759,59 @@ class LocalLinear:
 
     def confidence_bands(self, bootstrap_type: str = 'LBWB', h: float=None, alpha: float = None,
                          gamma: float = None, ic: str = None, Gsubs=None,
-                         Chtilde: float = 2, B: float = 1299, plots: bool = False):
-        """
-        Plot the beta coefficients with confidence bands over a normalized x-axis from 0 to 1.
+                         Chtilde: float = 2, B: float = 1299, bw_selection : str=None, plots: bool = False):
+        '''
+        
 
         Parameters
         ----------
-        bootstrap_type : str, optional
-            The type of bootstrap to use for constructing confidence bands (default is 'LBWB').
-        Gsubs : list of tuples, optional
-            List of tuples specifying the subsample ranges for G. If None, plot for the whole sample.
-        date_range : tuple of str, optional
-            Tuple containing start and end dates in 'YYYY-MM-DD' format.
-        """
+        bootstraptype : str
+            Type of bootstrap to use ('SB', 'WB', 'SWB', 'MB', 'LBWB, 'AWB').
+        h : float
+            The bandwidth parameter.
+        alpha : float
+            Significance level for quantiles.
+        gamma : float
+             Parameter value for Autoregressive Wild Bootstrap.
+        ic : str
+            Type of information criterion to use for Sieve and Sieve Wild Bootstrap.
+            Possible values are: 'aic', 'hqic', 'bic'
+        Gsubs : list of tuples
+            List of sub-ranges for G. Each sub-range is a tuple (start_index, end_index).
+            Default is None, which uses the full range (0, T).
+        Chtilde : float
+            Multiplication constant to determine size of oversmoothing bandwidth htilde.
+            Default is 2, if none or negative is specified.
+        B : int
+            The number of bootstrap samples.
+            Deafult is 1299, if not provided by the user.
+        bw_selection : string
+            The name of the bandwidth selection method to be used for the bootstrap.
+            Choice between 'aic', 'gcv', 'lmcv-l' with l=0,2,4,6,etc., or 'all'.
+            GCV is recommended for MB bootstrap.
+            If not provided, it is set to the method used for estimation.
+        plots : bool
+            If True, plots are shown of the estimated coefficients and corresponding confidence bands.
+            
+
+        Returns
+        -------
+        S_LB : np.ndarray
+            The lower simultaneous confidence bands.
+        S_UB : np.ndarray
+            The upper simultaneous confidence bands.
+        P_LB : np.ndarray
+            The lower pointwise confidence intervals.
+        P_UB : np.ndarray
+            The upper pointwise confidence intervals.
+
+        '''
         bootstrap_type = bootstrap_type.upper()
         
         # Construct confidence bands
         if Gsubs is None:
             confidence_bands_list = self.construct_confidence_bands(
-                bootstrap_type, h=h, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B)
+                bootstrap_type, h=h, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B, bw_selection=bw_selection)
             confidence_bands = confidence_bands_list[:-1][0]
             betahat = confidence_bands_list[-1]
             S_LB = confidence_bands[0]
@@ -1724,7 +1821,7 @@ class LocalLinear:
             G_full = np.linspace(0, 1, len(self.vY))
         else:
             confidence_bands_dict = self.construct_confidence_bands(
-                bootstrap_type, h=h, alpha=alpha, gamma=gamma, ic=ic, Gsubs=Gsubs, Chtilde=Chtilde, B=B)
+                bootstrap_type, h=h, alpha=alpha, gamma=gamma, ic=ic, Gsubs=Gsubs, Chtilde=Chtilde, B=B, bw_selection=bw_selection)
             confidence_bands_list = confidence_bands_dict[:-1]
             betahat = confidence_bands_dict[-1]
             G_full = np.linspace(0, 1, len(self.vY))

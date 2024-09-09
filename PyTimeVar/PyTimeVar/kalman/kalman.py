@@ -1,8 +1,6 @@
 import numpy as np
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt
-import pandas as pd
-from datetime import datetime
 
 
 class Kalman:
@@ -11,27 +9,74 @@ class Kalman:
 
     Parameters
     ----------
+    vY : np.ndarray
+        The dependent variable (response) array.
     T : np.ndarray, optional
         The transition matrix of the state space model.
     Z : np.ndarray, optional
-        The observation matrix of the state space model.
+        The observation vector of the state space model.
+    R : np.ndarray, optional
+        The transition correlation matrix of the state space model.
     Q : np.ndarray, optional
         The transition covariance matrix of the state space model.
-    H : np.ndarray, optional
-        The observation covariance matrix of the state space model.
-    a_1 : np.ndarray, optional
+    sigma_u : np.ndarray, optional
+        The observation noise variance of the state space model.
+    b_1 : np.ndarray, optional
         The initial mean of the state space model.
     P_1 : np.ndarray, optional
         The initial covariance matrix of the state space model.
     regressors : np.ndarray, optional
         The regressors to use in the model. If provided, the model will be a linear regression model.
-
+        
+        
+    Attributes
+    ----------
+    vY : np.ndarray
+        The dependent variable (response) array.
+    n : int
+        The length of vY.
+    isReg : bool
+        If True, regressors are provided by the user.
+    T : np.ndarray
+        The transition matrix of the state space model.
+    Z : np.ndarray
+        The observation vector of the state space model.
+    R : np.ndarray
+        The transition correlation matrix of the state space model.
+    Q : np.ndarray
+        The transition covariance matrix of the state space model.
+    H : np.ndarray
+        The observation noise variance of the state space model.
+    a_1 : np.ndarray, optional
+        The initial mean of the state space model.
+    P_1 : np.ndarray
+        The initial covariance matrix of the state space model.
+    regressors : np.ndarray
+        The regressors to use in the model. If provided, the model will be a linear regression model.
+    Z_reg : np.ndarray
+        The regressors matrix in correct format to use in filtering.
+    p_dim : int
+        The number of coefficients.
+    m_dim : int
+        The number of response variables. This is always 1.
+    filt : np.ndarray
+        The filtered coefficients.
+    smooth : 
+        The smoothed coefficients.
+    
+    
     Methods
     -------
-    filter(observations)
-        Performs the filtering step of the Kalman filter.
-    smoother(observations)
-        Performs the smoothing step of the Kalman filter.
+    fit()
+        Fit state-space model by Kalman filter or smoother, according to the specified option
+        (’filter' or ’smoother’)
+    summary()
+        Print a summary of the Kalman filter/smoother specifications, including the values of H, Q, R and T
+    plot()
+        Plot filtered/smoothed estimates against true data
+    
+    
+    
     """
 
     def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, Z: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, b_1: np.ndarray = None, P_1: np.ndarray = None, regressors: np.ndarray = None):
@@ -86,6 +131,17 @@ class Kalman:
         self.smooth = None
 
     def _estimate_ML(self):
+        '''
+        Esimates the H and Q values, if necessary.
+
+        Returns
+        -------
+        np.ndarray
+            Estimated value of H.
+        np.ndarray
+            Estimated value of Q.
+
+        '''
         if self.bEst_H and self.bEst_Q:
             vH_init, vQ_init = np.ones(
                 self.m_dim**2)*100, np.ones(self.p_dim**2)*100
@@ -117,6 +173,20 @@ class Kalman:
         return np.array([[mH]]), np.array([[mQ]])
 
     def compute_likelihood_LL(self, vTheta):
+        '''
+        Computes the negative log-likelihood value for a given parameter vector.
+
+        Parameters
+        ----------
+        vTheta : np.ndarray
+            The parameter vector.
+
+        Returns
+        -------
+        float
+            The negative log-likelihood value.
+
+        '''
         if self.bEst_H and self.bEst_Q:
             self.H, self.Q = vTheta[:self.m_dim**2].reshape(
                 self.m_dim, self.m_dim), vTheta[self.m_dim**2:].reshape(self.p_dim, self.p_dim)
@@ -183,11 +253,6 @@ class Kalman:
         """
         Performs the filtering step of the Kalman filter.
 
-        Parameters
-        ----------
-        observations : np.ndarray
-            The observed values.
-
         Returns
         -------
         np.ndarray
@@ -199,18 +264,13 @@ class Kalman:
 
     def _smoother(self):
         """
-        Performs the smoothing step of the Kalman filter.
-
-        Parameters
-        ----------
-        observations : np.ndarray
-            The observed values.
+        Performs the smoothing steps of the Kalman filter.
 
         Returns
         -------
-        np.ndarray
+        a_s : np.ndarray
             The smoothed state means at each time step.
-        np.ndarray
+        V_s : np.ndarray
             The smoothed state covariances at each time step.
         """
 
@@ -244,11 +304,6 @@ class Kalman:
         """
         Performs the smoothing step of the Kalman filter.
 
-        Parameters
-        ----------
-        observations : np.ndarray
-            The observed values.
-
         Returns
         -------
         np.ndarray
@@ -258,6 +313,25 @@ class Kalman:
         return a_s.squeeze()
 
     def fit(self, option):
+        '''
+        Fits the Kalman filter or smoother to the data.
+
+        Parameters
+        ----------
+        option : string
+            Denotes the fitted trend: filter or smoother.
+
+        Raises
+        ------
+        ValueError
+            No valid option is provided.
+
+        Returns
+        -------
+        np.ndarray
+            Estimated trend.
+
+        '''
 
         if option.lower() == 'filter':
             self.filt = self.filter()
@@ -271,7 +345,7 @@ class Kalman:
 
     def summary(self):
         """
-        Prints a summary of the results.
+        Prints a summary of the state-space model specification.
         """
 
         print("Kalman Filter specification:")
@@ -318,135 +392,3 @@ class Kalman:
                 plt.tick_params(axis='both', labelsize=16)
                 plt.legend(fontsize="x-large")
             plt.show()
-
-
-
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib.pyplot as plt
-
-    def simulate_ar3_data(n_timesteps, phi, sigma):
-        # Generate AR(3) data
-        y = np.zeros(n_timesteps)
-        for t in range(3, n_timesteps):
-            y[t] = phi[0]*y[t-1] + phi[1]*y[t-2] + \
-                phi[2]*y[t-3] + np.random.normal(0, sigma)
-        return y
-
-    def simulate_local_level_data(n_timesteps, sigma_w, sigma_v):
-        # Generate local level model data
-        x = np.zeros(n_timesteps)
-        y = np.zeros(n_timesteps)
-        for t in range(1, n_timesteps):
-            x[t] = x[t-1] + np.random.normal(0, sigma_w)
-            y[t] = x[t] + np.random.normal(0, sigma_v)
-        return y
-
-    def simulate_local_linear_trend_data(n_timesteps, sigma_w, sigma_v):
-        # Generate local linear trend model data
-        x = np.zeros(n_timesteps)
-        v = np.zeros(n_timesteps)
-        y = np.zeros(n_timesteps)
-        for t in range(1, n_timesteps):
-            v[t] = v[t-1] + np.random.normal(0, sigma_w)
-            x[t] = x[t-1] + v[t-1] + np.random.normal(0, sigma_w)
-            y[t] = x[t] + np.random.normal(0, sigma_v)
-        return y
-
-#     # Parameters for the AR(3) model
-#     phi = [0.5, -0.2, 0.1]
-#     sigma_ar3 = 1.0
-    n_timesteps = 100
-
-    # Parameters for the local level model
-    sigma_w_level = 0.1
-    sigma_v_level = 1.0
-
-#     # Parameters for the local linear trend model
-#     sigma_w_trend = 0.1
-#     sigma_v_trend = 1.0
-
-#     # Simulate data
-#     ar3_data = simulate_ar3_data(n_timesteps, phi, sigma_ar3)
-    local_level_data = simulate_local_level_data(
-        n_timesteps, sigma_w_level, sigma_v_level)
-    
-#     local_linear_trend_data = simulate_local_linear_trend_data(
-#         n_timesteps, sigma_w_trend, sigma_v_trend)
-
-#     # Define state space matrices for AR(3) model
-#     T_ar3 = np.array([[phi[0], 1, 0],
-#                       [phi[1], 0, 1],
-#                       [phi[2], 0, 0]])
-#     Z_ar3 = np.array([[1, 0, 0]])
-#     Q_ar3 = np.eye(3) * sigma_ar3**2
-#     H_ar3 = np.array([[1]])
-#     a_1_ar3 = np.zeros(3)
-#     P_1_ar3 = np.eye(3)
-
-#     # Define state space matrices for local level model
-    T_level = np.array([[1]])
-    Z_level = np.array([[1]])
-    Q_level = np.array([[sigma_w_level**2]])
-    H_level = np.array([[sigma_v_level**2]])
-    a_1_level = np.array([0])
-    P_1_level = np.array([[10**7]])
-
-#     # Define state space matrices for local linear trend model
-#     T_trend = np.array([[1, 1],
-#                         [0, 1]])
-#     Z_trend = np.array([[1, 0]])
-#     Q_trend = np.array([[sigma_w_trend**2, 0],
-#                         [0, sigma_w_trend**2]])
-#     H_trend = np.array([[sigma_v_trend**2]])
-#     a_1_trend = np.array([0, 0])
-#     P_1_trend = np.eye(2)
-
-#     # Apply Kalman filter and smoother for AR(3) model
-#     kalman_ar3 = Kalman(T=T_ar3, Z=Z_ar3, Q=Q_ar3,
-#                         H=H_ar3, a_1=a_1_ar3, P_1=P_1_ar3)
-#     filtered_ar3 = kalman_ar3.filter(ar3_data)
-#     smoothed_ar3 = kalman_ar3.smoother(ar3_data)
-
-#     # Apply Kalman filter and smoother for local level model
-    
-    kalmanmodel = Kalman(vY = local_level_data, T=T_level, Z= Z_level, a_1=a_1_level, P_1 = P_1_level)
-    kalmanmodel.summary()
-    
-#     smoothed_level = kalman_level.smoother(local_level_data)
-
-#     # Apply Kalman filter and smoother for local linear trend model
-#     kalman_trend = Kalman(T=T_trend, Z=Z_trend, Q=Q_trend,
-#                           H=H_trend, a_1=a_1_trend, P_1=P_1_trend)
-#     filtered_trend = kalman_trend.filter(local_linear_trend_data)
-#     smoothed_trend = kalman_trend.smoother(local_linear_trend_data)
-
-#     # Plot the results
-#     plt.figure(figsize=(12, 8))
-
-#     # AR(3) model
-#     plt.subplot(3, 1, 1)
-#     plt.plot(ar3_data, label='AR(3) Data')
-#     plt.plot(filtered_ar3, label='Filtered')
-#     plt.plot(smoothed_ar3, label='Smoothed')
-#     plt.legend()
-#     plt.title('AR(3) Model')
-
-#     # Local level model
-#     plt.subplot(3, 1, 2)
-#     plt.plot(local_level_data, label='Local Level Data')
-#     plt.plot(filtered_level, label='Filtered')
-#     plt.plot(smoothed_level, label='Smoothed')
-#     plt.legend()
-#     plt.title('Local Level Model')
-
-#     # Local linear trend model
-#     plt.subplot(3, 1, 3)
-#     plt.plot(local_linear_trend_data, label='Local Linear Trend Data')
-#     plt.plot(filtered_trend, label='Filtered')
-#     plt.plot(smoothed_trend, label='Smoothed')
-#     plt.legend()
-#     plt.title('Local Linear Trend Model')
-
-#     plt.tight_layout()
-#     plt.show()

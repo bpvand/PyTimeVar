@@ -1,16 +1,67 @@
 import numpy as np
 from scipy.optimize import minimize
 from scipy.special import gammaln
-from scipy.stats import t, multivariate_normal
 import time
 import matplotlib.pyplot as plt
-from datetime import datetime
-import pandas as pd
 
 
 class GAS:
     """
-    Class for performing GAS filtering.
+    Class for performing score-driven (GAS) filtering.
+    
+    Parameters
+    ----------
+    vY : np.ndarray
+        The dependent variable (response) array.
+    mX : np.ndarray
+        The independent variable (predictor) matrix.
+    method : string
+        Method to estimate GAS model.
+    vgamma0 : np.ndarray 
+        Initial parameter vector.
+    bounds : list
+        List to define parameter space.
+    options : dict
+        Stopping criteria for optimization.
+    maxiter : int
+        Maximum number of repitions of the optimization algorithm.
+        If not provided, default is set to five repitions with different initial parameters.
+        
+    Attributes
+    ----------
+    vY : np.ndarray
+        The dependent variable (response) array.
+    mX : np.ndarray
+        The independent variable (predictor) matrix.
+    n : int
+        The length of vY.
+    n_est : int
+        The number of coefficients.
+    method : string
+        Method to estimate GAS model.
+    vgamma0 : np.ndarray 
+        The initial parameter vector.
+    maxiter : int
+        Maximum number of repitions of the optimization algorithm.
+    bounds : list
+        List to define parameter space.
+    options : dict
+        Stopping criteria for optimization.
+    success : bool
+        If True, optimization was successful.
+    betas : np.ndarray
+        The estimated coefficients.
+    params : np.ndarray
+        The estimated GAS parameters.
+        
+        
+    Methods
+    -------
+    fit()
+        Fit score-driven model, according to the specified method (’gaussian’ or ’student’)
+    plot()
+        Plot estimated coefficients against true data
+    
 
     """
 
@@ -37,6 +88,17 @@ class GAS:
         self.params = None
 
     def fit(self):
+        '''
+        Fit score-driven model, according to the specified method (’gaussian’ or ’student’)
+
+        Returns
+        -------
+        mBetaHat : np.ndarray
+            The estimated coefficients.
+        vparaHat : np.ndarray
+            The estimated GAS parameters.
+
+        '''
         # np.random.seed(123)
         if self.method == 'none':
             print('Warning: no filter method is specified. A t-GAS filter is computed.')
@@ -66,12 +128,15 @@ class GAS:
                 self.construct_likelihood(vbeta0, vpara)
             mmBeta = np.zeros((self.maxiter, self.n_est, self.n))
             vMSE = np.zeros(self.maxiter)
+            vSuccess = np.zeros(self.maxiter)
+            mParaHat = np.zeros((self.maxiter, len(self.vgamma0)))
             for j in range(self.maxiter):
                 result = minimize(fgGAS_lh, self.vgamma0 + np.random.normal(0, 0.2, len(self.vgamma0)),
                                   bounds=self.bounds, options=self.options)
 
                 vparaHat_gGAS = result.x
-                vparaHat = vparaHat_gGAS
+                mParaHat[j,:] = vparaHat_gGAS
+                vSuccess[j] = result.success
 
                 # construct betat estimate
                 vbetaNow = vbeta0
@@ -96,7 +161,10 @@ class GAS:
 
                 mmBeta[j, :, :] = mBetaHat_gGAS
                 
-            mBetaHat = (mmBeta[np.argmin(vMSE), :, :]).T
+            ind_opt = np.argmin(vMSE)
+            mBetaHat = (mmBeta[ind_opt, :, :]).T
+            vparaHat = mParaHat[ind_opt,:]
+            self.success = vSuccess[ind_opt]
             # mBetaHat = mBetaHat_gGAS.T
 
         elif self.method == 'student':  # MLE by t-GAS
@@ -115,12 +183,15 @@ class GAS:
                 self.construct_likelihood(vbeta0, vpara)
             mmBeta = np.zeros((self.maxiter, self.n_est, self.n))
             vMSE = np.zeros(self.maxiter)
+            vSuccess = np.zeros(self.maxiter)
+            mParaHat = np.zeros((self.maxiter, len(self.vgamma0)))
             for j in range(self.maxiter):
                 result = minimize(ftGAS_lh, self.vgamma0 + np.random.normal(0, 0.5, len(self.vgamma0)),
                                   bounds=self.bounds, options=self.options)
 
                 vparaHat_tGAS = result.x
-                vparaHat = vparaHat_tGAS
+                mParaHat[j,:] = vparaHat_tGAS
+                vSuccess[j] = result.success
 
                 # construct betat estimate
                 vbetaNow = vbeta0
@@ -149,7 +220,10 @@ class GAS:
                     mBetaHat_tGAS[:, id] = vbetaNow
                 mmBeta[j, :, :] = mBetaHat_tGAS
                 
-            mBetaHat = (mmBeta[np.argmin(vMSE), :, :]).T
+            ind_opt = np.argmin(vMSE)
+            mBetaHat = (mmBeta[ind_opt, :, :]).T
+            vparaHat = mParaHat[ind_opt,:]
+            self.success = vSuccess[ind_opt]
             # mBetaHat = mBetaHat_tGAS.T
 
         self.betas, self.params = mBetaHat, vparaHat
@@ -157,6 +231,22 @@ class GAS:
         return mBetaHat, vparaHat
 
     def construct_likelihood(self, vbeta0, vpara):
+        '''
+        Calculated the log-likelihood value, according to the specified self.method.
+
+        Parameters
+        ----------
+        vbeta0 : np.ndarray
+            Initial coefficients at time zero.
+        vpara : np.ndarray
+            Array of GAS parameters.
+
+        Returns
+        -------
+        lhVal : float
+            Log-likelihood value.
+
+        '''
         # set initial values
         vbetaNow = vbeta0
         lhVal = 0
@@ -206,9 +296,10 @@ class GAS:
 
 
     def plot(self):
-        """
+        '''
         Plot the beta coefficients over a normalized x-axis from 0 to 1.
-        """
+
+        '''
         
         x_vals = np.linspace(0, 1, self.n)
         
@@ -245,51 +336,3 @@ class GAS:
                 plt.tick_params(axis='both', labelsize=16)
                 plt.legend(fontsize="x-large")
             plt.show()
-
-# if __name__ == "__main__":
-#     import matplotlib.pyplot as plt
-#     # Parameter specification for simulating data
-#     n = 2000
-#     nu = 2.1
-#     burnin = 20
-#     sigmau = 0.1
-#     mA = np.array([[0.3, 0.1], [0.1, 0.2]])
-
-#     # Simulate data
-#     def beta0x(x): return -4 * x**3 + 9 * x**2 - 6 * x + 2
-#     def beta1x(x): return 1.5 * np.exp(-10 * (x - 0.2)**2) + \
-#         1.6 * np.exp(-8 * (x - 0.8)**2)
-
-#     def beta2x(x): return -0.5 * x - 0.5 * np.exp(-5 * (x - 0.8)**2)
-#     trend = np.arange(1, n + 1) / n
-#     mbeta = np.vstack([beta0x(trend), beta1x(trend), beta2x(trend)]).T
-
-#     mXi = multivariate_normal.rvs(mean=np.zeros(
-#         2), cov=np.eye(2), size=n + burnin).T
-#     mX = np.zeros((2, n + burnin))
-#     for i in range(1, n + burnin):
-#         mX[:, i] = mA @ mX[:, i - 1] + mXi[:, i]
-#     mX = np.hstack([np.ones((n, 1)), mX[:, -n:].T])
-#     vu = sigmau * t.rvs(nu, size=n)
-#     vy = np.sum(mbeta * mX, axis=1) + vu
-
-#     # MLE by Gaussian-GAS
-#     gGAS = GAS(vy, mX, method='gaussian')
-#     mBetaHat_gGAS, vparaHat_gGAS = gGAS.fit()
-
-#     # MLE by t-GAS
-#     tGAS = GAS(vy, mX, method='student')
-#     mBetaHat_tGAS, vparaHat_tGAS = tGAS.fit()
-
-#     # Make plots
-#     for id2 in range(mX.shape[1]):
-#         plt.figure(figsize=(12, 6))
-#         plt.plot(mbeta[:, id2], '-k', linewidth=3, label='true')
-#         plt.plot(mBetaHat_gGAS[:, id2], '-.r',
-#                  linewidth=3, label='$\\mathcal{N}$-GAS')
-#         plt.plot(mBetaHat_tGAS[:, id2], '--b', linewidth=3, label='$t$-GAS')
-#         plt.grid(which='minor')
-#         plt.legend(fontsize=20, loc='best', frameon=False)
-#         plt.gca().tick_params(axis='both', which='major', labelsize=20)
-#         plt.grid(linestyle='dashed')
-#         plt.show()

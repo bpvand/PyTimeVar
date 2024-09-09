@@ -6,43 +6,46 @@ from tqdm import tqdm
 class BoostedHP:
     """
     Class for performing the boosted HP filter
+    
+    Parameters
+    ----------
+    vY : np.ndarray
+        The dependent variable (response) array.
+    dLambda : float
+        The smoothing parameter.
+    iMaxIter : int
+        The maximum number of iterations for the boosting algorithm.
 
     Attributes
     ----------
     vY : array-like
         The input time series data.
     dLambda : float
-        The smoothing parameter lambda.
+        The smoothing parameter.
     iMaxIter : int
         The maximum number of iterations for the boosting algorithm.
     results : tuple
         A tuple containing the results of the Boosted HP filter.
+    dAlpha : float
+        The significance level for the stopping criterion 'adf'.
+    stop : string
+        Stopping criterion ('adf', 'bic', 'aic', 'hq').
+    results : tuple
+        Contains the trends per iteration, the current residuals, 
+        the information criteria values, the number of iterations,
+        and the estimated trend.
 
     Methods
     -------
-    __init__(self, vY, dLambda=1600, iMaxIter=100)
-        Initializes the BoostedHP object.
-    fit(self, boost=True, stop='adf', dAlpha=0.05, verbose=False)
+    fit()
         Fits the Boosted HP filter to the data.
-    summary(self)
+    summary()
         Prints a summary of the results.
-    plot(self)
-        Plots the original series and the trend component.
+    plot()
+        Plot true data against estimated trend.
     """
 
     def __init__(self, vY, dLambda=1600, iMaxIter=100):
-        """
-        Initializes the BoostedHP object.
-
-        Parameters
-        ----------
-        vY : array-like
-            The input time series data.
-        dLambda : float
-            The smoothing parameter lambda.
-        iMaxIter : int
-            The maximum number of iterations for the boosting algorithm.
-        """
         self.vY = vY.flatten()
         self.dLambda = dLambda
         self.iMaxIter = iMaxIter
@@ -55,18 +58,20 @@ class BoostedHP:
         Parameters
         ----------
         boost : bool
-            Whether to use boosting.
+            if True, boosting is used.
         stop : str
             Stopping criterion ('adf', 'bic', 'aic', 'hq').
         dAlpha : float
-            The significance level for the stopping criterion.
+            The significance level for the stopping criterion 'adf'.
         verbose : bool
             Whether to display a progress bar.
 
         Returns
         -------
-        tuple
-            The trend component of the time series and the residuals.
+        vbHP : np.ndarray
+            The estimated trend.
+        vCurrentRes : np.ndarray
+            The residuals.
         """
         self.dAlpha = dAlpha
         self.stop = stop
@@ -96,7 +101,7 @@ class BoostedHP:
 
     def plot(self):
         """
-        Plots the original series and the trend component.
+        Plots the true data against estimated trend
         """
         if self.results is None:
             print("Model is not fitted yet.")
