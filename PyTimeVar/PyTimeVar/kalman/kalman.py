@@ -13,8 +13,6 @@ class Kalman:
         The dependent variable (response) array.
     T : np.ndarray, optional
         The transition matrix of the state space model.
-    Z : np.ndarray, optional
-        The observation vector of the state space model.
     R : np.ndarray, optional
         The transition correlation matrix of the state space model.
     Q : np.ndarray, optional
@@ -40,7 +38,7 @@ class Kalman:
     T : np.ndarray
         The transition matrix of the state space model.
     Z : np.ndarray
-        The observation vector of the state space model.
+        Auxiliary (1,1)-vector of a scalar 1. This is used in case there are no regressors.
     R : np.ndarray
         The transition correlation matrix of the state space model.
     Q : np.ndarray
@@ -79,7 +77,7 @@ class Kalman:
     
     """
 
-    def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, Z: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, b_1: np.ndarray = None, P_1: np.ndarray = None, regressors: np.ndarray = None):
+    def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, b_1: np.ndarray = None, P_1: np.ndarray = None, regressors: np.ndarray = None):
         self.vY = vY
         # data
         self.n = len(self.vY)
@@ -101,7 +99,7 @@ class Kalman:
                                   for t in range(self.regressors.shape[0])])
         self.T = self.T if self.T is not None else np.array(
             [[1]])                # Transition matrix
-        self.Z = Z if Z is not None else np.array(
+        self.Z = np.array(
             [[1]])                # Observation vector
         self.Q = Q
         self.bEst_Q, self.bEst_H = False, False
