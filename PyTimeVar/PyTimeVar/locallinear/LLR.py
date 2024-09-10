@@ -1458,6 +1458,7 @@ class LocalLinear:
 
         if mX.ndim == 1:
             mX = mX.reshape(-1, 1)
+        vY = vY.flatten()
         # Initialisation
         B = 3000
         # Parameter specification
@@ -1505,7 +1506,10 @@ class LocalLinear:
         ]
         P_LB_beta = S_LB_beta
         P_UB_beta = S_UB_beta
-        return S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta, betahat
+        results = []
+        results.append((S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta))
+        results.append(betahat)
+        return results
 
     def construct_confidence_bands(self, bootstraptype: str, h: float=None, alpha: float = None, gamma: float = None, ic: str = None, Gsubs: list = None, Chtilde: float = None, B: float = 1299, bw_selection: str = None):
         """
@@ -1545,6 +1549,8 @@ class LocalLinear:
             Each tuple contains simultaneous and pointwise lower and upper bands for each sub-range,
             and beta coefficients for each sub-range.
         """
+        if alpha is None or alpha <= 0 or alpha >= 1:
+            alpha = 0.05
         
         if bw_selection is not None:
             self.h = self.dict_bw[bw_selection]
@@ -1572,8 +1578,6 @@ class LocalLinear:
 
         results = []
 
-        if alpha is None or alpha <= 0 or alpha >= 1:
-            alpha = 0.05
 
         # Determine the appropriate bootstrap function
         bootstrap_functions = {
