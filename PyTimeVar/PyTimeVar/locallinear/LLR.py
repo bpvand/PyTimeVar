@@ -103,6 +103,8 @@ class LocalLinear:
         bw_selection: str = None,
         tau: np.ndarray = None,
         kernel: str = "epanechnikov",
+        LB_bw: float = 0.06,
+        UB_bw: float = 0.2
     ):
 
         self.vY = vY.reshape(-1,1)
@@ -145,7 +147,7 @@ class LocalLinear:
                     if self.bw_selection not in ['0','2','4','6']:
                         self.lmcv_type = self.bw_selection
             
-            self.dict_bw = self.bandwidth_selection()
+            self.dict_bw = self.bandwidth_selection(LB_bw, UB_bw)
             if bw_selection is None: 
                 print('-----------------------------------------------------------')
                 print('Optimal bandwidth selected by individual method:')
@@ -552,7 +554,7 @@ class LocalLinear:
 
         return np.sum(aa * b) / self.n
 
-    def _get_optimalh_lmcv(self, lmcv_type):
+    def _get_optimalh_lmcv(self, lmcv_type, LB_bw, UB_bw):
         """
         Calculates the optimal value of h for local linear regression using Local-Modified-Cross-Validation (LMCV).
 
@@ -568,8 +570,10 @@ class LocalLinear:
         """
 
         optimal_h_tau = []
-        vh = np.arange(0.06, 0.2, 0.005)
-
+        
+        # vh = np.arange(0.06, 0.2, 0.005)
+        vh = np.arange(LB_bw, UB_bw, 0.005)
+        
         betasss = np.zeros(shape=(len(vh), self.n_est, self.n))
         for index, h in enumerate(vh):
             # print(f"\r estimating for h = {h} ", end="")
@@ -587,7 +591,7 @@ class LocalLinear:
 
         return vh[min(optimal_h_tau)]
 
-    def _get_lmcv_bandwiths(self):
+    def _get_lmcv_bandwiths(self, LB_bw, UB_bw):
         """
         Calculates the local linear regression bandwidths using Local-Modified-Cross-Validation (LMCV-l) for different values of l.
 
@@ -599,11 +603,11 @@ class LocalLinear:
         
         h = []
         for lmcv_type in [0, 2, 4, 6]:
-            h.append(self._get_optimalh_lmcv(lmcv_type))
+            h.append(self._get_optimalh_lmcv(lmcv_type, LB_bw, UB_bw))
         AVG = np.mean(h)
         h.append(AVG)
         if self.lmcv_type is not None:
-            h.append(self._get_optimalh_lmcv(int(self.lmcv_type)))
+            h.append(self._get_optimalh_lmcv(int(self.lmcv_type), LB_bw, UB_bw))
         return h
 
     def AICmodx(self, s2, traceh):
@@ -735,7 +739,7 @@ class LocalLinear:
         elif mX.ndim == 1:
             return np.sum(mX[:, None] * np.reshape((times[None, :] - tau) ** k * K_u, newshape=(len(times), 1)), axis=0,) / (h)
 
-    def _get_aic_bandwidth(self):
+    def _get_aic_bandwidth(self,LB_bw, UB_bw):
         '''
         Calculates the LLR optimal bandwidth by minimizing modified AIC. 
 
@@ -745,7 +749,8 @@ class LocalLinear:
             Optimal bandwidth value
 
         '''
-        vh = np.arange(0.06, 0.2, 0.005)
+        # vh = np.arange(0.06, 0.2, 0.005)
+        vh = np.arange(LB_bw, UB_bw, 0.005)
         vlossh = np.zeros_like(vh)
         for j in range(len(vh)):
             s2, traceh = self._get_loss_aic_gcv(vh[j])
@@ -774,7 +779,7 @@ class LocalLinear:
         '''
         return s2/(1-traceh/self.n)**2
 
-    def _get_gcv_bandwidth(self):
+    def _get_gcv_bandwidth(self,LB_bw, UB_bw):
         '''
         Calculates the LLR optimal bandwidth using Generalized CV (GCV)
 
@@ -785,7 +790,8 @@ class LocalLinear:
 
         '''
 
-        vh = np.arange(0.06, 0.2, 0.005)
+        # vh = np.arange(0.06, 0.2, 0.005)
+        vh = np.arange(LB_bw, UB_bw, 0.005)
         vlossh = np.zeros_like(vh)
         for j in range(len(vh)):
             s2, traceh = self._get_loss_aic_gcv(vh[j])
@@ -795,7 +801,7 @@ class LocalLinear:
 
         return h_opt
 
-    def bandwidth_selection(self):
+    def bandwidth_selection(self, LB_bw, UB_bw):
         """
         Calculate the optimal bandwidth for the local linear regression model using LMCV, AIC and GCV.
 
@@ -805,9 +811,9 @@ class LocalLinear:
             The optimal bandwidths for each individual method.
         """
         d = {}
-        d['aic'] = self._get_aic_bandwidth()
-        d['gcv'] = self._get_gcv_bandwidth()
-        list_h = self._get_lmcv_bandwiths()
+        d['aic'] = self._get_aic_bandwidth(LB_bw, UB_bw)
+        d['gcv'] = self._get_gcv_bandwidth(LB_bw, UB_bw)
+        list_h = self._get_lmcv_bandwiths(LB_bw, UB_bw)
         d['0'] = list_h[0]
         d['2'] = list_h[1]
         d['4'] = list_h[2]
