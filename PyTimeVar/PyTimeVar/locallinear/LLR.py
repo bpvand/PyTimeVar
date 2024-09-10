@@ -1558,7 +1558,7 @@ class LocalLinear:
 
         if bootstraptype == "MB":
             print("Calculating Multiplier Bootstrap Samples")
-            return self.MC_ZW(self.h, self.vY, self.mX, len(self.vY))
+            return self.MC_ZW(alpha, self.h, self.vY, self.mX, len(self.vY))
 
         if Chtilde is None or Chtilde <= 0:
             Chtilde = 2
