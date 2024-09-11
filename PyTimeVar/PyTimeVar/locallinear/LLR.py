@@ -172,16 +172,16 @@ class LocalLinear:
             if self.bw_selection not in ['all','aic', 'gcv']:
                 print(f'Optimal bandwidth used is LMCV-{self.bw_selection}: {self.h: .4f}\n')
                 print('--------------------------------------------------------')
-                print(f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is implemented later, the LMCV-{self.bw_selection} bandwidth {self.h: .4f} is used.')
+                print(f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is adopted, the LMCV-{self.bw_selection} bandwidth {self.h: .4f} is used.')
                 print('If the MB is implemented, the GCV bandwidth is used.\n')
                 
             elif self.bw_selection == 'all':
                 print(f'Optimal bandwidth used is the avg. of all methods: {self.h: .4f}\n')
-                print(f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is implemented later, the avg. bandwidth {self.h: .4f} is used.')
+                print(f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is adopted, the avg. bandwidth {self.h: .4f} is used.')
                 print('If the MB is implemented, the GCV bandwidth is used.\n')
             else:
                 print(f'Optimal bandwidth used is {self.bw_selection}: {self.h: .4f}\n')
-                print(f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is implemented later, the {self.bw_selection} bandwidth {self.h: .4f} is used.')
+                print(f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is adopted, the {self.bw_selection} bandwidth {self.h: .4f} is used.')
                 print('If the MB is implemented, the GCV bandwidth is used.\n')
         else:
             self.h = h
