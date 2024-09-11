@@ -1558,7 +1558,7 @@ class LocalLinear:
             self.h = self.h
         else:
             if bootstraptype == 'MB':
-                self.h = 0.4#self.dict_bw['gcv']
+                self.h = self.dict_bw['gcv']
             else:
                 self.h = self.dict_bw['all']
 

@@ -70,10 +70,10 @@ gasmodel.plot()
 from PyTimeVar import LocalLinear
 from PyTimeVar.datasets import herding
 
-vY,mX = herding.load(data_replication=True)
-#%%
-LLr_model = LocalLinear(vY=vY, mX=mX, h=0.4)
-LLr_res = LLr_model.fit()
-#%%
-a=LLr_model.confidence_bands(plots=True,bootstrap_type="MB")
-#%%
+# vY,mX = herding.load(data_replication=True)
+# #%%
+# LLr_model = LocalLinear(vY=vY, mX=mX, h=0.4)
+# LLr_res = LLr_model.fit()
+# #%%
+# a=LLr_model.confidence_bands(plots=True,bootstrap_type="MB")
+# #%%
