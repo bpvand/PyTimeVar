@@ -1508,7 +1508,7 @@ class LocalLinear:
         P_UB_beta = S_UB_beta
         results = []
         results.append((S_LB_beta, S_UB_beta, P_LB_beta, P_UB_beta))
-        results.append(betahat)
+        results.append(betahat_jk)
         return results
 
     def construct_confidence_bands(self, bootstraptype: str, h: float=None, alpha: float = None, gamma: float = None, ic: str = None, Gsubs: list = None, Chtilde: float = None, B: float = 1299, bw_selection: str = None):
@@ -1558,7 +1558,7 @@ class LocalLinear:
             self.h = self.h
         else:
             if bootstraptype == 'MB':
-                self.h = self.dict_bw['gcv']
+                self.h = 0.4#self.dict_bw['gcv']
             else:
                 self.h = self.dict_bw['all']
 
