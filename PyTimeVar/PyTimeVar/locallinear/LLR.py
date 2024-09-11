@@ -1483,7 +1483,6 @@ class LocalLinear:
             Number of observations.
         B : int
             Number of bootstrap iterations.
-            If B < 3000, B is set to 3000 iterations.
 
         Returns
         -------
@@ -1494,9 +1493,7 @@ class LocalLinear:
         if mX.ndim == 1:
             mX = mX.reshape(-1, 1)
         vY = vY.flatten()
-        # Initialisation
-        if B < 3000:
-            B = 3000
+
         # Parameter specification
         iM = int((T) ** (2 / 7))
         dTau = (T) ** (-1 / 7)
