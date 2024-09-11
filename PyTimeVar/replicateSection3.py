@@ -4,7 +4,6 @@ Section 3: illustration of code on Temperature dataset
 
 '''
 # Download data
-
 from PyTimeVar.datasets import temperature
 import numpy as np
 data = temperature.load(
@@ -12,6 +11,8 @@ data = temperature.load(
 vY = data.values
 X = np.ones_like(vY)
 
+# set seed
+np.random.seed(123)
 
 # illustrate LLR
 from PyTimeVar import LocalLinear
@@ -25,7 +26,7 @@ model.summary()
 model.plot_predicted()
 
 # plot confidence bands using LBWB
-cb = model.confidence_bands(bootstrap_type='MB', Gsubs=None, plots=True)
+cb = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
 # auxiliary LLR model to illustrate kernel, bandwidth selection, and tau
 tau = np.linspace(0, 0.5, len(vY))
@@ -66,14 +67,3 @@ from PyTimeVar import GAS
 gasmodel = GAS(vY, X, 'student')
 tGAStrend, tGASparams = gasmodel.fit()
 gasmodel.plot()
-
-from PyTimeVar import LocalLinear
-from PyTimeVar.datasets import herding
-
-# vY,mX = herding.load(data_replication=True)
-# #%%
-# LLr_model = LocalLinear(vY=vY, mX=mX, h=0.4)
-# LLr_res = LLr_model.fit()
-# #%%
-# a=LLr_model.confidence_bands(plots=True,bootstrap_type="MB")
-# #%%

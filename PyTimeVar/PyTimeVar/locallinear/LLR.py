@@ -103,8 +103,8 @@ class LocalLinear:
         bw_selection: str = None,
         tau: np.ndarray = None,
         kernel: str = "epanechnikov",
-        LB_bw: float = 0.06,
-        UB_bw: float = 0.2
+        LB_bw: float = None,
+        UB_bw: float = None
     ):
 
         self.vY = vY.reshape(-1,1)
@@ -165,13 +165,22 @@ class LocalLinear:
             self.h = self.dict_bw[self.bw_selection]
             if self.bw_selection not in ['all','aic', 'gcv']:
                 print(f'Optimal bandwidth used is LMCV-{self.bw_selection}: {self.h: .4f}\n')
+                print('--------------------------------------------------------')
+                print(f'Note: If a residual-based bootstrap (LBWB, WB, [put the names here]) is implemented later, the LMCV-{self.bw_selection} bandwidth {self.h: .4f} is used.')
+                print('If the MB is implemented, the GCV bandwidth is used.\n')
                 
             elif self.bw_selection == 'all':
                 print(f'Optimal bandwidth used is the avg. of all methods: {self.h: .4f}\n')
+                print(f'Note: If a residual-based bootstrap (LBWB, WB, [put the names here]) is implemented later, the avg. bandwidth {self.h: .4f} is used.')
+                print('If the MB is implemented, the GCV bandwidth is used.\n')
             else:
                 print(f'Optimal bandwidth used is {self.bw_selection}: {self.h: .4f}\n')
+                print(f'Note: If a residual-based bootstrap (LBWB, WB, [put the names here]) is implemented later, the {self.bw_selection} bandwidth {self.h: .4f} is used.')
+                print('If the MB is implemented, the GCV bandwidth is used.\n')
         else:
             self.h = h
+            print(f'Bandwidth specified by user: {self.h: .4f}\n')
+            print('Note: this bandwidth will be used for any bootstrap implementation.\n')
             
         self.betahat = None
         self.predicted_y = None
@@ -610,7 +619,7 @@ class LocalLinear:
             h.append(self._get_optimalh_lmcv(int(self.lmcv_type), LB_bw, UB_bw))
         return h
 
-    def AICmodx(self, s2, traceh):
+    def AICmodx(self, h):
         '''
         Computes the AIC value for a given mean squared error and trace.
 
@@ -627,6 +636,7 @@ class LocalLinear:
             AIC value.
 
         '''
+        s2, traceh = self._get_loss_aic_gcv(h)
         return np.log(s2) + 2*(traceh+1)/(self.n-traceh-2)
 
     def _get_loss_aic_gcv(self, h):
@@ -749,27 +759,19 @@ class LocalLinear:
             Optimal bandwidth value
 
         '''
-        # vh = np.arange(0.06, 0.2, 0.005)
-        vh = np.arange(LB_bw, UB_bw, 0.005)
-        vlossh = np.zeros_like(vh)
-        for j in range(len(vh)):
-            s2, traceh = self._get_loss_aic_gcv(vh[j])
-            vlossh[j] = self.AICmodx(s2, traceh)
-
-        h_opt = vh[np.argmin(vlossh)]
+        res = scipy.optimize.minimize(self.AICmodx, 0.1, bounds=[(0.01, 0.7)])
+        h_opt = res.x[0]
 
         return h_opt
 
-    def GCVmodx(self, s2, traceh):
+    def GCVmodx(self, h):
         '''
-        Computes the GCV value for a given mean squared error and trace.
+        Computes the GCV value for a bandwidth value.
 
         Parameters
         ----------
-        s2 : float
-            The sample variance of residuals.
-        traceh : float
-            The trace of projection matrix Q_h in yhat(h) = Q_h y.
+        h : float
+            The bandwidth parameter.
 
         Returns
         -------
@@ -777,6 +779,7 @@ class LocalLinear:
             GCV value.
 
         '''
+        s2, traceh = self._get_loss_aic_gcv(h)
         return s2/(1-traceh/self.n)**2
 
     def _get_gcv_bandwidth(self,LB_bw, UB_bw):
@@ -788,16 +791,9 @@ class LocalLinear:
         h_opt
             Optimal bandwidth value
 
-        '''
-
-        # vh = np.arange(0.06, 0.2, 0.005)
-        vh = np.arange(LB_bw, UB_bw, 0.005)
-        vlossh = np.zeros_like(vh)
-        for j in range(len(vh)):
-            s2, traceh = self._get_loss_aic_gcv(vh[j])
-            vlossh[j] = self.GCVmodx(s2, traceh)
-
-        h_opt = vh[np.argmin(vlossh)]
+        '''        
+        res = scipy.optimize.minimize(self.GCVmodx, 0.1, bounds=[(0.01, 0.7)])
+        h_opt = res.x[0]
 
         return h_opt
 
@@ -811,9 +807,14 @@ class LocalLinear:
             The optimal bandwidths for each individual method.
         """
         d = {}
-        d['aic'] = self._get_aic_bandwidth(LB_bw, UB_bw)
-        d['gcv'] = self._get_gcv_bandwidth(LB_bw, UB_bw)
-        list_h = self._get_lmcv_bandwiths(LB_bw, UB_bw)
+        if LB_bw is None:
+            LB_bw = 0.06
+        if UB_bw is None:
+            UB_bw_aic_gcv = 0.7
+            UB_bw_lmcv = 0.2
+        d['aic'] = self._get_aic_bandwidth(LB_bw, UB_bw_aic_gcv)
+        d['gcv'] = self._get_gcv_bandwidth(LB_bw, UB_bw_aic_gcv)
+        list_h = self._get_lmcv_bandwiths(LB_bw, UB_bw_lmcv)
         d['0'] = list_h[0]
         d['2'] = list_h[1]
         d['4'] = list_h[2]
@@ -1450,11 +1451,6 @@ class LocalLinear:
         tuple
             Lower and upper confidence bands and beta coefficients.
         """
-        if self.bw_selection != 'gcv':
-            print(
-                'Warning: the bandwidth selection used is different than the gcv (recommended)')
-            self.bw_selection = input(
-                'Please confirm your BW selection method for the MB here: ').lower()
 
         if mX.ndim == 1:
             mX = mX.reshape(-1, 1)
@@ -1511,7 +1507,7 @@ class LocalLinear:
         results.append(betahat_jk)
         return results
 
-    def construct_confidence_bands(self, bootstraptype: str, h: float=None, alpha: float = None, gamma: float = None, ic: str = None, Gsubs: list = None, Chtilde: float = None, B: float = 1299, bw_selection: str = None):
+    def construct_confidence_bands(self, bootstraptype: str, h: float=None, alpha: float = None, gamma: float = None, ic: str = None, Gsubs: list = None, Chtilde: float = None, B: float = 1299):
         """
         Construct confidence bands using bootstrap methods.
 
@@ -1552,17 +1548,16 @@ class LocalLinear:
         if alpha is None or alpha <= 0 or alpha >= 1:
             alpha = 0.05
         
-        if bw_selection is not None:
-            self.h = self.dict_bw[bw_selection]
         if self.bw_selection is None:
             self.h = self.h
         else:
             if bootstraptype == 'MB':
                 self.h = self.dict_bw['gcv']
             else:
-                self.h = self.dict_bw['all']
+                self.h = self.dict_bw[self.bw_selection]
 
         if bootstraptype == "MB":
+            print('MB is selected. Estimator and confidence bands are constructed using the GCV-selected bandwidth\n')
             print("Calculating Multiplier Bootstrap Samples")
             return self.MC_ZW(alpha, self.h, self.vY, self.mX, len(self.vY))
 
@@ -1769,7 +1764,7 @@ class LocalLinear:
 
     def confidence_bands(self, bootstrap_type: str = 'LBWB', h: float=None, alpha: float = None,
                          gamma: float = None, ic: str = None, Gsubs=None,
-                         Chtilde: float = 2, B: float = 1299, bw_selection : str=None, plots: bool = False):
+                         Chtilde: float = 2, B: float = 1299, plots: bool = False):
         '''
         
 
@@ -1795,11 +1790,6 @@ class LocalLinear:
         B : int
             The number of bootstrap samples.
             Deafult is 1299, if not provided by the user.
-        bw_selection : string
-            The name of the bandwidth selection method to be used for the bootstrap.
-            Choice between 'aic', 'gcv', 'lmcv-l' with l=0,2,4,6,etc., or 'all'.
-            GCV is recommended for MB bootstrap.
-            If not provided, it is set to the method used for estimation.
         plots : bool
             If True, plots are shown of the estimated coefficients and corresponding confidence bands.
             
@@ -1821,7 +1811,7 @@ class LocalLinear:
         # Construct confidence bands
         if Gsubs is None:
             confidence_bands_list = self.construct_confidence_bands(
-                bootstrap_type, h=h, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B, bw_selection=bw_selection)
+                bootstrap_type, h=h, alpha=alpha, gamma=gamma, ic=ic, Chtilde=Chtilde, B=B)
             confidence_bands = confidence_bands_list[:-1][0]
             betahat = confidence_bands_list[-1]
             S_LB = confidence_bands[0]
@@ -1831,7 +1821,7 @@ class LocalLinear:
             G_full = np.linspace(0, 1, len(self.vY))
         else:
             confidence_bands_dict = self.construct_confidence_bands(
-                bootstrap_type, h=h, alpha=alpha, gamma=gamma, ic=ic, Gsubs=Gsubs, Chtilde=Chtilde, B=B, bw_selection=bw_selection)
+                bootstrap_type, h=h, alpha=alpha, gamma=gamma, ic=ic, Gsubs=Gsubs, Chtilde=Chtilde, B=B)
             confidence_bands_list = confidence_bands_dict[:-1]
             betahat = confidence_bands_dict[-1]
             G_full = np.linspace(0, 1, len(self.vY))
