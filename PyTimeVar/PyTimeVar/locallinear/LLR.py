@@ -1614,6 +1614,9 @@ class LocalLinear:
             "LBWB": self.LBW_BT,
             "AWB": self.AW_BT
         }
+        
+        if B < 1299:
+            print(f'Note: It is recommended that the number of iterations B >= 1299.')
 
         if bootstraptype not in bootstrap_functions:
             raise ValueError(
