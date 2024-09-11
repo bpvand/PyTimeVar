@@ -23,7 +23,7 @@ class Kalman:
         The initial mean of the state space model.
     P_1 : np.ndarray, optional
         The initial covariance matrix of the state space model.
-    regressors : np.ndarray, optional
+    mX : np.ndarray, optional
         The regressors to use in the model. If provided, the model will be a linear regression model.
         
         
@@ -49,7 +49,7 @@ class Kalman:
         The initial mean of the state space model.
     P_1 : np.ndarray
         The initial covariance matrix of the state space model.
-    regressors : np.ndarray
+    mX : np.ndarray
         The regressors to use in the model. If provided, the model will be a linear regression model.
     Z_reg : np.ndarray
         The regressors matrix in correct format to use in filtering.
@@ -77,26 +77,26 @@ class Kalman:
     
     """
 
-    def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, b_1: np.ndarray = None, P_1: np.ndarray = None, regressors: np.ndarray = None):
+    def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, b_1: np.ndarray = None, P_1: np.ndarray = None, mX: np.ndarray = None):
         self.vY = vY
         # data
         self.n = len(self.vY)
         self.isReg = False
         self.T = T
-        if regressors is not None:
+        if mX is not None:
             self.isReg = True
-            if regressors.ndim == 1:
+            if mX.ndim == 1:
                 k = 1
-                self.regressors = regressors.reshape(-1, 1)
+                self.mX = mX.reshape(-1, 1)
             else:
-                k = regressors.shape[1]
-                self.regressors = regressors
+                k = mX.shape[1]
+                self.mX = mX
 
             self.T = T if T is not None else np.eye(k)
 
             # Create a Z array that can be indexed by t to return the appropriate regressor
-            self.Z_reg = np.array([self.regressors[t]
-                                  for t in range(self.regressors.shape[0])])
+            self.Z_reg = np.array([self.mX[t]
+                                  for t in range(self.mX.shape[0])])
         self.T = self.T if self.T is not None else np.array(
             [[1]])                # Transition matrix
         self.Z = np.array(

@@ -26,12 +26,18 @@ class LocalLinear:
         The name of the bandwidth selection method to be used.
         Choice between 'aic', 'gcv', 'lmcv-l' with l=0,2,4,6,etc., or 'all'.
         If not provided, it is set to 'all'.
-    tau : np.ndarray, optional
+    tau : np.ndarray
         The array of points at which predictions are made. 
         If not provided, it is set to a linear space between 0 and 1 with the same length as `vY`.
     kernel : string
         The name of the kernel function used for estimation.
         If not provided, it is set to 'epanechnikov' for the Epanechnikov kernel.
+    LB_bw : float
+        The lower bound for the bandwidth selection.
+        If not provided, it is set to 0.06.
+    UB_bw : float
+        The upper bound for the bandwidth selection.
+        If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.
 
     Attributes
     ----------
@@ -166,16 +172,16 @@ class LocalLinear:
             if self.bw_selection not in ['all','aic', 'gcv']:
                 print(f'Optimal bandwidth used is LMCV-{self.bw_selection}: {self.h: .4f}\n')
                 print('--------------------------------------------------------')
-                print(f'Note: If a residual-based bootstrap (LBWB, WB, [put the names here]) is implemented later, the LMCV-{self.bw_selection} bandwidth {self.h: .4f} is used.')
+                print(f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is implemented later, the LMCV-{self.bw_selection} bandwidth {self.h: .4f} is used.')
                 print('If the MB is implemented, the GCV bandwidth is used.\n')
                 
             elif self.bw_selection == 'all':
                 print(f'Optimal bandwidth used is the avg. of all methods: {self.h: .4f}\n')
-                print(f'Note: If a residual-based bootstrap (LBWB, WB, [put the names here]) is implemented later, the avg. bandwidth {self.h: .4f} is used.')
+                print(f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is implemented later, the avg. bandwidth {self.h: .4f} is used.')
                 print('If the MB is implemented, the GCV bandwidth is used.\n')
             else:
                 print(f'Optimal bandwidth used is {self.bw_selection}: {self.h: .4f}\n')
-                print(f'Note: If a residual-based bootstrap (LBWB, WB, [put the names here]) is implemented later, the {self.bw_selection} bandwidth {self.h: .4f} is used.')
+                print(f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is implemented later, the {self.bw_selection} bandwidth {self.h: .4f} is used.')
                 print('If the MB is implemented, the GCV bandwidth is used.\n')
         else:
             self.h = h
@@ -571,6 +577,10 @@ class LocalLinear:
         ----------
         lmcv_type : int
             The type of LMCV to use.
+        LB_bw : float
+            The lower bound for the bandwidth selection.
+        UB_bw : float
+            The upper bound for the bandwidth selection
 
         Returns
         -------
@@ -603,7 +613,14 @@ class LocalLinear:
     def _get_lmcv_bandwiths(self, LB_bw, UB_bw):
         """
         Calculates the local linear regression bandwidths using Local-Modified-Cross-Validation (LMCV-l) for different values of l.
-
+        
+        Parameters
+        ----------
+        LB_bw : float
+            The lower bound for the bandwidth selection.
+        UB_bw : float
+            The upper bound for the bandwidth selection
+        
         Returns
         -------
         h : list
@@ -625,10 +642,8 @@ class LocalLinear:
 
         Parameters
         ----------
-        s2 : float
-            The sample variance of residuals.
-        traceh : float
-            The trace of projection matrix Q_h in yhat(h) = Q_h y.
+        h : float
+            The bandwidth parameter.
 
         Returns
         -------
@@ -752,6 +767,13 @@ class LocalLinear:
     def _get_aic_bandwidth(self,LB_bw, UB_bw):
         '''
         Calculates the LLR optimal bandwidth by minimizing modified AIC. 
+        
+        Parameters
+        ----------
+        LB_bw : float
+            The lower bound for the bandwidth selection.
+        UB_bw : float
+            The upper bound for the bandwidth selection
 
         Returns
         -------
@@ -759,7 +781,7 @@ class LocalLinear:
             Optimal bandwidth value
 
         '''
-        res = scipy.optimize.minimize(self.AICmodx, 0.1, bounds=[(0.01, 0.7)])
+        res = scipy.optimize.minimize(self.AICmodx, 0.1, bounds=[(LB_bw, UB_bw)])
         h_opt = res.x[0]
 
         return h_opt
@@ -785,6 +807,13 @@ class LocalLinear:
     def _get_gcv_bandwidth(self,LB_bw, UB_bw):
         '''
         Calculates the LLR optimal bandwidth using Generalized CV (GCV)
+        
+        Parameters
+        ----------
+        LB_bw : float
+            The lower bound for the bandwidth selection.
+        UB_bw : float
+            The upper bound for the bandwidth selection
 
         Returns
         -------
@@ -792,7 +821,7 @@ class LocalLinear:
             Optimal bandwidth value
 
         '''        
-        res = scipy.optimize.minimize(self.GCVmodx, 0.1, bounds=[(0.01, 0.7)])
+        res = scipy.optimize.minimize(self.GCVmodx, 0.1, bounds=[(LB_bw, UB_bw)])
         h_opt = res.x[0]
 
         return h_opt
@@ -800,6 +829,13 @@ class LocalLinear:
     def bandwidth_selection(self, LB_bw, UB_bw):
         """
         Calculate the optimal bandwidth for the local linear regression model using LMCV, AIC and GCV.
+        
+        Parameters
+        ----------
+        LB_bw : float
+            The lower bound for the bandwidth selection.
+        UB_bw : float
+            The upper bound for the bandwidth selection
 
         Returns
         -------
@@ -1427,7 +1463,7 @@ class LocalLinear:
         mM = mX_tilde.T @ mX_tilde / (T * h)
         return mM
 
-    def MC_ZW(self, alpha, h, vY, mX, T):
+    def MC_ZW(self, alpha, h, vY, mX, T, B):
         """
         Perform the Multiplier Bootstrap bootstrap algorithm.
         Zhou, Z., & Wu, W. B. (2010). Simultaneous inference of linear models with time varying coefficients.
@@ -1445,6 +1481,9 @@ class LocalLinear:
             Array of covariates.
         T : int
             Number of observations.
+        B : int
+            Number of bootstrap iterations.
+            If B < 3000, B is set to 3000 iterations.
 
         Returns
         -------
@@ -1456,7 +1495,8 @@ class LocalLinear:
             mX = mX.reshape(-1, 1)
         vY = vY.flatten()
         # Initialisation
-        B = 3000
+        if B < 3000:
+            B = 3000
         # Parameter specification
         iM = int((T) ** (2 / 7))
         dTau = (T) ** (-1 / 7)
@@ -1533,11 +1573,6 @@ class LocalLinear:
         B : int
             The number of bootstrap samples.
             Deafult is 1299, if not provided by the user.
-        bw_selection ; string
-            The name of the bandwidth selection method to be used for the bootstrap.
-            Choice between 'aic', 'gcv', 'lmcv-l' with l=0,2,4,6,etc., or 'all'.
-            GCV is recommended for MB bootstrap.
-            If not provided, it is set to the method used for estimation.
 
         Returns
         -------
@@ -1559,7 +1594,7 @@ class LocalLinear:
         if bootstraptype == "MB":
             print('MB is selected. Estimator and confidence bands are constructed using the GCV-selected bandwidth\n')
             print("Calculating Multiplier Bootstrap Samples")
-            return self.MC_ZW(alpha, self.h, self.vY, self.mX, len(self.vY))
+            return self.MC_ZW(alpha, self.h, self.vY, self.mX, len(self.vY), B)
 
         if Chtilde is None or Chtilde <= 0:
             Chtilde = 2

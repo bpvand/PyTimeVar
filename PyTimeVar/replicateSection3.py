@@ -64,6 +64,6 @@ kalmanmodel.plot()
 
 # illustrate GAS model
 from PyTimeVar import GAS
-gasmodel = GAS(vY, X, 'student')
-tGAStrend, tGASparams = gasmodel.fit()
-gasmodel.plot()
+N_gasmodel = GAS(vY=vY, mX=X, method='gaussian')
+N_GAStrend, N_GASparams = N_gasmodel.fit()
+N_gasmodel.plot()
