@@ -226,7 +226,6 @@ class Kalman:
         v = np.zeros((self.n, self.m_dim, 1))
         F = np.zeros((self.n, self.m_dim, self.m_dim))
         K = np.zeros((self.n, self.p_dim, self.m_dim))
-        prediction = np.zeros((self.n, self.m_dim, 1))
         a[0] = self.a_1.reshape(self.T.shape[1], 1)
         P[0] = self.P_1
         for t in range(self.n):
@@ -244,7 +243,6 @@ class Kalman:
 
             P[t + 1] = self.T @ P[t] @ (self.T - K[t]
                                         @ self.Z).T + self.R @ self.Q @ self.R.T
-
         return a[1:], P[1:], v, F, K
 
     def filter(self):
@@ -273,28 +271,27 @@ class Kalman:
         """
 
         a, P, v, F, K = self._filter()
-        r = np.zeros((self.n, self.p_dim, 1))
-        N = np.zeros((self.n, self.p_dim, self.p_dim))
+        r = np.zeros((self.n+1, self.p_dim, 1))
+        N = np.zeros((self.n+1, self.p_dim, self.p_dim))
         a_s = np.zeros((self.n, self.p_dim, 1))
         V_s = np.zeros((self.n, self.p_dim, self.p_dim))
 
-        r[self.n - 1] = 0
-        N[self.n - 1] = 0
+        r[self.n-1] = 0
+        N[self.n-1] = 0
 
         for t in range(self.n-1, -1, -1):
             if self.isReg:
                 self.Z = self.Z_reg[t].reshape(1, -1)
             L = self.T - K[t] @ self.Z
             if not np.isnan(self.vY[t]):
-                r[t - 1] = self.Z @ np.linalg.inv(F[t]) @ v[t] + L.T @ r[t]
-                N[t -
-                    1] = self.Z @ np.linalg.inv(F[t]) @ self.Z + L.T @ N[t] @ L
+                r[t-1] = self.Z.T @ np.linalg.inv(F[t]) @ v[t] + L.T @ r[t]
+                N[t-1] = self.Z.T @ np.linalg.inv(F[t]) @ self.Z + L.T @ N[t] @ L
             else:
-                r[t - 1] = r[t]
-                N[t - 1] = N[t]
+                r[t-1] = self.T.T @ r[t]
+                N[t-1] = self.T.T @ N[t] @ self.T
 
-            a_s[t] = a[t] + P[t] @ r[t - 1]
-            V_s[t] = P[t] - P[t] @ N[t - 1] @ P[t]
+            a_s[t] = a[t] + P[t] @ r[t-1]
+            V_s[t] = P[t] - P[t] @ N[t-1] @ P[t]
 
         return a_s, V_s
 
@@ -366,7 +363,7 @@ class Kalman:
             if self.smooth is not None:
                 plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
             if self.filt is not None:
-                plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="-", linewidth=2)
+                plt.plot(x_vals[1:], self.filt[:-1], label="Estimated $\\beta_{0}$ - Filter", linestyle="-", linewidth=2)
             
             plt.grid(linestyle='dashed')
             plt.xlabel('$t/n$',fontsize="xx-large")
@@ -382,7 +379,7 @@ class Kalman:
                 if self.smooth is not None:
                     plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
                 if self.filt is not None:
-                    plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-", linewidth=2)
+                    plt.plot(x_vals[1:], self.filt[:-1, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-", linewidth=2)
 
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")

@@ -3,7 +3,7 @@
 Section 3: illustration of code on Temperature dataset
 
 '''
-# Download data
+# Load data
 from PyTimeVar.datasets import temperature
 import numpy as np
 data = temperature.load(
