@@ -1616,7 +1616,7 @@ class LocalLinear:
         }
         
         if B < 1299:
-            print(f'Note: It is recommended that the number of iterations B >= 1299.')
+            print('Note: It is recommended to use at least B = 1299 iterations.\n')
 
         if bootstraptype not in bootstrap_functions:
             raise ValueError(
