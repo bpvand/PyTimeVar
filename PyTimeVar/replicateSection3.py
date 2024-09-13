@@ -26,7 +26,7 @@ model.summary()
 model.plot_predicted()
 
 # plot confidence bands using LBWB
-cb = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
+S_LB, S_UB, P_LB, P_UB = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
 # auxiliary LLR model to illustrate kernel, bandwidth selection, and tau
 tau = np.linspace(0, 0.5, len(vY))

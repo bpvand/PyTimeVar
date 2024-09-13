@@ -78,7 +78,7 @@ class Kalman:
     """
 
     def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, b_1: np.ndarray = None, P_1: np.ndarray = None, mX: np.ndarray = None):
-        self.vY = vY
+        self.vY = vY.reshape(-1,1)
         # data
         self.n = len(self.vY)
         self.isReg = False
@@ -271,27 +271,27 @@ class Kalman:
         """
 
         a, P, v, F, K = self._filter()
-        r = np.zeros((self.n+1, self.p_dim, 1))
-        N = np.zeros((self.n+1, self.p_dim, self.p_dim))
         a_s = np.zeros((self.n, self.p_dim, 1))
         V_s = np.zeros((self.n, self.p_dim, self.p_dim))
 
-        r[self.n-1] = 0
-        N[self.n-1] = 0
+        r_prev, r_cur = np.zeros((self.p_dim, 1)), np.zeros((self.p_dim, 1))
+        N_prev, N_cur = np.zeros((self.p_dim, self.p_dim)), np.zeros((self.p_dim, self.p_dim))
 
         for t in range(self.n-1, -1, -1):
             if self.isReg:
                 self.Z = self.Z_reg[t].reshape(1, -1)
             L = self.T - K[t] @ self.Z
             if not np.isnan(self.vY[t]):
-                r[t-1] = self.Z.T @ np.linalg.inv(F[t]) @ v[t] + L.T @ r[t]
-                N[t-1] = self.Z.T @ np.linalg.inv(F[t]) @ self.Z + L.T @ N[t] @ L
+                r_prev = self.Z.T @ np.linalg.inv(F[t]) @ v[t] + L.T @ r_cur
+                N_prev = self.Z.T @ np.linalg.inv(F[t]) @ self.Z + L.T @ N_cur @ L
             else:
-                r[t-1] = self.T.T @ r[t]
-                N[t-1] = self.T.T @ N[t] @ self.T
-
-            a_s[t] = a[t] + P[t] @ r[t-1]
-            V_s[t] = P[t] - P[t] @ N[t-1] @ P[t]
+                r_prev = self.T.T @ r_cur
+                N_prev = self.T.T @ N_cur @ self.T
+            
+            a_s[t] = a[t] + P[t] @ r_prev
+            V_s[t] = P[t] - P[t] @ N_prev @ P[t]
+            
+            r_cur, N_cur = r_prev, N_prev
 
         return a_s, V_s
 

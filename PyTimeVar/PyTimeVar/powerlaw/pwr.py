@@ -52,7 +52,7 @@ class PowerLaw():
     """
 
     def __init__(self, vY: np.ndarray, n_powers: float = None, vgamma0: np.ndarray=None, options: dict=None):
-        self.vY = vY
+        self.vY = vY.reshape(-1,1)
         self.n = len(self.vY)
         self.p = 2 if n_powers is None else n_powers
         if n_powers is None:
