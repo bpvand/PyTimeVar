@@ -20,8 +20,3 @@ The PyTimeVar can implemented as a PyPI package. To download the package in your
 ```python 
 pip install PyTimeVar
 ```
-
-
-```
-
-```
