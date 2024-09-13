@@ -123,7 +123,6 @@ class PowerLaw():
         self.gammaHat = res.x.reshape(1, self.p)
 
         trend = np.arange(1, self.n+1, 1).reshape(self.n, 1)
-        # mP = trend @ self.gammaHat
         mP = trend ** self.gammaHat
         self.coeffHat = np.linalg.pinv(mP.T @ mP) @ mP.T @ self.vY
         self.trendHat = mP @ self.coeffHat
@@ -165,7 +164,7 @@ class PowerLaw():
         Returns
         -------
         c : list
-            List of parameter constraints.
+            List of non-linear parameter constraints.
 
         '''
         epsilon = 0.005

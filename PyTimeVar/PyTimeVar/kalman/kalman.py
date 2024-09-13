@@ -79,7 +79,6 @@ class Kalman:
 
     def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, b_1: np.ndarray = None, P_1: np.ndarray = None, mX: np.ndarray = None):
         self.vY = vY.reshape(-1,1)
-        # data
         self.n = len(self.vY)
         self.isReg = False
         self.T = T

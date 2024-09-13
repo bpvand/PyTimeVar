@@ -463,6 +463,7 @@ class LocalLinear:
             # Multiple betas
             predicted_y = np.sum(betahat * self.mX.T, axis=0)
             
+        # store results in corresponding attributes
         self.betahat = betahat
         self.predicted_y = predicted_y.reshape(-1,1)
         self.residuals = self.vY - predicted_y.reshape(-1,1)
@@ -590,18 +591,15 @@ class LocalLinear:
 
         optimal_h_tau = []
         
-        # vh = np.arange(0.06, 0.2, 0.005)
         vh = np.arange(LB_bw, UB_bw, 0.005)
         
         betasss = np.zeros(shape=(len(vh), self.n_est, self.n))
         for index, h in enumerate(vh):
-            # print(f"\r estimating for h = {h} ", end="")
             betasss[index] = self._beta_estimation_lmcv(
                 h, tau=self.times, lmcv_type=lmcv_type)
 
         for one_tau in self.times:
             contain = []
-            # print(f"\r calculating best h for one_tau = {one_tau} ", end="")
             for index, h in enumerate(vh):
                 contain.append(
                     self._compute_LMCV_score(betasss[index], one_tau)
@@ -1757,10 +1755,7 @@ class LocalLinear:
         x_vals = np.linspace(0, 1, len(self.vY))
 
         plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
-        plt.plot(x_vals, self.predicted_y, label="Fit", linewidth=2)
-        # plt.title("Actual vs Predicted Y")
-        
-        
+        plt.plot(x_vals, self.predicted_y, label="Fit", linewidth=2)        
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
         plt.tick_params(axis='both', labelsize=16)
@@ -1782,10 +1777,7 @@ class LocalLinear:
 
         x_vals = np.linspace(0, 1, len(self.residuals))
 
-        plt.plot(x_vals, self.residuals, label="Residuals")
-        # plt.title("Residuals")
-        
-        
+        plt.plot(x_vals, self.residuals, label="Residuals")       
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
         plt.tick_params(axis='both', labelsize=16)

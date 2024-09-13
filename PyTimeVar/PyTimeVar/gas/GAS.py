@@ -99,7 +99,6 @@ class GAS:
             The estimated GAS parameters.
 
         '''
-        # np.random.seed(123)
         if self.method == 'none':
             print('Warning: no filter method is specified. A t-GAS filter is computed.')
             self.method = 'student'
@@ -165,8 +164,7 @@ class GAS:
             mBetaHat = (mmBeta[ind_opt, :, :]).T
             vparaHat = mParaHat[ind_opt,:]
             self.success = vSuccess[ind_opt]
-            # mBetaHat = mBetaHat_gGAS.T
-
+            
         elif self.method == 'student':  # MLE by t-GAS
             LB = np.concatenate(([0.01], LB))
             UB = np.concatenate(([200], UB))
@@ -224,7 +222,6 @@ class GAS:
             mBetaHat = (mmBeta[ind_opt, :, :]).T
             vparaHat = mParaHat[ind_opt,:]
             self.success = vSuccess[ind_opt]
-            # mBetaHat = mBetaHat_tGAS.T
 
         self.betas, self.params = mBetaHat, vparaHat
         print(f"Time taken: {time.time() - start_time:.2f} seconds")

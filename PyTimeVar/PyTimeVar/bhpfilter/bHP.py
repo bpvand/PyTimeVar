@@ -90,7 +90,7 @@ class BoostedHP:
             return
 
         mTrends, vCurrentRes, vIC_values, iM, vBHP = self.results
-        print(f"Boosted HP Filter Results:")
+        print("Boosted HP Filter Results:")
         print(f"Stopping Criterion: {self.stop}")
         print(f"Max Iterations: {self.iMaxIter}")
         print(f"Iterations Run: {iM}")
@@ -188,7 +188,6 @@ class BoostedHP:
         tuple
             The trend component, residuals, ADF p-values, number of iterations, and trend component.
         """
-        bStationary = False
         vCurrentRes = vY
         mTrends = np.zeros((dT, iMaxIter))
         vAdf_pvalues = np.zeros(iMaxIter)
