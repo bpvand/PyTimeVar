@@ -1,24 +1,26 @@
 # PyTimeVar
 
-A Python package for Time Varying Models for Time Series
+A Python package for Trending Time-Varying Time Series Models
 
 ## Purpose of the Package
 
-The PyTimeVar package provides tools for analyzing and modeling time-varying properties in time series data. It is designed to facilitate the creation, evaluation, and visualization of time-varying models.
+The PyTimeVar package offers state-of-the-art estimation and statistical inference methods for time series regression models with flexible trends and/or time-
+varying coefficients.
 
 ## Features
 
-- Time-varying parameter estimation using boosted HP filter and local linear regression.
-- Advanced time series decomposition.
-- Visualization tools for time-varying models.
-- Easy integration with popular data analysis libraries such as pandas and numpy.
-- Comprehensive dataset loading and filtering utilities.
+- Nonparametric estimation of time-varying time series models, along with multiple bootstrap-assisted inference methods
+- Alternative estimation methods for modelling trend and time-varying relationships.
+- Unified framework for comparison of methods.
+- Four datasets for illustration.
 
 ## Getting Started
 
-To run the test files you need to install poetry and run poerty shell while in the TimeVarModels dir this spins up a shell with the TimeVarModel package installed.
+The PyTimeVar can implemented as a PyPI package. To download the package in your Python environment, use the following command:
+```python 
+pip install PyTimeVar
+```
 
-Then you can do python test_trend.py or python test_confidencebands.py
 
 ```
 
