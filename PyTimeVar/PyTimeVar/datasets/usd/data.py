@@ -52,18 +52,18 @@ def load(type="Open", start_date=None, end_date=None):
             print("Warning: end_date is later than the maximum date in the data.")
         max_date = min(max_date, end_date)
     
-    # Create a complete date range from min_date to max_date
-    all_dates = pd.date_range(start=min_date, end=max_date)
+    # # Create a complete date range from min_date to max_date
+    # all_dates = pd.date_range(start=min_date, end=max_date)
     
-    # Reindex the data to include all dates, filling missing dates with NaN
-    data = data.reindex(all_dates)
+    # # Reindex the data to include all dates, filling missing dates with NaN
+    # data = data.reindex(all_dates)
     
     # Select the specified type of data
     if type not in ['Open', 'High', 'Low', 'Close']:
         raise ValueError("Invalid type specified. Available options are: ['Open', 'High', 'Low', 'Close']")
     
     # Return the filtered data with only the specified column
-    return data[[type]]
+    return data[[type]].iloc[::-1]
 
 if __name__ == "__main__":
     # Test the load function
