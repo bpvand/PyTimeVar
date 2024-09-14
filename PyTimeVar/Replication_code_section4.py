@@ -21,8 +21,8 @@ vY = herd_data[['CSAD_AVG']].values
 mX = np.ones_like(vY)
 
 ############### Local linear estimation
-# LLr_model = LocalLinear(vY=vY, mX=mX, bw_selection='lmcv6') ##### this function will cost around 48 mins.
-                                                              ##### We use the resulted bandwidth directly in the next line
+# LLr_model = LocalLinear(vY=vY, mX=mX, bw_selection='lmcv6') ##### this bandwidth selection function will cost around 48 mins
+                                                              ##### so we use the resulted bandwidth directly in the next line
 LLr_model = LocalLinear(vY=vY, mX=mX, h=0.140)
 LLr_trend = LLr_model.fit()
 
@@ -30,9 +30,9 @@ LLr_trend = LLr_model.fit()
 bHPmodel = BoostedHP(vY=vY, dLambda=1600, iMaxIter=100)
 bHPtrend, bHPresiduals = bHPmodel.fit(boost=True, stop="bic",dAlpha=0.05, verbose=False)
 
-############### t-GAS model
+############### t-GAS model                    
 gasmodel = GAS(vY=vY, mX=mX, method='student')
-tGAStrend, tGASparams = gasmodel.fit()
+tGAStrend, tGASparams = gasmodel.fit()                        ##### this function takes around 85 seconds
 
 ############### Kalman smoother
 kalmanmodel = Kalman(vY=vY, mX=mX)
