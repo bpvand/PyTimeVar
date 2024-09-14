@@ -29,10 +29,10 @@ def load(currencies=None, start_date=None, end_date=None):
     Prints warnings if the start_date is earlier than the minimum date in the data or the end_date is later than the maximum date in the data.
     """
     data = load_csv(__file__, "gold.csv", sep=",")
-    print(data)
+    # print(data)
 
     # Convert Date column to datetime
-    data["Date"] = to_datetime(data["Date"], dayfirst=True)
+    data["Date"] = to_datetime(data["Date"], dayfirst=False)
 
     # Replace commas and convert #N/A to NaN, then convert to float
     for column in data.columns:
@@ -88,19 +88,19 @@ def load(currencies=None, start_date=None, end_date=None):
     # Drop duplicate dates
     data = data.drop_duplicates(subset="Date")
 
-    # Create a complete date range from start_date to end_date
-    all_dates = pd.date_range(start=start_date, end=end_date)
+    # # Create a complete date range from start_date to end_date
+    # all_dates = pd.date_range(start=start_date, end=end_date)
 
     # Set 'Date' column as the index
     data.set_index("Date", inplace=True)
 
-    # Reindex the DataFrame to include all dates, filling missing dates with NaN
-    data = data.reindex(all_dates)
+    # # Reindex the DataFrame to include all dates, filling missing dates with NaN
+    # data = data.reindex(all_dates)
 
-    return data
+    return pd.DataFrame(data)
 
 if __name__ == "__main__":
     # Test the load function
     data = load()
-    print(data["USD"].head())
-    print(data["USD"].tail())
+    # print(data["USD"].head())
+    # print(data["USD"].tail())
