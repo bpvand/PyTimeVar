@@ -64,6 +64,7 @@ def load(start_date=None, end_date=None, regions=None):
     data['Date'] = dates
     # Set 'Date' as the index
     data.set_index('Date', inplace=True)
+    data = data.drop('Unnamed: 0', axis=1)
     
     return data
 
