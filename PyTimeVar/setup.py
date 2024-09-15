@@ -15,7 +15,7 @@ setuptools.setup(
     packages=['PyTimeVar', 'tests'],
     install_requires=['numpy', 'pandas', 'matplotlib',
                       'scipy', 'statsmodels', 'tqdm'],
-    long_description=read('README'),
+    long_description=read('README.md'),
     url = "https://github.com/bpvand/PyTimeVar",
     license = 'GPLv3+',
     classifier=['License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',],
