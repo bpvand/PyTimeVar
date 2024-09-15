@@ -1,104 +1,60 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
-<head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyTimeVar.bhpfilter package &mdash; PyTimeVar 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=8d563738"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/js/theme.js"></script>
+    <title>PyTimeVar.bhpfilter package &#8212; PyTimeVar 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=def86cc0" />
+    
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="PyTimeVar.datasets package" href="PyTimeVar.datasets.html" />
     <link rel="prev" title="PyTimeVar package" href="PyTimeVar.html" /> 
-</head>
+  </head><body>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="PyTimeVar.datasets.html" title="PyTimeVar.datasets package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PyTimeVar.html" title="PyTimeVar package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyTimeVar 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >PyTimeVar</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="PyTimeVar.html" accesskey="U">PyTimeVar package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PyTimeVar.bhpfilter package</a></li> 
+      </ul>
+    </div>  
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            PyTimeVar
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">PyTimeVar</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="PyTimeVar.html">PyTimeVar package</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="PyTimeVar.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">PyTimeVar.bhpfilter package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.datasets.html">PyTimeVar.datasets package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html">PyTimeVar.gas package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html">PyTimeVar.kalman package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html">PyTimeVar.locallinear package</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="PyTimeVar.html#module-PyTimeVar">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">PyTimeVar</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">PyTimeVar</a></li>
-          <li class="breadcrumb-item"><a href="PyTimeVar.html">PyTimeVar package</a></li>
-      <li class="breadcrumb-item active">PyTimeVar.bhpfilter package</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/PyTimeVar.bhpfilter.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
   <section id="pytimevar-bhpfilter-package">
-<h1>PyTimeVar.bhpfilter package<a class="headerlink" href="#pytimevar-bhpfilter-package" title="Link to this heading"></a></h1>
+<h1>PyTimeVar.bhpfilter package<a class="headerlink" href="#pytimevar-bhpfilter-package" title="Link to this heading">¶</a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
 <section id="module-PyTimeVar.bhpfilter.bHP">
-<span id="pytimevar-bhpfilter-bhp-module"></span><h2>PyTimeVar.bhpfilter.bHP module<a class="headerlink" href="#module-PyTimeVar.bhpfilter.bHP" title="Link to this heading"></a></h2>
+<span id="pytimevar-bhpfilter-bhp-module"></span><h2>PyTimeVar.bhpfilter.bHP module<a class="headerlink" href="#module-PyTimeVar.bhpfilter.bHP" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="PyTimeVar.bhpfilter.bHP.BoostedHP">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PyTimeVar.bhpfilter.bHP.</span></span><span class="sig-name descname"><span class="pre">BoostedHP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dLambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iMaxIter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PyTimeVar.bhpfilter.bHP.</span></span><span class="sig-name descname"><span class="pre">BoostedHP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dLambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1600</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iMaxIter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for performing the boosted HP filter</p>
 <dl class="field-list simple">
@@ -112,7 +68,7 @@
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.bhpfilter.bHP.BoostedHP.vY">
-<span class="sig-name descname"><span class="pre">vY</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.vY" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">vY</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.vY" title="Link to this definition">¶</a></dt>
 <dd><p>The input time series data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -123,7 +79,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.bhpfilter.bHP.BoostedHP.dLambda">
-<span class="sig-name descname"><span class="pre">dLambda</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.dLambda" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dLambda</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.dLambda" title="Link to this definition">¶</a></dt>
 <dd><p>The smoothing parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -134,7 +90,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.bhpfilter.bHP.BoostedHP.iMaxIter">
-<span class="sig-name descname"><span class="pre">iMaxIter</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.iMaxIter" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">iMaxIter</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.iMaxIter" title="Link to this definition">¶</a></dt>
 <dd><p>The maximum number of iterations for the boosting algorithm.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -145,7 +101,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.bhpfilter.bHP.BoostedHP.results">
-<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.results" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.results" title="Link to this definition">¶</a></dt>
 <dd><p>A tuple containing the results of the Boosted HP filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -156,7 +112,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.bhpfilter.bHP.BoostedHP.dAlpha">
-<span class="sig-name descname"><span class="pre">dAlpha</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.dAlpha" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dAlpha</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.dAlpha" title="Link to this definition">¶</a></dt>
 <dd><p>The significance level for the stopping criterion ‘adf’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -167,7 +123,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.bhpfilter.bHP.BoostedHP.stop">
-<span class="sig-name descname"><span class="pre">stop</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.stop" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stop</span></span><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.stop" title="Link to this definition">¶</a></dt>
 <dd><p>Stopping criterion (‘adf’, ‘bic’, ‘aic’, ‘hq’).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -178,7 +134,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
 <dd><p>Contains the trends per iteration, the current residuals,
 the information criteria values, the number of iterations,
 and the estimated trend.</p>
@@ -191,25 +147,25 @@ and the estimated trend.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.bhpfilter.bHP.BoostedHP.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.fit" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.fit" title="Link to this definition">¶</a></dt>
 <dd><p>Fits the Boosted HP filter to the data.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.bhpfilter.bHP.BoostedHP.summary">
-<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.summary" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.summary" title="Link to this definition">¶</a></dt>
 <dd><p>Prints a summary of the results.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.bhpfilter.bHP.BoostedHP.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.plot" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.plot" title="Link to this definition">¶</a></dt>
 <dd><p>Plot true data against estimated trend.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'adf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dAlpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'adf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dAlpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
 <dd><p>Fits the Boosted HP filter to the data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -232,13 +188,13 @@ and the estimated trend.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
 <dd><p>Plots the true data against estimated trend</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/bhpfilter/bHP.html#BoostedHP.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
 <dd><p>Prints a summary of the results.</p>
 </dd></dl>
 
@@ -246,39 +202,102 @@ and the estimated trend.</p>
 
 </section>
 <section id="module-PyTimeVar.bhpfilter">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-PyTimeVar.bhpfilter" title="Link to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-PyTimeVar.bhpfilter" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
 
-           </div>
+            <div class="clearer"></div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="PyTimeVar.html" class="btn btn-neutral float-left" title="PyTimeVar package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="PyTimeVar.datasets.html" class="btn btn-neutral float-right" title="PyTimeVar.datasets package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2024, Bernhard van der Sluis.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">PyTimeVar.bhpfilter package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-PyTimeVar.bhpfilter.bHP">PyTimeVar.bhpfilter.bHP module</a><ul>
+<li><a class="reference internal" href="#PyTimeVar.bhpfilter.bHP.BoostedHP"><code class="docutils literal notranslate"><span class="pre">BoostedHP</span></code></a><ul>
+<li><a class="reference internal" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.vY"><code class="docutils literal notranslate"><span class="pre">BoostedHP.vY</span></code></a></li>
+<li><a class="reference internal" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.dLambda"><code class="docutils literal notranslate"><span class="pre">BoostedHP.dLambda</span></code></a></li>
+<li><a class="reference internal" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.iMaxIter"><code class="docutils literal notranslate"><span class="pre">BoostedHP.iMaxIter</span></code></a></li>
+<li><a class="reference internal" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.results"><code class="docutils literal notranslate"><span class="pre">BoostedHP.results</span></code></a></li>
+<li><a class="reference internal" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.dAlpha"><code class="docutils literal notranslate"><span class="pre">BoostedHP.dAlpha</span></code></a></li>
+<li><a class="reference internal" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.stop"><code class="docutils literal notranslate"><span class="pre">BoostedHP.stop</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">BoostedHP.results</span></code></a></li>
+<li><a class="reference internal" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.fit"><code class="docutils literal notranslate"><span class="pre">BoostedHP.fit()</span></code></a></li>
+<li><a class="reference internal" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.summary"><code class="docutils literal notranslate"><span class="pre">BoostedHP.summary()</span></code></a></li>
+<li><a class="reference internal" href="#PyTimeVar.bhpfilter.bHP.BoostedHP.plot"><code class="docutils literal notranslate"><span class="pre">BoostedHP.plot()</span></code></a></li>
+<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">BoostedHP.fit()</span></code></a></li>
+<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">BoostedHP.plot()</span></code></a></li>
+<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">BoostedHP.summary()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-PyTimeVar.bhpfilter">Module contents</a></li>
+</ul>
+</li>
+</ul>
 
-</body>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="PyTimeVar.html"
+                          title="previous chapter">PyTimeVar package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="PyTimeVar.datasets.html"
+                          title="next chapter">PyTimeVar.datasets package</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/PyTimeVar.bhpfilter.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="Related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="PyTimeVar.datasets.html" title="PyTimeVar.datasets package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="PyTimeVar.html" title="PyTimeVar package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyTimeVar 1.0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >PyTimeVar</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="PyTimeVar.html" >PyTimeVar package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PyTimeVar.bhpfilter package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2024, Bernhard van der Sluis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    </div>
+  </body>
 </html>
