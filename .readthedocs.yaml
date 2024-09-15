@@ -34,4 +34,4 @@ python:
   install:
       - requirements: PyTimeVar/docs/requirements.txt
       - method: pip
-        path: .
+        path: PyTimeVar/
