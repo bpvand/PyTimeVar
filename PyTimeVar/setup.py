@@ -18,5 +18,7 @@ setuptools.setup(
     long_description=read('README'),
     url = "https://github.com/bpvand/PyTimeVar",
     license = 'GPLv3+',
-    classifier=['License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',]
+    classifier=['License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',],
+    include_package_data=True,
+    package_data={"PyTimeVar.datasets": ["**/*.csv"],}
 )
