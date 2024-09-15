@@ -6,10 +6,6 @@ authors = ["Mingxuan Song <678270ms@eur.nl>", "Bernhard van der Sluis <vanderslu
 maintainers = ["Mingxuan Song <678270ms@eur.nl>", "Bernhard van der Sluis <vandersluis@ese.eur.nl>"]
 readme = "README.md"
 
-[tool.poetry.dependencies]
-python = "^3.8"
-
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
