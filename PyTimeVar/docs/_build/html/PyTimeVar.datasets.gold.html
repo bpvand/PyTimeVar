@@ -51,11 +51,42 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
-<section id="pytimevar-datasets-gold-data-module">
-<h2>PyTimeVar.datasets.gold.data module<a class="headerlink" href="#pytimevar-datasets-gold-data-module" title="Link to this heading">¶</a></h2>
+<section id="module-PyTimeVar.datasets.gold.data">
+<span id="pytimevar-datasets-gold-data-module"></span><h2>PyTimeVar.datasets.gold.data module<a class="headerlink" href="#module-PyTimeVar.datasets.gold.data" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="PyTimeVar.datasets.gold.data.load">
+<span class="sig-prename descclassname"><span class="pre">PyTimeVar.datasets.gold.data.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">currencies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/datasets/gold/data.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.datasets.gold.data.load" title="Link to this definition">¶</a></dt>
+<dd><p>Load the gold dataset and optionally filter by specific currencies and date range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>currencies</strong> (<em>list</em><em>, </em><em>optional</em>) – <p>List of currency codes to filter the dataset by. Available options are:
+[‘USD’, ‘EUR’, ‘JPY’, ‘GBP’, ‘CAD’, ‘CHF’, ‘INR’, ‘CNY’, ‘TRY’, ‘SAR’,</p>
+<blockquote>
+<div><p>’IDR’, ‘AED’, ‘THB’, ‘VND’, ‘EGP’, ‘KRW’, ‘RUB’, ‘ZAR’, ‘AUD’]</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>start_date</strong> (<em>str</em><em>, </em><em>optional</em>) – The start date to filter the data. Format ‘YYYY-MM-DD’.</p></li>
+<li><p><strong>end_date</strong> (<em>str</em><em>, </em><em>optional</em>) – The end date to filter the data. Format ‘YYYY-MM-DD’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame containing the filtered data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Prints warnings if any provided currencies are not found in the dataset.
+Prints warnings if the start_date is earlier than the minimum date in the data or the end_date is later than the maximum date in the data.</p>
+</div>
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
+<section id="module-PyTimeVar.datasets.gold">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-PyTimeVar.datasets.gold" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -71,8 +102,11 @@
     <ul>
 <li><a class="reference internal" href="#">PyTimeVar.datasets.gold package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#pytimevar-datasets-gold-data-module">PyTimeVar.datasets.gold.data module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-PyTimeVar.datasets.gold.data">PyTimeVar.datasets.gold.data module</a><ul>
+<li><a class="reference internal" href="#PyTimeVar.datasets.gold.data.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-PyTimeVar.datasets.gold">Module contents</a></li>
 </ul>
 </li>
 </ul>

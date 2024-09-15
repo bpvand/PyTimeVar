@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
 
-class PowerLaw():
+class PowerLaw:
     """
     Class for implementing the Power-Law method.
     
