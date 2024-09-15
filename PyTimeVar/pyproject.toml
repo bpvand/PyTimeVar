@@ -1,8 +1,17 @@
 [tool.poetry]
-name = "timevarmodels"
-version = "0.0.1"
-description = "A python package for Time Varying Models for Time Series"
-authors = ["Simeon <s.g.klumperbeek@gmail.com>"]
+name = "PyTimeVar"
+version = "0.0.2"
+description = "A Python package for Trending Time-Varying Time Series Models"
+authors = [
+  {name = "Mingxuan Song", email = "678270ms@eur.nl"},
+  {name = "Bernhard van der Sluis", email = "vandersluis@ese.eur.nl"},
+  {name = "Yicong Lin"},
+  {email = "yc.lin@vu.nl"},
+]
+maintainers = [
+  {name = "Mingxuan Song", email = "678270ms@eur.nl"},
+  {name = "Bernhard van der Sluis", email = "vandersluis@ese.eur.nl"}
+]
 readme = "README.md"
 
 [tool.poetry.dependencies]
