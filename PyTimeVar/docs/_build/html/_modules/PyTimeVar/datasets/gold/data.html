@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyTimeVar.datasets.gold.data &mdash; PyTimeVar 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            PyTimeVar
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">PyTimeVar</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">PyTimeVar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">PyTimeVar.datasets.gold.data</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for PyTimeVar.datasets.gold.data</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">PyTimeVar.datasets.utils</span> <span class="kn">import</span> <span class="n">load_csv</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">to_datetime</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<div class="viewcode-block" id="load">
+<a class="viewcode-back" href="../../../../PyTimeVar.datasets.gold.html#PyTimeVar.datasets.gold.data.load">[docs]</a>
+<span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">currencies</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load the gold dataset and optionally filter by specific currencies and date range.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    currencies : list, optional</span>
+<span class="sd">        List of currency codes to filter the dataset by. Available options are:</span>
+<span class="sd">        [&#39;USD&#39;, &#39;EUR&#39;, &#39;JPY&#39;, &#39;GBP&#39;, &#39;CAD&#39;, &#39;CHF&#39;, &#39;INR&#39;, &#39;CNY&#39;, &#39;TRY&#39;, &#39;SAR&#39;,</span>
+<span class="sd">         &#39;IDR&#39;, &#39;AED&#39;, &#39;THB&#39;, &#39;VND&#39;, &#39;EGP&#39;, &#39;KRW&#39;, &#39;RUB&#39;, &#39;ZAR&#39;, &#39;AUD&#39;]</span>
+<span class="sd">    start_date : str, optional</span>
+<span class="sd">        The start date to filter the data. Format &#39;YYYY-MM-DD&#39;.</span>
+<span class="sd">    end_date : str, optional</span>
+<span class="sd">        The end date to filter the data. Format &#39;YYYY-MM-DD&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        DataFrame containing the filtered data.</span>
+
+<span class="sd">    Warnings</span>
+<span class="sd">    --------</span>
+<span class="sd">    Prints warnings if any provided currencies are not found in the dataset.</span>
+<span class="sd">    Prints warnings if the start_date is earlier than the minimum date in the data or the end_date is later than the maximum date in the data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="s2">&quot;gold.csv&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="c1"># print(data)</span>
+
+    <span class="c1"># Convert Date column to datetime</span>
+    <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_datetime</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">dayfirst</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Replace commas and convert #N/A to NaN, then convert to float</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="o">!=</span> <span class="s2">&quot;Date&quot;</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;#N/A&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="c1"># data[column] = (</span>
+            <span class="c1">#     data[column].str.replace(&quot;.&quot;, &quot;&quot;).str.replace(&quot;,&quot;, &quot;.&quot;).astype(float)</span>
+            <span class="c1"># )</span>
+
+    <span class="n">min_date</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">max_date</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+    <span class="n">available_columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">valid_currencies</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">available_columns</span> <span class="k">if</span> <span class="n">col</span> <span class="o">!=</span> <span class="s2">&quot;Date&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">currencies</span><span class="p">:</span>
+        <span class="n">selected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span>
+        <span class="n">invalid_currencies</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">currency</span> <span class="ow">in</span> <span class="n">currencies</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">currency</span> <span class="ow">in</span> <span class="n">available_columns</span><span class="p">:</span>
+                <span class="n">selected_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">currency</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">invalid_currencies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">currency</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">invalid_currencies</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Warning: The following currencies are not available in the dataset and will be ignored: </span><span class="si">{</span><span class="n">invalid_currencies</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">selected_columns</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">start_date</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">to_datetime</span><span class="p">(</span><span class="n">start_date</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">start_date</span> <span class="o">&lt;</span> <span class="n">min_date</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Warning: The provided start_date </span><span class="si">{</span><span class="n">start_date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s2"> is earlier than the minimum date in the dataset </span><span class="si">{</span><span class="n">min_date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s2">. Adjusting to </span><span class="si">{</span><span class="n">min_date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">start_date</span> <span class="o">=</span> <span class="n">min_date</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">start_date</span> <span class="o">=</span> <span class="n">min_date</span>
+
+    <span class="k">if</span> <span class="n">end_date</span><span class="p">:</span>
+        <span class="n">end_date</span> <span class="o">=</span> <span class="n">to_datetime</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">end_date</span> <span class="o">&gt;</span> <span class="n">max_date</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Warning: The provided end_date </span><span class="si">{</span><span class="n">end_date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s2"> is later than the maximum date in the dataset </span><span class="si">{</span><span class="n">max_date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s2">. Adjusting to </span><span class="si">{</span><span class="n">max_date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">end_date</span> <span class="o">=</span> <span class="n">max_date</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">end_date</span> <span class="o">=</span> <span class="n">max_date</span>
+
+    <span class="c1"># Drop duplicate dates</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
+
+    <span class="c1"># # Create a complete date range from start_date to end_date</span>
+    <span class="c1"># all_dates = pd.date_range(start=start_date, end=end_date)</span>
+
+    <span class="c1"># Set &#39;Date&#39; column as the index</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># # Reindex the DataFrame to include all dates, filling missing dates with NaN</span>
+    <span class="c1"># data = data.reindex(all_dates)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Test the load function</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">load</span><span class="p">()</span>
+    <span class="c1"># print(data[&quot;USD&quot;].head())</span>
+    <span class="c1"># print(data[&quot;USD&quot;].tail())</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Bernhard van der Sluis.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
