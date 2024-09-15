@@ -2,7 +2,5 @@ numpy
 pandas
 matplotlib 
 scipy
-time
 statsmodels 
-os
 tqdm 
