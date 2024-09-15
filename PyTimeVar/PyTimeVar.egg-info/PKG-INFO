@@ -1,4 +1,11 @@
 Metadata-Version: 2.1
 Name: PyTimeVar
-Version: 0.0.1
+Version: 0.0.3
 Requires-Python: >=3.9
+License-File: LICENSE.txt
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: matplotlib
+Requires-Dist: scipy
+Requires-Dist: statsmodels
+Requires-Dist: tqdm
