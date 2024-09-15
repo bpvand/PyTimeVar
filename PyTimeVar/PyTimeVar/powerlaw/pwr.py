@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
-
 class PowerLaw:
     """
     Class for implementing the Power-Law method.
@@ -173,5 +172,3 @@ class PowerLaw:
             for id2 in range(id1+1, self.p):
                 c.append(params[id1] - params[id2] + epsilon)
         return c
-
-

@@ -12,7 +12,8 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
+basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'PyTimeVar'))
+sys.path.insert(0, basedir)
 
 
 # -- Project information -----------------------------------------------------

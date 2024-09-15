@@ -12,6 +12,7 @@ Subpackages
    PyTimeVar.gas
    PyTimeVar.kalman
    PyTimeVar.locallinear
+   PyTimeVar.powerlaw
 
 Module contents
 ---------------
