@@ -73,15 +73,15 @@ LLr_betahat = LLr_model.fit()
 residuals = LLr_model.plot_residuals()
 
 ############### plot LBWB full sample bands, replication of 8b.
-############### Only the plot of beta_3 is reported in the paper (takes about 27 mins).
+############### Only the plot of beta_3 is reported in the paper (takes about 28 mins).
 S_LB_full, S_UB_full, P_LB_full, P_UB_full = LLr_model.confidence_bands(plots=True)
 
 ############### plot LBWB G1 bands, replication of 8c.
-############### Only the plot of beta_3 is reported in the paper (takes about 6 mins).
+############### Only the plot of beta_3 is reported in the paper (takes about 8 mins).
 S_LB_G1, S_UB_G1, P_LB_G1, P_UB_G1 = LLr_model.confidence_bands(plots=True, Gsubs=[(0, breakindex_1)])
 
 ############### plot LBWB G6 bands, replication of 8d.
-############### Only the plot of beta_3 is reported in the paper (takes about 7 mins).
+############### Only the plot of beta_3 is reported in the paper (takes about 9 mins).
 S_LB_G6, S_UB_G6, P_LB_G6, P_UB_G6 = LLr_model.confidence_bands(plots=True, Gsubs=[(breakindex_5, len(vY))])
 
 ################### Replication code for Figure 9 in Appendix A.5 ###################
@@ -101,13 +101,13 @@ def plot_figure9(LLr_betahat, S_LB_full, S_UB_full, P_LB_full, P_UB_full):
     plt.legend(fontsize="x-large")
     plt.show()
 
-############### Sieve bootstrap (SB) bands, Figure 9a (takes about 31 mins)
+############### Sieve bootstrap (SB) bands, Figure 9a (takes about 35 mins)
 S_LB_full_SB, S_UB_full_SB, P_LB_full_SB, P_UB_full_SB = LLr_model.confidence_bands(plots=False, bootstrap_type="SB")
 
 ############### replication code for Figure 9a
 plot_figure9(LLr_betahat, S_LB_full_SB, S_UB_full_SB, P_LB_full_SB, P_UB_full_SB)
 
-############### Sieve wild bootstrap (SWB) bands, Figure 9b (takes about 36 mins)
+############### Sieve wild bootstrap (SWB) bands, Figure 9b (takes about 33 mins)
 S_LB_full_SWB, S_UB_full_SWB, P_LB_full_SWB, P_UB_full_SWB = LLr_model.confidence_bands(plots=False, bootstrap_type="SWB")
 
 ############### replication code for Figure 9b
