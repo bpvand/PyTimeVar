@@ -29,7 +29,7 @@ model.plot_predicted()
 S_LB, S_UB, P_LB, P_UB = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
 # auxiliary LLR model to illustrate kernel, bandwidth selection, and tau
-tau = np.linspace(0, 0.5, len(vY))
+tau = np.array([0, 0.5])
 model2LLR = LocalLinear(vY, X, kernel='Gaussian', bw_selection='lmcv_8', tau=tau)
 beta_hat_model2 = model2LLR.fit()
 
