@@ -26,7 +26,7 @@ def load(start_date=None, end_date=None, regions=None):
     Prints warnings if the start_year is earlier than the minimum year in the data or the end_year is later than the maximum year in the data.
     """
     
-    data = load_csv(__file__,"Emissions_19002017.csv", sep=",") # change to load_csv
+    data = load_csv(__file__,"Emissions_19002017.csv", sep=",")
     
     # Convert the 'Date' column to YYYY-MM-DD format for filtering
     data['Date'] = pd.to_datetime(data['Date'])
@@ -51,6 +51,7 @@ def load(start_date=None, end_date=None, regions=None):
     # Select the 'Date' and variable columns
     available_columns = data.columns
     if regions:
+        regions = [x.upper() for x in regions]
         selected_columns = regions
         invalid_regions = [region for region in regions if region not in available_columns]
 
@@ -64,12 +65,5 @@ def load(start_date=None, end_date=None, regions=None):
     data['Date'] = dates
     # Set 'Date' as the index
     data.set_index('Date', inplace=True)
-    data = data.drop('Unnamed: 0', axis=1)
     
     return data
-
-if __name__ == '__main__':
-    # Test the load function
-    data = load(start_date='1900', end_date='2017', regions=['Austria'])
-    print(data.head())
-    print(data.tail())
