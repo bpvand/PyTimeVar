@@ -4,11 +4,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PyTimeVar.locallinear.LLR &#8212; PyTimeVar 0.0.7 documentation</title>
+    <title>PyTimeVar.locallinear.LLR &#8212; PyTimeVar 0.0.8 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
     
-    <script src="../../../_static/documentation_options.js?v=bbaf98b3"></script>
+    <script src="../../../_static/documentation_options.js?v=53b53b71"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     
@@ -24,7 +24,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">PyTimeVar 0.0.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyTimeVar 0.0.8 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">PyTimeVar.locallinear.LLR</a></li> 
       </ul>
@@ -235,7 +235,7 @@
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;- LMCV-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lmcv_type</span><span class="si">}</span><span class="s1"> method: &#39;</span><span class="p">,</span> <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span><span class="s1">&#39;.4f&#39;</span><span class="p">))</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal bandwidth used is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="si">:</span><span class="s1"> .4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-----------------------------------------------------------&#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommeneded.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommended.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="c1"># print(</span>
                 <span class="c1">#     f&#39;Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is adopted, the {self.bw_selection} bandwidth {self.h: .4f} is used.&#39;)</span>
                 <span class="c1"># print(f&#39;If the MB is implemented, the GCV bandwidth {self.the_gcv_h: .4f} is used.&#39;)</span>
@@ -256,7 +256,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict_bw</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal bandwidth used is the avg. of all methods: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="si">:</span><span class="s1"> .4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-----------------------------------------------------------&#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommeneded.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommended.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="c1"># print(f&#39;If the MB is implemented, the GCV bandwidth {self.the_gcv_h: .4f} is used.&#39;)</span>
 
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span> <span class="o">==</span> <span class="s1">&#39;gcv&#39;</span> <span class="ow">or</span> <span class="s1">&#39;aic&#39;</span><span class="p">:</span>
@@ -265,11 +265,11 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-----------------------------------------------------------&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span> <span class="o">==</span> <span class="s1">&#39;gcv&#39;</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span>
-                        <span class="s1">&#39;Note: For constructing confidence intervals/bands using the residual-based bootstrap method, a LMCV bandwidth is recommeneded.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="s1">&#39;Note: For constructing confidence intervals/bands using the residual-based bootstrap method, a LMCV bandwidth is recommended.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
                 <span class="k">else</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span>
-                        <span class="s1">&#39;Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommeneded.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="s1">&#39;Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommended.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="n">h</span>
@@ -2112,7 +2112,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">PyTimeVar 0.0.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyTimeVar 0.0.8 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">PyTimeVar.locallinear.LLR</a></li> 
       </ul>
