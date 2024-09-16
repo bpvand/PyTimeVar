@@ -7,5 +7,22 @@ PyTimeVar.egg-info/SOURCES.txt
 PyTimeVar.egg-info/dependency_links.txt
 PyTimeVar.egg-info/requires.txt
 PyTimeVar.egg-info/top_level.txt
+PyTimeVar/bhpfilter/__init__.py
+PyTimeVar/bhpfilter/bHP.py
+PyTimeVar/datasets/__init__.py
+PyTimeVar/datasets/utils.py
+PyTimeVar/datasets/co2/Emissions_19002017.csv
+PyTimeVar/datasets/gold/gold.csv
+PyTimeVar/datasets/herding/CN HERDING.csv
+PyTimeVar/datasets/temperature/temperature.csv
+PyTimeVar/datasets/usd/USDindex.csv
+PyTimeVar/gas/GAS.py
+PyTimeVar/gas/__init__.py
+PyTimeVar/kalman/__init__.py
+PyTimeVar/kalman/kalman.py
+PyTimeVar/locallinear/LLR.py
+PyTimeVar/locallinear/__init__.py
+PyTimeVar/powerlaw/__init__.py
+PyTimeVar/powerlaw/pwr.py
 tests/__init__.py
 tests/replicateSection3.py
