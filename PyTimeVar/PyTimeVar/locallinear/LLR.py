@@ -172,8 +172,8 @@ class LocalLinear:
                 self.dict_bw = self.bandwidth_selection(LB_bw, UB_bw)
                 print('-----------------------------------------------------------')
                 print('Optimal bandwidth selected by individual method:')
-                print('- AIC method:', format(self.dict_bw['aic'], '4f'))
-                print('- GCV method: ', format(self.dict_bw['gcv'], '4f'))
+                print('- AIC method:', format(self.dict_bw['aic'], '.4f'))
+                print('- GCV method: ', format(self.dict_bw['gcv'], '.4f'))
                 print('- LMCV-0 method: ', format(self.dict_bw['0'],'.4f'))
                 print('- LMCV-2 method: ', format(self.dict_bw['2'],'.4f'))
                 print('- LMCV-4 method: ', format(self.dict_bw['4'],'.4f'))
@@ -185,8 +185,8 @@ class LocalLinear:
                 print(f'Optimal bandwidth used is the avg. of all methods: {self.h: .4f}\n')
                 print('-----------------------------------------------------------')
                 print(
-                    f'Note: For constructing confidence intervals/band using the residual-based bootstrap method, the avg. bandwidth of all methods {self.h: .4f} is used.\n')
-                print(f'For constructing confidence intervals/band using the MB method, the GCV bandwidth {self.h_gcv: .4f} is used.\n')
+                    f'Note: For constructing confidence intervals/bands using the residual-based bootstrap method, the avg. bandwidth of all methods {self.h: .4f} is used.\n')
+                print(f'For constructing confidence intervals/bands using the MB method, the GCV bandwidth {self.h_gcv: .4f} is used.\n')
                 # print(f'If the MB is implemented, the GCV bandwidth {self.the_gcv_h: .4f} is used.')
 
 
@@ -195,7 +195,7 @@ class LocalLinear:
                 print(f'- LMCV-{self.lmcv_type} method: ', format(self.h,'4f'))
                 print(f'Optimal bandwidth used is {self.bw_selection}: {self.h: .4f}\n')
                 print('-----------------------------------------------------------')
-                print(f'Note: For constructing confidence intervals/band using the MB method, a GCV bandwidth is recommeneded.\n')
+                print(f'Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommeneded.\n')
                 # print(
                 #     f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is adopted, the {self.bw_selection} bandwidth {self.h: .4f} is used.')
                 # print(f'If the MB is implemented, the GCV bandwidth {self.the_gcv_h: .4f} is used.')
@@ -216,7 +216,7 @@ class LocalLinear:
                 self.h = self.dict_bw['all']
                 print(f'Optimal bandwidth used is the avg. of all methods: {self.h: .4f}\n')
                 print('-----------------------------------------------------------')
-                print('Note: For constructing confidence intervals/band using the MB method, a GCV bandwidth is recommeneded.\n')
+                print('Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommeneded.\n')
                 # print(f'If the MB is implemented, the GCV bandwidth {self.the_gcv_h: .4f} is used.')
 
             elif self.bw_selection == 'gcv' or 'aic':
@@ -225,11 +225,11 @@ class LocalLinear:
                 pprint('-----------------------------------------------------------')
                 if self.bw_selection == 'gcv':
                     print(
-                        'Note: For constructing confidence intervals/band using the residual-based bootstrap method, a LMCV bandwidth is recommeneded.\n')
+                        'Note: For constructing confidence intervals/bands using the residual-based bootstrap method, a LMCV bandwidth is recommeneded.\n')
 
                 else:
                     print(
-                        'Note: For constructing confidence intervals/band using the MB method, a GCV bandwidth is recommeneded.\n')
+                        'Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommeneded.\n')
 
         else:
             self.h = h
