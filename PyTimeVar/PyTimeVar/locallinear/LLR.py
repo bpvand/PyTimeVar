@@ -222,7 +222,7 @@ class LocalLinear:
             elif self.bw_selection == 'gcv' or 'aic':
                 self.h  = self.bandwidth_selection(LB_bw, UB_bw)
                 print(f'Optimal bandwidth used is {self.bw_selection}: {self.h: .4f}\n')
-                pprint('-----------------------------------------------------------')
+                print('-----------------------------------------------------------')
                 if self.bw_selection == 'gcv':
                     print(
                         'Note: For constructing confidence intervals/bands using the residual-based bootstrap method, a LMCV bandwidth is recommeneded.\n')
