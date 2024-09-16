@@ -192,7 +192,7 @@ class LocalLinear:
 
             elif self.bw_selection[:4] == 'lmcv':
                 self.h = self.bandwidth_selection(LB_bw, UB_bw)
-                print(f'- LMCV-{self.lmcv_type} method: ', format(self.h,'4f'))
+                print(f'- LMCV-{self.lmcv_type} method: ', format(self.h,'.4f'))
                 print(f'Optimal bandwidth used is {self.bw_selection}: {self.h: .4f}\n')
                 print('-----------------------------------------------------------')
                 print(f'Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommeneded.\n')
@@ -205,8 +205,8 @@ class LocalLinear:
                 self.dict_bw = self.bandwidth_selection(LB_bw, UB_bw)
                 print('-----------------------------------------------------------')
                 print('Optimal bandwidth selected by individual method:')
-                print('- AIC method:', format(self.dict_bw['aic'], '4f'))
-                print('- GCV method: ', format(self.dict_bw['gcv'], '4f'))
+                print('- AIC method:', format(self.dict_bw['aic'], '.4f'))
+                print('- GCV method: ', format(self.dict_bw['gcv'], '.4f'))
                 print('- LMCV-0 method: ', format(self.dict_bw['0'], '.4f'))
                 print('- LMCV-2 method: ', format(self.dict_bw['2'], '.4f'))
                 print('- LMCV-4 method: ', format(self.dict_bw['4'], '.4f'))
