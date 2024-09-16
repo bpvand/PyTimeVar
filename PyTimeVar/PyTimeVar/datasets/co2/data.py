@@ -14,7 +14,8 @@ def load(start_date=None, end_date=None, regions=None):
     end_date : str, optional
         The end_year to filter the data. Format 'YYYY'.
     regions : list, optional
-        Regions to be selected from data. 
+        Regions to be selected from data.
+        Possible regions are 
     Returns
     -------
     pandas.DataFrame

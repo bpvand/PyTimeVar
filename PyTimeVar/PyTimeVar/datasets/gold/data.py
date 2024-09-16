@@ -41,15 +41,17 @@ def load(currencies=None, start_date=None, end_date=None):
             # data[column] = (
             #     data[column].str.replace(".", "").str.replace(",", ".").astype(float)
             # )
-
+            
     min_date = data["Date"].min()
     max_date = data["Date"].max()
+    
+    data.set_index("Date", inplace=True)
 
     available_columns = data.columns
     valid_currencies = [col for col in available_columns if col != "Date"]
 
     if currencies:
-        selected_columns = ["Date"]
+        selected_columns = []#["Date"]
         invalid_currencies = []
 
         for currency in currencies:
@@ -65,34 +67,36 @@ def load(currencies=None, start_date=None, end_date=None):
 
         data = data[selected_columns]
 
-    if start_date:
+    if start_date is not None:
         start_date = to_datetime(start_date)
         if start_date < min_date:
             print(
                 f"Warning: The provided start_date {start_date.date()} is earlier than the minimum date in the dataset {min_date.date()}. Adjusting to {min_date.date()}."
             )
             start_date = min_date
+        data = data[data.index >= start_date]
     else:
         start_date = min_date
 
-    if end_date:
+    if end_date is not None:
         end_date = to_datetime(end_date)
         if end_date > max_date:
             print(
                 f"Warning: The provided end_date {end_date.date()} is later than the maximum date in the dataset {max_date.date()}. Adjusting to {max_date.date()}."
             )
             end_date = max_date
+        data = data[data.index <= end_date]
     else:
         end_date = max_date
 
     # Drop duplicate dates
-    data = data.drop_duplicates(subset="Date")
+    # data = data.drop_duplicates(subset="Date")
 
     # # Create a complete date range from start_date to end_date
     # all_dates = pd.date_range(start=start_date, end=end_date)
 
     # Set 'Date' column as the index
-    data.set_index("Date", inplace=True)
+    # data.set_index("Date", inplace=True)
 
     # # Reindex the DataFrame to include all dates, filling missing dates with NaN
     # data = data.reindex(all_dates)

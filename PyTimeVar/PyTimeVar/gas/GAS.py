@@ -16,7 +16,7 @@ class GAS:
     mX : np.ndarray
         The independent variable (predictor) matrix.
     method : string
-        Method to estimate GAS model.
+        Method to estimate GAS model. Choose between 'gaussian' or 'student'.
     vgamma0 : np.ndarray 
         Initial parameter vector.
     bounds : list
