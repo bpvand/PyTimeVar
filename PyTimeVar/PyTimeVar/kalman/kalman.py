@@ -114,7 +114,7 @@ class Kalman:
         self.a_1 = b_1 if b_1 is not None else np.zeros(
             self.T.shape[0])            # Initial state mean
         self.P_1 = P_1 if P_1 is not None else np.eye(
-            self.T.shape[0])*1000       # Initial state covariance
+            self.T.shape[0])*100000       # Initial state covariance
         self.R = R if R is not None else np.eye(
             self.a_1.shape[0])         # Transition covariance matrix
         # Dimension of the state space

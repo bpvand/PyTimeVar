@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.optimize import minimize
 from scipy.special import gammaln
+from scipy.optimize import basinhopping
 import time
 import matplotlib.pyplot as plt
 
@@ -23,9 +24,8 @@ class GAS:
         List to define parameter space.
     options : dict
         Stopping criteria for optimization.
-    maxiter : int
-        Maximum number of repitions of the optimization algorithm.
-        If not provided, default is set to five repitions with different initial parameters.
+    niter : int
+        The number of basin-hopping iterations, for scipy.optimize.basinhopping()
         
     Attributes
     ----------
@@ -41,12 +41,12 @@ class GAS:
         Method to estimate GAS model.
     vgamma0 : np.ndarray 
         The initial parameter vector.
-    maxiter : int
-        Maximum number of repitions of the optimization algorithm.
     bounds : list
         List to define parameter space.
     options : dict
         Stopping criteria for optimization.
+    niter : int
+        The number of basin-hopping iterations, for scipy.optimize.basinhopping()
     success : bool
         If True, optimization was successful.
     betas : np.ndarray
@@ -65,14 +65,13 @@ class GAS:
 
     """
 
-    def __init__(self, vY: np.ndarray, mX: np.ndarray, method: str = 'none', vgamma0: np.ndarray = None, bounds: list = None, options: dict = None, maxiter: int = 5):
+    def __init__(self, vY: np.ndarray, mX: np.ndarray, method: str = 'none', vgamma0: np.ndarray = None, bounds: list = None, options: dict = None, niter : int=10):
         self.vY = vY.flatten()
         self.mX = mX
         self.n = len(vY)
         self.n_est = np.shape(mX)[1]
         self.method = method.lower()
         self.vgamma0 = vgamma0
-        self.maxiter = maxiter
         if self.vgamma0 is not None:
             if self.method == 'gaussian' and len(self.vgamma0) == 3*self.n_est+1:
                 ValueError(
@@ -82,7 +81,9 @@ class GAS:
                     "Incorrect number of initial parameters are provided. Provide either 3*n_est + 2 or no initial parameters.")
 
         self.bounds = bounds
-        self.options = {'maxfun': 5E3} if options is None else options
+        self.options = {'maxfun': 5E5} if options is None else options
+        self.niter = niter
+        
         self.success = None
         self.betas = None
         self.params = None
@@ -125,46 +126,37 @@ class GAS:
 
             def fgGAS_lh(vpara): return - \
                 self.construct_likelihood(vbeta0, vpara)
-            mmBeta = np.zeros((self.maxiter, self.n_est, self.n))
-            vMSE = np.zeros(self.maxiter)
-            vSuccess = np.zeros(self.maxiter)
-            mParaHat = np.zeros((self.maxiter, len(self.vgamma0)))
-            for j in range(self.maxiter):
-                result = minimize(fgGAS_lh, self.vgamma0 + np.random.normal(0, 0.2, len(self.vgamma0)),
-                                  bounds=self.bounds, options=self.options)
-
-                vparaHat_gGAS = result.x
-                mParaHat[j,:] = vparaHat_gGAS
-                vSuccess[j] = result.success
-
-                # construct betat estimate
-                vbetaNow = vbeta0
-                mBetaHat_gGAS = np.zeros((self.n_est, self.n))
-                vthetaHat_gGAS = vparaHat_gGAS[1:]
-                vomegaHat_gGAS = vthetaHat_gGAS[:self.n_est]
-                mBHat_gGAS = vthetaHat_gGAS[self.n_est:2*self.n_est]
-                mAHat_gGAS = vthetaHat_gGAS[2*self.n_est:]
-
-                for id in range(self.n):
-                    vxt = self.mX[id, :].reshape(-1, 1)
-                    yt = self.vY[id]
-                    epst = yt - vbetaNow.T @ vxt
-
-                    vMSE[j] = vMSE[j] + epst*epst/self.n
-
-                    mNablat = vxt * epst
-                    vbetaNow = vomegaHat_gGAS + mBHat_gGAS * \
-                        vbetaNow + mAHat_gGAS * mNablat.squeeze()
-
-                    mBetaHat_gGAS[:, id] = vbetaNow
-
-                mmBeta[j, :, :] = mBetaHat_gGAS
                 
-            ind_opt = np.argmin(vMSE)
-            mBetaHat = (mmBeta[ind_opt, :, :]).T
-            vparaHat = mParaHat[ind_opt,:]
-            self.success = vSuccess[ind_opt]
-            
+            min_kwargs = {"method":"L-BFGS-B", "bounds": self.bounds, "options": self.options}
+            result = basinhopping(fgGAS_lh, self.vgamma0,
+                              minimizer_kwargs = min_kwargs,
+                              niter = self.niter)
+
+            vparaHat_gGAS = result.x
+            self.success = result.success
+
+            # construct betat estimate
+            vbetaNow = vbeta0
+            mBetaHat_gGAS = np.zeros((self.n_est, self.n))
+            vthetaHat_gGAS = vparaHat_gGAS[1:]
+            vomegaHat_gGAS = vthetaHat_gGAS[:self.n_est]
+            mBHat_gGAS = vthetaHat_gGAS[self.n_est:2*self.n_est]
+            mAHat_gGAS = vthetaHat_gGAS[2*self.n_est:]
+
+            for id in range(self.n):
+                vxt = self.mX[id, :].reshape(-1, 1)
+                yt = self.vY[id]
+                epst = yt - vbetaNow.T @ vxt
+
+                mNablat = vxt * epst
+                vbetaNow = vomegaHat_gGAS + mBHat_gGAS * \
+                    vbetaNow + mAHat_gGAS * mNablat.squeeze()
+
+                mBetaHat_gGAS[:, id] = vbetaNow
+
+            mBetaHat = mBetaHat_gGAS.T
+            vparaHat = vparaHat_gGAS
+                
         elif self.method == 'student':  # MLE by t-GAS
             LB = np.concatenate(([0.01], LB))
             UB = np.concatenate(([200], UB))
@@ -179,49 +171,41 @@ class GAS:
 
             def ftGAS_lh(vpara): return - \
                 self.construct_likelihood(vbeta0, vpara)
-            mmBeta = np.zeros((self.maxiter, self.n_est, self.n))
-            vMSE = np.zeros(self.maxiter)
-            vSuccess = np.zeros(self.maxiter)
-            mParaHat = np.zeros((self.maxiter, len(self.vgamma0)))
-            for j in range(self.maxiter):
-                result = minimize(ftGAS_lh, self.vgamma0 + np.random.normal(0, 0.5, len(self.vgamma0)),
-                                  bounds=self.bounds, options=self.options)
-
-                vparaHat_tGAS = result.x
-                mParaHat[j,:] = vparaHat_tGAS
-                vSuccess[j] = result.success
-
-                # construct betat estimate
-                vbetaNow = vbeta0
-                mBetaHat_tGAS = np.zeros((self.n_est, self.n))
-                dnuHat_tGAS = vparaHat_tGAS[0]
-                dsigmauHat_tGAS = vparaHat_tGAS[1]
-                vthetaHat_tGAS = vparaHat_tGAS[2:]
-                vomegaHat_tGAS = vthetaHat_tGAS[:self.n_est]
-                mBHat_tGAS = vthetaHat_tGAS[self.n_est:2*self.n_est]
-                mAHat_tGAS = vthetaHat_tGAS[2*self.n_est:]
-
-                for id in range(self.n):
-                    vxt = self.mX[id, :].reshape(-1, 1)
-                    yt = self.vY[id]
-                    epst = yt - vbetaNow.T @ vxt
-
-                    vMSE[j] = vMSE[j] + epst*epst/self.n
-
-                    temp1 = (1 + dnuHat_tGAS**(-1)) * (1 + dnuHat_tGAS**(-1)
-                                                       * (epst / dsigmauHat_tGAS)**2)**(-1)
-                    mNablat = (1 + dnuHat_tGAS)**(-1) * (3 + dnuHat_tGAS) * \
-                        temp1 * vxt * epst
-                    vbetaNow = vomegaHat_tGAS + mBHat_tGAS * \
-                        vbetaNow + mAHat_tGAS * mNablat.squeeze()
-
-                    mBetaHat_tGAS[:, id] = vbetaNow
-                mmBeta[j, :, :] = mBetaHat_tGAS
                 
-            ind_opt = np.argmin(vMSE)
-            mBetaHat = (mmBeta[ind_opt, :, :]).T
-            vparaHat = mParaHat[ind_opt,:]
-            self.success = vSuccess[ind_opt]
+            min_kwargs = {"method":"L-BFGS-B", "bounds": self.bounds, "options": self.options}
+            result = basinhopping(ftGAS_lh, self.vgamma0,
+                              minimizer_kwargs = min_kwargs,
+                              niter = self.niter)
+
+            vparaHat_tGAS = result.x
+            self.success = result.success
+
+            # construct betat estimate
+            vbetaNow = vbeta0
+            mBetaHat_tGAS = np.zeros((self.n_est, self.n))
+            dnuHat_tGAS = vparaHat_tGAS[0]
+            dsigmauHat_tGAS = vparaHat_tGAS[1]
+            vthetaHat_tGAS = vparaHat_tGAS[2:]
+            vomegaHat_tGAS = vthetaHat_tGAS[:self.n_est]
+            mBHat_tGAS = vthetaHat_tGAS[self.n_est:2*self.n_est]
+            mAHat_tGAS = vthetaHat_tGAS[2*self.n_est:]
+
+            for id in range(self.n):
+                vxt = self.mX[id, :].reshape(-1, 1)
+                yt = self.vY[id]
+                epst = yt - vbetaNow.T @ vxt
+
+                temp1 = (1 + dnuHat_tGAS**(-1)) * (1 + dnuHat_tGAS**(-1)
+                                                   * (epst / dsigmauHat_tGAS)**2)**(-1)
+                mNablat = (1 + dnuHat_tGAS)**(-1) * (3 + dnuHat_tGAS) * \
+                    temp1 * vxt * epst
+                vbetaNow = vomegaHat_tGAS + mBHat_tGAS * \
+                    vbetaNow + mAHat_tGAS * mNablat.squeeze()
+
+                mBetaHat_tGAS[:, id] = vbetaNow
+            
+            mBetaHat = mBetaHat_tGAS.T
+            vparaHat = vparaHat_tGAS
 
         self.betas, self.params = mBetaHat, vparaHat
         print(f"Time taken: {time.time() - start_time:.2f} seconds")
@@ -265,6 +249,7 @@ class GAS:
                 vbetaNow = vomega + mB * vbetaNow + mA * mNablat.squeeze()
 
             lhVal = -np.log(dsigmau) - 0.5 * lhVal / self.n
+
 
         elif self.method == 'student':
             dnu = vpara[0]
