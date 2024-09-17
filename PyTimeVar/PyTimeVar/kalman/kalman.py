@@ -59,6 +59,8 @@ class Kalman:
         The number of response variables. This is always 1.
     filt : np.ndarray
         The filtered coefficients.
+    pred : np.ndarray
+        The predicted coefficients.
     smooth : 
         The smoothed coefficients.
     
@@ -67,11 +69,11 @@ class Kalman:
     -------
     fit()
         Fit state-space model by Kalman filter or smoother, according to the specified option
-        (’filter' or ’smoother’)
+        (’filter', 'predict', or ’smoother’)
     summary()
-        Print a summary of the Kalman filter/smoother specifications, including the values of H, Q, R and T
+        Print a summary of the state-space specifications, including the values of H, Q, R and T
     plot()
-        Plot filtered/smoothed estimates against true data
+        Plot filtered/predicted/smoothed estimates against true data
     
     
     
@@ -204,19 +206,21 @@ class Kalman:
 
     def _KalmanFilter(self):
         """
-        Performs the filtering step of the Kalman filter.
+        Performs the Kalman filter.
 
         Returns
         -------
-        np.ndarray
+        a_filt : np.ndarray
             The filtered state at each time step.
-        np.ndarray
+        a_pred : np.ndarray
+            The predicted state at each time step.
+        P : np.ndarray
             The filtered state covariances at each time step.
-        np.ndarray
+        v : np.ndarray
             The prediction errors at each time step.
-        np.ndarray
+        F : np.ndarray
             The prediction variances at each time step.
-        np.ndarray
+        K : np.ndarray
             The Kalman gains at each time step.
 
         """
@@ -251,12 +255,12 @@ class Kalman:
 
     def _filter(self):
         """
-        Computes the one-step ahead predictions from the Kalman filter.
+        Computes the filtered states using the Kalman filter.
 
         Returns
         -------
         np.ndarray
-            The one-step ahead predicted states at each time step.
+            The filtered states at each time step.
         """
         a_filt , _, _, _, _, _ = self._KalmanFilter()
 
@@ -264,12 +268,12 @@ class Kalman:
     
     def _predict(self):
         """
-        Performs the filtering  of the Kalman filter.
+        Computes the one-step ahead predictions using the Kalman filter.
 
         Returns
         -------
         np.ndarray
-            The filtered state means at each time step.
+            The one-step ahead predicted state means at each time step.
         """
         a_filt , a_pred, _, _, _, _ = self._KalmanFilter()
 
@@ -318,7 +322,7 @@ class Kalman:
 
     def _smoother(self):
         """
-        Performs the smoothing step of the Kalman filter.
+        Computes the smoothed state estimates using the Kalman smoother.
 
         Returns
         -------
@@ -330,12 +334,12 @@ class Kalman:
 
     def fit(self, option):
         '''
-        Fits the Kalman filter or smoother to the data.
+        Computes the Kalman filtered states, one-step ahead predicted states or smoothed states for the data.
 
         Parameters
         ----------
         option : string
-            Denotes the fitted trend: filter or smoother.
+            Denotes the fitted trend: filter, predict or smoother.
 
         Raises
         ------
@@ -359,14 +363,14 @@ class Kalman:
             return self.smooth
         else:
             raise ValueError(
-                'Unknown option provided to fit(). Choose either filter or smoother')
+                'Unknown option provided to fit(). Choose either filter, predict or smoother')
 
     def summary(self):
         """
         Prints a summary of the state-space model specification.
         """
 
-        print("Kalman Filter specification:")
+        print("State-space model specification:")
         print(f"H: {self.H}")
         print(f"Q: {self.Q}")
         print(f"R: {self.R}")
@@ -375,7 +379,7 @@ class Kalman:
 
     def plot(self):
         """
-        Plot the beta coefficients over a normalized x-axis from 0 to 1 or over a date range.
+        Plot the estimated beta coefficients over a normalized x-axis from 0 to 1 or over a date range.
         """
 
         x_vals = np.linspace(0, 1, self.n)

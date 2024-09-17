@@ -10,19 +10,24 @@ def load(start_date=None, end_date=None, data_replication=False):
     Parameters
     ----------
     start_date : str, optional
-        The start_year to filter the data. Format 'YYYY-MM-DD'. Minimum start year is 1900.
+        The start date to filter the data. 
+        Format 'YYYY-MM-DD'.
+        Minimum start date is 2015-01-05.
     end_date : str, optional
-        The end_year to filter the data. Format 'YYYY'.
+        The end date to filter the data.
+        Format 'YYYY-MM-DD'.
+        Maximum end date is 2022-04-29.
+    data_replication : bool, optional
+        If True, the data is returned to replicate the output in Section 4.2 of the reference paper Song et al. (2024).
 
     Returns
     -------
     pandas.DataFrame
-        DataFrame containing the filtered data with columns 'Date' and 'Herding'.
+        DataFrame containing the filtered data with columns 'Date' and regressors.
 
     Warnings
     --------
-    Prints warnings if any provided regions are not found in the dataset.
-    Prints warnings if the start_year is earlier than the minimum year in the data or the end_year is later than the maximum year in the data.
+    Prints warnings if the start_date is earlier than the minimum date in the data or the end_date is later than the maximum date in the data.
     """
     
     data = load_csv(__file__,"CN HERDING.csv", sep=",") # change to load_csv

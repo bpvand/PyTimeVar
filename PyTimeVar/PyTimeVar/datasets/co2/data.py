@@ -10,12 +10,21 @@ def load(start_date=None, end_date=None, regions=None):
     Parameters
     ----------
     start_date : str, optional
-        The start_year to filter the data. Format 'YYYY'. Minimum start year is 1900.
+        The start year to filter the data. 
+        Format 'YYYY'. 
+        Minimum start year is 1900.
     end_date : str, optional
-        The end_year to filter the data. Format 'YYYY'.
+        The end year to filter the data.
+        Format 'YYYY'. 
+        Maximum end year is 2017.
     regions : list, optional
-        Regions to be selected from data.
-        Possible regions are 
+        Regions to be selected from data. 
+        Available options are:
+            AUSTRALIA, AUSTRIA, BELGIUM, CANADA, DENMARK, FINLAND, FRANCE, GERMANY,
+            ITALY, JAPAN, NETHERLANDS, NEW ZEALAND, NORWAY, PORTUGAL, SPAIN, SWEDEN,
+            SWITZERLAND, UNITED KINGDOM, UNITED STATES, CHILE, SRI LANKA, URUGUAY, 
+            BRAZIL, GREECE, PERU, VENEZUELA, COLOMBIA, ECUADOR, INDIA, MEXICO
+
     Returns
     -------
     pandas.DataFrame
@@ -24,7 +33,7 @@ def load(start_date=None, end_date=None, regions=None):
     Warnings
     --------
     Prints warnings if any provided regions are not found in the dataset.
-    Prints warnings if the start_year is earlier than the minimum year in the data or the end_year is later than the maximum year in the data.
+    Prints warnings if the start year is earlier than the minimum year in the data or the end year is later than the maximum year in the data.
     """
     
     data = load_csv(__file__,"Emissions_19002017.csv", sep=",")

@@ -1,30 +1,34 @@
 from PyTimeVar.datasets.utils import load_csv
 from pandas import to_datetime
-import numpy as np
 
-def load(regions=None, start_date=None, end_date=None):
+def load(start_date=None, end_date=None, regions=None):
     """
-    Load the temperature dataset and optionally filter by specific regions and date range.
+    Load the temperature dataset and optionally filter by by date range and/or regions.
     This dataset contains the average yearly temperature change in degrees Celsius for different regions of the world from 1961 to 2023.
+    
     Parameters
     ----------
+    start_date : str, optional
+        The start year to filter the data. 
+        Format 'YYYY'. 
+        Minimum start year is 1961.
+    end_date : str, optional
+        The end year to filter the data.
+        Format 'YYYY'. 
+        Maximum end year is 2023.
     regions : list, optional
         List of regions to filter the dataset by. Available options are:
-        ['World', 'Africa', 'Asia', 'Europe', 'North America', 'Oceania', 'South America']
-    start_date : str, optional
-        The start date to filter the data. Format 'YYYY-MM-DD'.
-    end_date : str, optional
-        The end date to filter the data. Format 'YYYY-MM-DD'.
+            World, Africa, Asia, Europe, North America, Oceania, South America
 
     Returns
     -------
     pandas.DataFrame
-        DataFrame containing the filtered data.
+        DataFrame containing the filtered data with columns 'Date' and regions.
 
     Warnings
     --------
     Prints warnings if any provided regions are not found in the dataset.
-    Prints warnings if the start_year is earlier than the minimum year in the data or the end_year is later than the maximum year in the data.
+    Prints warnings if the start_date is earlier than the minimum year in the data or the end_date is later than the maximum year in the data.
     """
     data = load_csv(__file__, "temperature.csv", sep=",")
     data.rename(columns={'Year': 'Date'}, inplace=True)

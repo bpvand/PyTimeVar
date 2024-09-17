@@ -6,16 +6,16 @@ Section 3: illustration of code on Temperature dataset
 from PyTimeVar.datasets import temperature
 import numpy as np
 data = temperature.load(
-    regions=['World'], start_date='1961-01-01', end_date='2023-01-01')
+    regions=['World'], start_date='1961', end_date='2023')
 vY = data.values
-X = np.ones_like(vY)
+mX = np.ones_like(vY)
 
 # set seed
 np.random.seed(123)
 
 # illustrate LLR
 from PyTimeVar import LocalLinear
-model = LocalLinear(vY, X)
+model = LocalLinear(vY, mX)
 betaHatLLR = model.fit()
 
 # print summary
@@ -29,7 +29,7 @@ S_LB, S_UB, P_LB, P_UB = model.confidence_bands(bootstrap_type='LBWB', Gsubs=Non
 
 # auxiliary LLR model to illustrate kernel, bandwidth selection, and tau
 tau = np.linspace(0, 0.5, len(vY))
-model2LLR = LocalLinear(vY, X, kernel='Gaussian', bw_selection='lmcv_8', tau=tau)
+model2LLR = LocalLinear(vY, mX, kernel='Gaussian', bw_selection='lmcv_8', tau=tau)
 beta_hat_model2 = model2LLR.fit()
 
 # illustrate boosted HP filter
@@ -58,12 +58,10 @@ auxPwr.summary()
 from PyTimeVar import Kalman
 kalmanmodel = Kalman(vY=vY)
 smooth_trend = kalmanmodel.fit('smoother')
-filt_trend = kalmanmodel.fit('filter')
-filt_trend = kalmanmodel.fit('predict')
 kalmanmodel.plot()
 
 # # illustrate GAS model
 from PyTimeVar import GAS
-N_gasmodel = GAS(vY=vY, mX=X, method='gaussian')
+N_gasmodel = GAS(vY=vY, mX=mX, method='gaussian')
 N_GAStrend, N_GASparams = N_gasmodel.fit()
 N_gasmodel.plot()

@@ -1,20 +1,25 @@
 from PyTimeVar.datasets.utils import load_csv
-from pandas import to_datetime
 import pandas as pd
 
-def load(type="Open", start_date=None, end_date=None):
+def load(start_date=None, end_date=None, type="Open"):
     """
     Load the USD index dataset and optionally filter by date range.
+    This dataset contains the USD index data from 1961 to 2023.
 
     Parameters
     ----------
-    type : str, optional
-        The type of data to load. Available options are:
-        ['Open', 'High', 'Low', 'Close']
     start_date : str, optional
-        The start date to filter the data. Format 'YYYY-MM-DD'.
+        The start date to filter the data. 
+        Format 'YYYY-MM-DD'.
+        Minimum start date is 2015-01-20.
     end_date : str, optional
-        The end date to filter the data. Format 'YYYY-MM-DD'.
+        The end date to filter the data.
+        Format 'YYYY-MM-DD'.
+        Maximum end date is 2024-09-06.
+    type : str, optional
+        The type of data to load. 
+        Available options are:
+        ['Open', 'High', 'Low', 'Close']
 
     Returns
     -------

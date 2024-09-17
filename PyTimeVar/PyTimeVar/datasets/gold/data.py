@@ -3,25 +3,31 @@ from pandas import to_datetime
 import numpy as np
 import pandas as pd
 
-def load(currencies=None, start_date=None, end_date=None):
+def load(start_date=None, end_date=None, currencies=None):
     """
-    Load the gold dataset and optionally filter by specific currencies and date range.
+    Load the gold dataset and optionally filter by specific date range and/or currencies.
+    This dataset contains the gold price data from Dec 29 1978 to Sept 6 2024, for a range of currencies.
 
     Parameters
     ----------
-    currencies : list, optional
-        List of currency codes to filter the dataset by. Available options are:
-        ['USD', 'EUR', 'JPY', 'GBP', 'CAD', 'CHF', 'INR', 'CNY', 'TRY', 'SAR',
-         'IDR', 'AED', 'THB', 'VND', 'EGP', 'KRW', 'RUB', 'ZAR', 'AUD']
     start_date : str, optional
-        The start date to filter the data. Format 'YYYY-MM-DD'.
+        The start date to filter the data. 
+        Format 'YYYY-MM-DD'.
+        Minimum start date is 1978-12-29.
     end_date : str, optional
-        The end date to filter the data. Format 'YYYY-MM-DD'.
+        The end date to filter the data.
+        Format 'YYYY-MM-DD'.
+        Maximum end date is 2024-09-06.
+    currencies : list, optional
+        Currencies to be selected from data. Available options are:
+            USD, EUR, JPY, GBP, CAD, CHF, INR, CNY, TRY, SAR, IDR, AED, THB, VND,
+            EGP, KRW, RUB, ZAR, AUD
+
 
     Returns
     -------
     pandas.DataFrame
-        DataFrame containing the filtered data.
+        DataFrame containing the filtered data with columns 'Date' and currencies.
 
     Warnings
     --------
