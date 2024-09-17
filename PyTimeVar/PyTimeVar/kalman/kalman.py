@@ -125,6 +125,7 @@ class Kalman:
         self.H, self.Q = self._estimate_ML()
 
         self.filt = None
+        self.pred = None
         self.smooth = None
 
     def _estimate_ML(self):
@@ -152,7 +153,7 @@ class Kalman:
         else:
             return self.H, self.Q
 
-        LL_model = minimize(self.compute_likelihood_LL, vTheta, method='SLSQP', bounds=(
+        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='SLSQP', bounds=(
             (0.00001, None),)*len(vTheta), options={'maxiter': 3000})
         if LL_model.success == False:
             print('Optimization failed')
@@ -169,7 +170,7 @@ class Kalman:
 
         return np.array([[mH]]), np.array([[mQ]])
 
-    def compute_likelihood_LL(self, vTheta):
+    def _compute_likelihood_LL(self, vTheta):
         '''
         Computes the negative log-likelihood value for a given parameter vector.
 
@@ -192,7 +193,7 @@ class Kalman:
         elif not self.bEst_H and self.bEst_Q:
             self.Q = vTheta.reshape(self.p_dim, self.p_dim)
 
-        a, P, v, F, K = self._filter()
+        a_filt, a_pred, P, v, F, K = self._KalmanFilter()
         dLL = -(self.n*self.m_dim/2)*np.log(2*np.pi)
         for t in range(self.n):
             dLL = dLL - 0.5 * \
@@ -201,7 +202,7 @@ class Kalman:
 
         return -dLL
 
-    def _filter(self):
+    def _KalmanFilter(self):
         """
         Performs the filtering step of the Kalman filter.
 
@@ -220,44 +221,62 @@ class Kalman:
 
         """
 
-        a = np.zeros((self.n + 1, self.p_dim, 1))
+        a_pred = np.zeros((self.n + 1, self.p_dim, 1))
+        a_filt = np.zeros((self.n, self.p_dim, 1))
         P = np.zeros((self.n + 1, self.p_dim, self.p_dim))
         v = np.zeros((self.n, self.m_dim, 1))
         F = np.zeros((self.n, self.m_dim, self.m_dim))
         K = np.zeros((self.n, self.p_dim, self.m_dim))
-        a[0] = self.a_1.reshape(self.T.shape[1], 1)
+        a_pred[0] = self.a_1.reshape(self.T.shape[1], 1)
         P[0] = self.P_1
         for t in range(self.n):
             if self.isReg:
                 self.Z = self.Z_reg[t].reshape(1, -1)
-            v[t] = self.vY[t] - self.Z @ a[t]
+            v[t] = self.vY[t] - self.Z @ a_pred[t]
             F[t] = self.Z @ P[t] @ self.Z.T + self.H
 
             if not np.isnan(self.vY[t]):
-                K[t] = self.T @ P[t] @ self.Z.T @ np.linalg.inv(F[t])
-                a[t + 1] = self.T @ a[t] + K[t] @ v[t]
+                mAux = P[t] @ self.Z.T @ np.linalg.inv(F[t])
+                K[t] = self.T @ mAux
+                a_filt[t] = a_pred[t] + mAux @ v[t]
+                a_pred[t + 1] = self.T @ a_pred[t] + K[t] @ v[t]
             else:
                 K[t] = 0
-                a[t + 1] = self.T @ a[t]
+                a_filt[t] = a_pred[t]
+                a_pred[t + 1] = self.T @ a_pred[t]
 
             P[t + 1] = self.T @ P[t] @ (self.T - K[t]
                                         @ self.Z).T + self.R @ self.Q @ self.R.T
-        return a[1:], P[1:], v, F, K
+        return a_filt, a_pred, P, v, F, K
 
-    def filter(self):
+    def _filter(self):
         """
-        Performs the filtering step of the Kalman filter.
+        Computes the one-step ahead predictions from the Kalman filter.
+
+        Returns
+        -------
+        np.ndarray
+            The one-step ahead predicted states at each time step.
+        """
+        a_filt , _, _, _, _, _ = self._KalmanFilter()
+
+        return a_filt.squeeze()
+    
+    def _predict(self):
+        """
+        Performs the filtering  of the Kalman filter.
 
         Returns
         -------
         np.ndarray
             The filtered state means at each time step.
         """
-        a, _, _, _, _ = self._filter()
+        a_filt , a_pred, _, _, _, _ = self._KalmanFilter()
 
-        return a.squeeze()
+        return a_pred.squeeze()
+    
 
-    def _smoother(self):
+    def _KalmanSmoother(self):
         """
         Performs the smoothing steps of the Kalman filter.
 
@@ -269,7 +288,8 @@ class Kalman:
             The smoothed state covariances at each time step.
         """
 
-        a, P, v, F, K = self._filter()
+        a_filt, a, P, v, F, K = self._KalmanFilter()
+        a = a[:-1]
         a_s = np.zeros((self.n, self.p_dim, 1))
         V_s = np.zeros((self.n, self.p_dim, self.p_dim))
 
@@ -293,8 +313,10 @@ class Kalman:
             r_cur, N_cur = r_prev, N_prev
 
         return a_s, V_s
+        
+        
 
-    def smoother(self):
+    def _smoother(self):
         """
         Performs the smoothing step of the Kalman filter.
 
@@ -303,7 +325,7 @@ class Kalman:
         np.ndarray
             The smoothed state means at each time step.
         """
-        a_s, _ = self._smoother()
+        a_s, _ = self._KalmanSmoother()
         return a_s.squeeze()
 
     def fit(self, option):
@@ -326,12 +348,14 @@ class Kalman:
             Estimated trend.
 
         '''
-
         if option.lower() == 'filter':
-            self.filt = self.filter()
+            self.filt = self._filter()
             return self.filt
+        if option.lower() == 'predict':
+            self.pred = self._predict()
+            return self.pred
         elif option.lower() == 'smoother':
-            self.smooth = self.smoother()
+            self.smooth = self._smoother()
             return self.smooth
         else:
             raise ValueError(
@@ -361,8 +385,10 @@ class Kalman:
             plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
             if self.smooth is not None:
                 plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
+            if self.pred is not None:
+                plt.plot(x_vals[1:], self.pred[1:-1], label="Estimated $\\beta_{0}$ - Predict", linestyle="--", linewidth=2)
             if self.filt is not None:
-                plt.plot(x_vals[1:], self.filt[:-1], label="Estimated $\\beta_{0}$ - Filter", linestyle="-", linewidth=2)
+                plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="-", linewidth=2)
             
             plt.grid(linestyle='dashed')
             plt.xlabel('$t/n$',fontsize="xx-large")
@@ -377,8 +403,10 @@ class Kalman:
                 plt.subplot(self.p_dim, 1, i + 1)
                 if self.smooth is not None:
                     plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
+                if self.smooth is not None:
+                    plt.plot(x_vals[1:], self.pred[1:-1, i], label="Estimated $\\beta_{0}$ - Predict", linestyle="--", linewidth=2)
                 if self.filt is not None:
-                    plt.plot(x_vals[1:], self.filt[:-1, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-", linewidth=2)
+                    plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-", linewidth=2)
 
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")

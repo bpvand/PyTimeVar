@@ -1,5 +1,4 @@
 '''
-
 Section 3: illustration of code on Temperature dataset
 
 '''
@@ -10,13 +9,6 @@ data = temperature.load(
     regions=['World'], start_date='1961-01-01', end_date='2023-01-01')
 vY = data.values
 X = np.ones_like(vY)
-
-# from PyTimeVar.datasets import gold
-# import numpy as np
-# data = gold.load(
-#     currencies=['EUR'], start_date='2014-01-01', end_date='2016-01-01')
-# vY = data.values
-# X = np.ones_like(vY)
 
 # set seed
 np.random.seed(123)
@@ -67,6 +59,7 @@ from PyTimeVar import Kalman
 kalmanmodel = Kalman(vY=vY)
 smooth_trend = kalmanmodel.fit('smoother')
 filt_trend = kalmanmodel.fit('filter')
+filt_trend = kalmanmodel.fit('predict')
 kalmanmodel.plot()
 
 # # illustrate GAS model
@@ -74,16 +67,3 @@ from PyTimeVar import GAS
 N_gasmodel = GAS(vY=vY, mX=X, method='gaussian')
 N_GAStrend, N_GASparams = N_gasmodel.fit()
 N_gasmodel.plot()
-
-from PyTimeVar.datasets import herding
-np.random.seed(123)
-herd_data = herding.load(start_date='2015-01-05', end_date='2022-04-29')
-vY = herd_data[['CSAD_AVG']].values
-mX = np.ones_like(vY)
-
-############### t-GAS model
-gasmodel = GAS(vY=vY, mX=mX, method='student')
-tGAStrend, tGASparams = gasmodel.fit()
-
-tGAStrend.plot()
-
