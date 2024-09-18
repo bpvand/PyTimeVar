@@ -335,7 +335,7 @@ class Kalman:
         a_s, _ = self._KalmanSmoother()
         return a_s.squeeze()
 
-    def fit(self, option):
+    def fit(self, option='filter'):
         '''
         Computes the Kalman filtered states, one-step ahead predicted states or smoothed states for the data.
 
