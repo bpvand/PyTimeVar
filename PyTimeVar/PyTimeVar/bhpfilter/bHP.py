@@ -42,6 +42,7 @@ class BoostedHP:
         self.dLambda = dLambda
         self.iMaxIter = iMaxIter
         self.results = None
+        self.n = len(vY)
 
     def fit(self, boost=True, stop="adf", dAlpha=0.05, verbose=False):
         """
