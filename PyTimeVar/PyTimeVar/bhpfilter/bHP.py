@@ -93,7 +93,7 @@ class BoostedHP:
         print("Information Criteria Values:", vIC_values)
         print('='*30)
 
-    def plot(self):
+    def plot(self, tau: list = None):
         """
         Plots the true data against estimated trend
         """
@@ -101,12 +101,21 @@ class BoostedHP:
             print("Model is not fitted yet.")
             return
         
-        x_vals = np.linspace(0, 1, len(self.vY))
+        tau_index=None
+        x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
+        if tau is None:
+
+            tau_index=np.array([0,self.n])
+        elif isinstance(tau, list):
+            if min(tau) <= 0:
+                tau_index = np.array([int(0), int(max(tau) * self.n)])
+            else:
+                tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
         
         _, _, _, _, vBHP = self.results
         plt.figure(figsize=(12, 6))
-        plt.plot(x_vals, self.vY, label="True data", linewidth=2, color= 'black')
-        plt.plot(x_vals, vBHP, label="Estimated $\\beta_{0}$", linestyle="--", linewidth=2)
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], (self.vY)[tau_index[0]:tau_index[1]], label="True data", linewidth=2, color= 'black')
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], vBHP[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$", linestyle="--", linewidth=2)
         
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
