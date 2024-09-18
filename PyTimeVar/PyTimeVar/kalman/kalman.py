@@ -69,7 +69,7 @@ class Kalman:
     -------
     fit()
         Fit state-space model by Kalman filter or smoother, according to the specified option
-        (’filter', 'predict', or ’smoother’)
+        (’filter', 'predictor', ’smoother’, or 'all')
     summary()
         Print a summary of the state-space specifications, including the values of H, Q, R and T
     plot()
@@ -342,7 +342,7 @@ class Kalman:
         Parameters
         ----------
         option : string
-            Denotes the fitted trend: filter, predict or smoother.
+            Denotes the fitted trend: filter, predictor, smoother, or all.
 
         Raises
         ------
@@ -352,21 +352,28 @@ class Kalman:
         Returns
         -------
         np.ndarray
-            Estimated trend.
+            Estimated trend. 
+            If option='all', a list of trends is returned:
+                [filter, predictor, smoother]
 
         '''
         if option.lower() == 'filter':
             self.filt = self._filter()
             return self.filt
-        if option.lower() == 'predict':
+        if option.lower() == 'predictor':
             self.pred = self._predict()
             return self.pred
         elif option.lower() == 'smoother':
             self.smooth = self._smoother()
             return self.smooth
+        elif option.lower() == 'all':
+            self.filt = self._filter()
+            self.pred = self._predict()
+            self.smooth = self._smoother()
+            return [self.filt, self.pred, self.smooth]
         else:
             raise ValueError(
-                'Unknown option provided to fit(). Choose either filter, predict or smoother')
+                'Unknown option provided to fit(). Choose either filter, predictor, smoother or all')
 
     def summary(self):
         """
@@ -401,7 +408,7 @@ class Kalman:
                 if self.smooth is not None:
                     plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
                 if self.pred is not None:
-                    plt.plot(x_vals[1:], self.pred[1:-1], label="Estimated $\\beta_{0}$ - Predict", linestyle="-", linewidth=2)
+                    plt.plot(x_vals[1:], self.pred[1:-1], label="Estimated $\\beta_{0}$ - Predictor", linestyle="-", linewidth=2)
                 if self.filt is not None:
                     plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="-.", linewidth=2)
                 
@@ -419,7 +426,7 @@ class Kalman:
                     if self.smooth is not None:
                         plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
                     if self.smooth is not None:
-                        plt.plot(x_vals[1:], self.pred[1:-1, i], label="Estimated $\\beta_{0}$ - Predict", linestyle="-", linewidth=2)
+                        plt.plot(x_vals[1:], self.pred[1:-1, i], label="Estimated $\\beta_{0}$ - Predictor", linestyle="-", linewidth=2)
                     if self.filt is not None:
                         plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-.", linewidth=2)
     
@@ -446,7 +453,7 @@ class Kalman:
                 if self.pred is not None:
                     plt.figure(figsize=(12, 6))
                     plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
-                    plt.plot(x_vals[1:], self.pred[1:-1], label="Estimated $\\beta_{0}$ - Predict", linestyle="--", linewidth=2)
+                    plt.plot(x_vals[1:], self.pred[1:-1], label="Estimated $\\beta_{0}$ - Predictor", linestyle="--", linewidth=2)
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -482,7 +489,7 @@ class Kalman:
                     plt.figure(figsize=(10, 6 * self.p_dim))
                     for i in range(self.p_dim):
                         plt.subplot(self.p_dim, 1, i + 1)
-                        plt.plot(x_vals[1:], self.pred[1:-1, i], label="Estimated $\\beta_{0}$ - Predict", linestyle="--", linewidth=2)
+                        plt.plot(x_vals[1:], self.pred[1:-1, i], label="Estimated $\\beta_{0}$ - Predictor", linestyle="--", linewidth=2)
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
         
