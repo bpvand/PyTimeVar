@@ -125,7 +125,7 @@ class GAS:
                 self.vgamma0 = np.concatenate([[vdelta0], vtheta0])
 
             def fgGAS_lh(vpara): return - \
-                self.construct_likelihood(vbeta0, vpara)
+                self._construct_likelihood(vbeta0, vpara)
                 
             min_kwargs = {"method":"L-BFGS-B", "bounds": self.bounds, "options": self.options}
             result = basinhopping(fgGAS_lh, self.vgamma0,
@@ -170,7 +170,7 @@ class GAS:
                 self.vgamma0 = np.concatenate([vdelta0, vtheta0])
 
             def ftGAS_lh(vpara): return - \
-                self.construct_likelihood(vbeta0, vpara)
+                self._construct_likelihood(vbeta0, vpara)
                 
             min_kwargs = {"method":"L-BFGS-B", "bounds": self.bounds, "options": self.options}
             result = basinhopping(ftGAS_lh, self.vgamma0,
@@ -208,10 +208,10 @@ class GAS:
             vparaHat = vparaHat_tGAS
 
         self.betas, self.params = mBetaHat, vparaHat
-        print(f"Time taken: {time.time() - start_time:.2f} seconds")
+        print(f"\nTime taken: {time.time() - start_time:.2f} seconds")
         return mBetaHat, vparaHat
 
-    def construct_likelihood(self, vbeta0, vpara):
+    def _construct_likelihood(self, vbeta0, vpara):
         '''
         Calculated the log-likelihood value, according to the specified self.method.
 

@@ -370,11 +370,12 @@ class Kalman:
         Prints a summary of the state-space model specification.
         """
 
-        print("State-space model specification:")
+        print("State-space model specification")
+        print('='*30)
         print(f"H: {self.H}")
         print(f"Q: {self.Q}")
         print(f"R: {self.R}")
-        print(f"T: {self.T}")
+        print(f"T: {self.T}\n")
 
 
     def plot(self):

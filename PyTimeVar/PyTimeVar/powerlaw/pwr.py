@@ -55,7 +55,7 @@ class PowerLaw:
         self.n = len(self.vY)
         self.p = 2 if n_powers is None else n_powers
         if n_powers is None:
-            print('The number of powers is set to 2 by default. \nConsider setting n_powers to 3 or higher if a visual inspection of the data leads you to believe the trend is curly.')
+            print('The number of powers is set to 2 by default. \nConsider setting n_powers to 3 or higher if a visual inspection of the data leads you to believe the trend is curly.\n')
 
         self.vgamma0 =vgamma0 if vgamma0 is not None else np.arange(0, 1*self.p, 1)
         self.bounds = ((-0.495, 8),)*self.p
@@ -102,6 +102,8 @@ class PowerLaw:
         for j in range(len(self.coeffHat)):
           if self.coeffHat[j][0] != 0:
             terms.append(term(self.coeffHat[j][0], self.gammaHat[0][j]))
+        print('\nPower-Law Trend Results:')
+        print('='*30)
         print('yhat= ' + ' + '.join(terms))
 
     def fit(self):

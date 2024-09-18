@@ -195,7 +195,7 @@ class LocalLinear:
                 print(f'- LMCV-{self.lmcv_type} method: ', format(self.h,'.4f'))
                 print(f'Optimal bandwidth used is {self.bw_selection}: {self.h: .4f}\n')
                 print('-----------------------------------------------------------')
-                print(f'Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommended.\n')
+                print('Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommended.\n')
                 # print(
                 #     f'Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is adopted, the {self.bw_selection} bandwidth {self.h: .4f} is used.')
                 # print(f'If the MB is implemented, the GCV bandwidth {self.the_gcv_h: .4f} is used.')
@@ -214,7 +214,7 @@ class LocalLinear:
                 print('-----------------------------------------------------------')
                 self.dict_bw['all'] = np.array(list(self.dict_bw.values())).mean()
                 self.h = self.dict_bw['all']
-                print(f'Optimal bandwidth used is the avg. of all methods: {self.h: .4f}\n')
+                print(f'Optimal bandwidth used is the avg. of all methods: {self.h: .4f}')
                 print('-----------------------------------------------------------')
                 print('Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommended.\n')
                 # print(f'If the MB is implemented, the GCV bandwidth {self.the_gcv_h: .4f} is used.')
@@ -1748,7 +1748,9 @@ class LocalLinear:
         """
         print("Local Linear Regression Results")
         print("=" * 30)
-        print(f"Bandwidth: {self.h: .4f}")
+        print(f'Kernel: {self.kernel}')
+        print(f'Bandwidth selection method: {self.bw_selection.upper()}')
+        print(f"Bandwidth used: {self.h: .4f}")
         print(f"Number of observations: {len(self.vY)}")
         print(f"Number of predictors: {self.betahat.shape[0]}")
         print("=" * 30)
@@ -1761,7 +1763,7 @@ class LocalLinear:
             "You can choose out of 6 types of Bootstrap to construct confidence bands:")
         print("SB, WB, SWB, MB, LBWB, AWB")
         print("=" * 30)
-        print("Use the 'plot_residuals()' method to plot the residuals.")
+        print("Use the 'plot_residuals()' method to plot the residuals.\n")
 
 
     def plot_betas(self):

@@ -1,40 +1,77 @@
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyTimeVar.kalman.kalman &mdash; PyTimeVar 0.0.9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
-<html lang="en" data-content_root="../../../">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PyTimeVar.kalman.kalman &#8212; PyTimeVar 0.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css?v=def86cc0" />
-    
-    <script src="../../../_static/documentation_options.js?v=53b53b71"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f7cdbf68"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="Related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">PyTimeVar 0.0.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">PyTimeVar.kalman.kalman</a></li> 
-      </ul>
-    </div>  
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            PyTimeVar
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html#pytimevar">PyTimeVar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">PyTimeVar</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyTimeVar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">PyTimeVar.kalman.kalman</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <h1>Source code for PyTimeVar.kalman.kalman</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
@@ -99,6 +136,8 @@
 <span class="sd">        The number of response variables. This is always 1.</span>
 <span class="sd">    filt : np.ndarray</span>
 <span class="sd">        The filtered coefficients.</span>
+<span class="sd">    pred : np.ndarray</span>
+<span class="sd">        The predicted coefficients.</span>
 <span class="sd">    smooth : </span>
 <span class="sd">        The smoothed coefficients.</span>
 <span class="sd">    </span>
@@ -107,11 +146,11 @@
 <span class="sd">    -------</span>
 <span class="sd">    fit()</span>
 <span class="sd">        Fit state-space model by Kalman filter or smoother, according to the specified option</span>
-<span class="sd">        (’filter&#39; or ’smoother’)</span>
+<span class="sd">        (’filter&#39;, &#39;predict&#39;, or ’smoother’)</span>
 <span class="sd">    summary()</span>
-<span class="sd">        Print a summary of the Kalman filter/smoother specifications, including the values of H, Q, R and T</span>
+<span class="sd">        Print a summary of the state-space specifications, including the values of H, Q, R and T</span>
 <span class="sd">    plot()</span>
-<span class="sd">        Plot filtered/smoothed estimates against true data</span>
+<span class="sd">        Plot filtered/predicted/smoothed estimates against true data</span>
 <span class="sd">    </span>
 <span class="sd">    </span>
 <span class="sd">    </span>
@@ -154,7 +193,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">a_1</span> <span class="o">=</span> <span class="n">b_1</span> <span class="k">if</span> <span class="n">b_1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>            <span class="c1"># Initial state mean</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">P_1</span> <span class="o">=</span> <span class="n">P_1</span> <span class="k">if</span> <span class="n">P_1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="mi">1000</span>       <span class="c1"># Initial state covariance</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="mi">100000</span>       <span class="c1"># Initial state covariance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">R</span> <span class="k">if</span> <span class="n">R</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">a_1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>         <span class="c1"># Transition covariance matrix</span>
         <span class="c1"># Dimension of the state space</span>
@@ -165,6 +204,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_ML</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">filt</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pred</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_estimate_ML</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -192,7 +232,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span>
 
-        <span class="n">LL_model</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compute_likelihood_LL</span><span class="p">,</span> <span class="n">vTheta</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;SLSQP&#39;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span>
+        <span class="n">LL_model</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_likelihood_LL</span><span class="p">,</span> <span class="n">vTheta</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;SLSQP&#39;</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span>
             <span class="p">(</span><span class="mf">0.00001</span><span class="p">,</span> <span class="kc">None</span><span class="p">),)</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">vTheta</span><span class="p">),</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;maxiter&#39;</span><span class="p">:</span> <span class="mi">3000</span><span class="p">})</span>
         <span class="k">if</span> <span class="n">LL_model</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimization failed&#39;</span><span class="p">)</span>
@@ -209,9 +249,7 @@
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">mH</span><span class="p">]]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">mQ</span><span class="p">]])</span>
 
-<div class="viewcode-block" id="Kalman.compute_likelihood_LL">
-<a class="viewcode-back" href="../../../PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.compute_likelihood_LL">[docs]</a>
-    <span class="k">def</span> <span class="nf">compute_likelihood_LL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vTheta</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_compute_likelihood_LL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vTheta</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Computes the negative log-likelihood value for a given parameter vector.</span>
 
@@ -234,76 +272,92 @@
         <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bEst_H</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">bEst_Q</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">vTheta</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">)</span>
 
-        <span class="n">a</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="p">()</span>
+        <span class="n">a_filt</span><span class="p">,</span> <span class="n">a_pred</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_KalmanFilter</span><span class="p">()</span>
         <span class="n">dLL</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">m_dim</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">):</span>
             <span class="n">dLL</span> <span class="o">=</span> <span class="n">dLL</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> \
                 <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span> <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span>
                  <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span><span class="nd">@v</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
 
-        <span class="k">return</span> <span class="o">-</span><span class="n">dLL</span></div>
+        <span class="k">return</span> <span class="o">-</span><span class="n">dLL</span>
 
-
-    <span class="k">def</span> <span class="nf">_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_KalmanFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Performs the filtering step of the Kalman filter.</span>
+<span class="sd">        Performs the Kalman filter.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        np.ndarray</span>
+<span class="sd">        a_filt : np.ndarray</span>
 <span class="sd">            The filtered state at each time step.</span>
-<span class="sd">        np.ndarray</span>
+<span class="sd">        a_pred : np.ndarray</span>
+<span class="sd">            The predicted state at each time step.</span>
+<span class="sd">        P : np.ndarray</span>
 <span class="sd">            The filtered state covariances at each time step.</span>
-<span class="sd">        np.ndarray</span>
+<span class="sd">        v : np.ndarray</span>
 <span class="sd">            The prediction errors at each time step.</span>
-<span class="sd">        np.ndarray</span>
+<span class="sd">        F : np.ndarray</span>
 <span class="sd">            The prediction variances at each time step.</span>
-<span class="sd">        np.ndarray</span>
+<span class="sd">        K : np.ndarray</span>
 <span class="sd">            The Kalman gains at each time step.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">a_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">a_filt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">))</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_dim</span><span class="p">))</span>
         <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">m_dim</span><span class="p">))</span>
-        <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_1</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">a_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_1</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">P</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_1</span>
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isReg</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z_reg</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">v</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vY</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">@</span> <span class="n">a</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+            <span class="n">v</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vY</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">@</span> <span class="n">a_pred</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
             <span class="n">F</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">@</span> <span class="n">P</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vY</span><span class="p">[</span><span class="n">t</span><span class="p">]):</span>
-                <span class="n">K</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">P</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
-                <span class="n">a</span><span class="p">[</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">a</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">K</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">@</span> <span class="n">v</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="n">mAux</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">F</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+                <span class="n">K</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">mAux</span>
+                <span class="n">a_filt</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">a_pred</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">mAux</span> <span class="o">@</span> <span class="n">v</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="n">a_pred</span><span class="p">[</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">a_pred</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">+</span> <span class="n">K</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">@</span> <span class="n">v</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">K</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="n">a</span><span class="p">[</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">a</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="n">a_filt</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">a_pred</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="n">a_pred</span><span class="p">[</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">a_pred</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
 
             <span class="n">P</span><span class="p">[</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">P</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">@</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">-</span> <span class="n">K</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
-<div class="viewcode-block" id="Kalman.filter">
-<a class="viewcode-back" href="../../../PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.filter">[docs]</a>
                                         <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="o">.</span><span class="n">T</span>
-        <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">P</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">v</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">K</span>
+        <span class="k">return</span> <span class="n">a_filt</span><span class="p">,</span> <span class="n">a_pred</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">K</span>
 
-    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Performs the filtering step of the Kalman filter.</span>
+<span class="sd">        Computes the filtered states using the Kalman filter.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
-<span class="sd">            The filtered state means at each time step.</span>
+<span class="sd">            The filtered states at each time step.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">a</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="p">()</span>
+        <span class="n">a_filt</span> <span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_KalmanFilter</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">a_filt</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the one-step ahead predictions using the Kalman filter.</span>
 
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        np.ndarray</span>
+<span class="sd">            The one-step ahead predicted state means at each time step.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a_filt</span> <span class="p">,</span> <span class="n">a_pred</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_KalmanFilter</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_smoother</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a_pred</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    
+
+    <span class="k">def</span> <span class="nf">_KalmanSmoother</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs the smoothing steps of the Kalman filter.</span>
 
@@ -315,7 +369,8 @@
 <span class="sd">            The smoothed state covariances at each time step.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">a</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="p">()</span>
+        <span class="n">a_filt</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_KalmanFilter</span><span class="p">()</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">a_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">V_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">))</span>
 
@@ -339,32 +394,31 @@
             <span class="n">r_cur</span><span class="p">,</span> <span class="n">N_cur</span> <span class="o">=</span> <span class="n">r_prev</span><span class="p">,</span> <span class="n">N_prev</span>
 
         <span class="k">return</span> <span class="n">a_s</span><span class="p">,</span> <span class="n">V_s</span>
+        
+        
 
-<div class="viewcode-block" id="Kalman.smoother">
-<a class="viewcode-back" href="../../../PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.smoother">[docs]</a>
-    <span class="k">def</span> <span class="nf">smoother</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_smoother</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Performs the smoothing step of the Kalman filter.</span>
+<span class="sd">        Computes the smoothed state estimates using the Kalman smoother.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            The smoothed state means at each time step.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">a_s</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smoother</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">a_s</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span></div>
-
+        <span class="n">a_s</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_KalmanSmoother</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">a_s</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Kalman.fit">
 <a class="viewcode-back" href="../../../PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.fit">[docs]</a>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Fits the Kalman filter or smoother to the data.</span>
+<span class="sd">        Computes the Kalman filtered states, one-step ahead predicted states or smoothed states for the data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        option : string</span>
-<span class="sd">            Denotes the fitted trend: filter or smoother.</span>
+<span class="sd">            Denotes the fitted trend: filter, predict or smoother.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -377,16 +431,18 @@
 <span class="sd">            Estimated trend.</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-
         <span class="k">if</span> <span class="n">option</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;filter&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">filt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter</span><span class="p">()</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt</span>
+        <span class="k">if</span> <span class="n">option</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;predict&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pred</span>
         <span class="k">elif</span> <span class="n">option</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;smoother&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoother</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_smoother</span><span class="p">()</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;Unknown option provided to fit(). Choose either filter or smoother&#39;</span><span class="p">)</span></div>
+                <span class="s1">&#39;Unknown option provided to fit(). Choose either filter, predict or smoother&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Kalman.summary">
@@ -396,7 +452,7 @@
 <span class="sd">        Prints a summary of the state-space model specification.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Kalman Filter specification:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;State-space model specification:&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;H: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Q: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;R: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">R</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -408,7 +464,7 @@
 <a class="viewcode-back" href="../../../PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.plot">[docs]</a>
     <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plot the beta coefficients over a normalized x-axis from 0 to 1 or over a date range.</span>
+<span class="sd">        Plot the estimated beta coefficients over a normalized x-axis from 0 to 1 or over a date range.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">x_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
@@ -418,8 +474,10 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vY</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;True data&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span><span class="p">[:],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Estimated $</span><span class="se">\\</span><span class="s2">beta_</span><span class="si">{0}</span><span class="s2">$ - Smoother&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pred</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">pred</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Estimated $</span><span class="se">\\</span><span class="s2">beta_</span><span class="si">{0}</span><span class="s2">$ - Predict&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Estimated $</span><span class="se">\\</span><span class="s2">beta_</span><span class="si">{0}</span><span class="s2">$ - Filter&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt</span><span class="p">[:],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Estimated $</span><span class="se">\\</span><span class="s2">beta_</span><span class="si">{0}</span><span class="s2">$ - Filter&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
             
             <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$t/n$&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;xx-large&quot;</span><span class="p">)</span>
@@ -434,8 +492,10 @@
                 <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p_dim</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Estimated $</span><span class="se">\\</span><span class="s2">beta</span><span class="si">{i}</span><span class="s2">$ - Smoother&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smooth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">pred</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Estimated $</span><span class="se">\\</span><span class="s2">beta_</span><span class="si">{0}</span><span class="s2">$ - Predict&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Estimated $</span><span class="se">\\</span><span class="s2">beta</span><span class="si">{i}</span><span class="s2">$ - Filter&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filt</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Estimated $</span><span class="se">\\</span><span class="s2">beta</span><span class="si">{i}</span><span class="s2">$ - Filter&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
                 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;dashed&#39;</span><span class="p">)</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$t/n$&#39;</span><span class="p">,</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">&quot;xx-large&quot;</span><span class="p">)</span>
@@ -447,43 +507,31 @@
 
 </pre></div>
 
-            <div class="clearer"></div>
+           </div>
           </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
-        <div class="sphinxsidebarwrapper">
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="Related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../../../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">PyTimeVar 0.0.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">PyTimeVar.kalman.kalman</a></li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
-    </div>
-  </body>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>

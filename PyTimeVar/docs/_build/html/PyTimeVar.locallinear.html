@@ -1,60 +1,107 @@
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<html lang="en" data-content_root="./">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyTimeVar.locallinear package &mdash; PyTimeVar 0.0.9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
-    <title>PyTimeVar.locallinear package &#8212; PyTimeVar 0.0.8 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=def86cc0" />
-    
-    <script src="_static/documentation_options.js?v=53b53b71"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=f7cdbf68"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="PyTimeVar.powerlaw package" href="PyTimeVar.powerlaw.html" />
     <link rel="prev" title="PyTimeVar.kalman package" href="PyTimeVar.kalman.html" /> 
-  </head><body>
-    <div class="related" role="navigation" aria-label="Related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="PyTimeVar.powerlaw.html" title="PyTimeVar.powerlaw package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="PyTimeVar.kalman.html" title="PyTimeVar.kalman package"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyTimeVar 0.0.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >PyTimeVar</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="PyTimeVar.html" accesskey="U">PyTimeVar package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">PyTimeVar.locallinear package</a></li> 
-      </ul>
-    </div>  
+</head>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PyTimeVar
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Readme File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html#pytimevar">PyTimeVar</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">PyTimeVar</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="PyTimeVar.html">PyTimeVar package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="PyTimeVar.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.bhpfilter.html">PyTimeVar.bhpfilter package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.datasets.html">PyTimeVar.datasets package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html">PyTimeVar.gas package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html">PyTimeVar.kalman package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">PyTimeVar.locallinear package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.powerlaw.html">PyTimeVar.powerlaw package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="PyTimeVar.html#module-PyTimeVar">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PyTimeVar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">PyTimeVar</a></li>
+          <li class="breadcrumb-item"><a href="PyTimeVar.html">PyTimeVar package</a></li>
+      <li class="breadcrumb-item active">PyTimeVar.locallinear package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/PyTimeVar.locallinear.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="pytimevar-locallinear-package">
-<h1>PyTimeVar.locallinear package<a class="headerlink" href="#pytimevar-locallinear-package" title="Link to this heading">¶</a></h1>
+<h1>PyTimeVar.locallinear package<a class="headerlink" href="#pytimevar-locallinear-package" title="Link to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
 <section id="module-PyTimeVar.locallinear.LLR">
-<span id="pytimevar-locallinear-llr-module"></span><h2>PyTimeVar.locallinear.LLR module<a class="headerlink" href="#module-PyTimeVar.locallinear.LLR" title="Link to this heading">¶</a></h2>
+<span id="pytimevar-locallinear-llr-module"></span><h2>PyTimeVar.locallinear.LLR module<a class="headerlink" href="#module-PyTimeVar.locallinear.LLR" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PyTimeVar.locallinear.LLR.</span></span><span class="sig-name descname"><span class="pre">LocalLinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vY</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'epanechnikov'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LB_bw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UB_bw</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PyTimeVar.locallinear.LLR.</span></span><span class="sig-name descname"><span class="pre">LocalLinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_selection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'epanechnikov'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LB_bw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UB_bw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for performing local linear regression (LLR).</p>
 <p>Local linear regression is a non-parametric regression method that fits linear models to localized subsets of the data to form a
@@ -82,7 +129,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.vY">
-<span class="sig-name descname"><span class="pre">vY</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.vY" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">vY</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.vY" title="Link to this definition"></a></dt>
 <dd><p>The response variable array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -93,7 +140,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.mX">
-<span class="sig-name descname"><span class="pre">mX</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.mX" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mX</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.mX" title="Link to this definition"></a></dt>
 <dd><p>The predictor matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -104,7 +151,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.n">
-<span class="sig-name descname"><span class="pre">n</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.n" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">n</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.n" title="Link to this definition"></a></dt>
 <dd><p>The length of vY.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -115,7 +162,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.times">
-<span class="sig-name descname"><span class="pre">times</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.times" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">times</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.times" title="Link to this definition"></a></dt>
 <dd><p>Linearly spaced time points for the local regression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -126,7 +173,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.tau">
-<span class="sig-name descname"><span class="pre">tau</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.tau" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">tau</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.tau" title="Link to this definition"></a></dt>
 <dd><p>Points at which the regression is evaluated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -137,7 +184,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.n_est">
-<span class="sig-name descname"><span class="pre">n_est</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.n_est" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">n_est</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.n_est" title="Link to this definition"></a></dt>
 <dd><p>The number of coefficients.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -148,7 +195,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.kernel">
-<span class="sig-name descname"><span class="pre">kernel</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.kernel" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">kernel</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.kernel" title="Link to this definition"></a></dt>
 <dd><p>The name of the kernel function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -159,7 +206,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.bw_selection">
-<span class="sig-name descname"><span class="pre">bw_selection</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.bw_selection" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bw_selection</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.bw_selection" title="Link to this definition"></a></dt>
 <dd><p>The name of the bandwidth selection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -170,7 +217,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.lmcv_type">
-<span class="sig-name descname"><span class="pre">lmcv_type</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.lmcv_type" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">lmcv_type</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.lmcv_type" title="Link to this definition"></a></dt>
 <dd><p>If LMCV is used for bandwidth selection, this attribute denotes the l in leave-2*l+1-out.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -181,7 +228,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.dict_bw">
-<span class="sig-name descname"><span class="pre">dict_bw</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.dict_bw" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">dict_bw</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.dict_bw" title="Link to this definition"></a></dt>
 <dd><p>The dictionary that contains the optimnal bandwidth values for each individual method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -192,7 +239,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.h">
-<span class="sig-name descname"><span class="pre">h</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.h" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">h</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.h" title="Link to this definition"></a></dt>
 <dd><p>The bandwidth used for local linear regression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -203,7 +250,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.betahat">
-<span class="sig-name descname"><span class="pre">betahat</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.betahat" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">betahat</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.betahat" title="Link to this definition"></a></dt>
 <dd><p>The estimated coefficients.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -214,7 +261,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.predicted_y">
-<span class="sig-name descname"><span class="pre">predicted_y</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.predicted_y" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predicted_y</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.predicted_y" title="Link to this definition"></a></dt>
 <dd><p>The fitted values for the response variable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -225,7 +272,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.residuals">
-<span class="sig-name descname"><span class="pre">residuals</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.residuals" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">residuals</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.residuals" title="Link to this definition"></a></dt>
 <dd><p>The residuals resulting from the local linear regression.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -236,38 +283,51 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.fit" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.fit" title="Link to this definition"></a></dt>
 <dd><p>Fit the model by local linear estimation and return estimated coefficients.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.summary">
-<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.summary" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.summary" title="Link to this definition"></a></dt>
 <dd><p>Print a summary of local linear regression results, including bandwidth, number of observations, and beta coefficients.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.plot_betas">
-<span class="sig-name descname"><span class="pre">plot_betas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_betas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.plot_betas" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_betas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_betas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.plot_betas" title="Link to this definition"></a></dt>
 <dd><p>Plot estimated coefficients curve over a normalized x-axis from 0 to 1.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.plot_predicted">
-<span class="sig-name descname"><span class="pre">plot_predicted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_predicted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.plot_predicted" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_predicted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_predicted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.plot_predicted" title="Link to this definition"></a></dt>
 <dd><p>Plot true data against fitted values.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.plot_residuals">
-<span class="sig-name descname"><span class="pre">plot_residuals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_residuals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.plot_residuals" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_residuals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_residuals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.plot_residuals" title="Link to this definition"></a></dt>
 <dd><p>Plot residuals.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.confidence_bands">
-<span class="sig-name descname"><span class="pre">confidence_bands</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.confidence_bands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.confidence_bands" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">confidence_bands</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.confidence_bands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.confidence_bands" title="Link to this definition"></a></dt>
 <dd><p>Construct and plot bootstrap confidence intervals/bands for each coefficient curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bootstrap_type</strong> (<em>str</em>)</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>gamma</strong> (<em>float</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>ic</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+<li><p><strong>Chtilde</strong> (<em>float</em>)</p></li>
+<li><p><strong>B</strong> (<em>float</em>)</p></li>
+<li><p><strong>plots</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <p class="rubric">Notes</p>
@@ -282,7 +342,7 @@ Forthcoming.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.ABS_value">
-<span class="sig-name descname"><span class="pre">ABS_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qtau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.ABS_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.ABS_value" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">ABS_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qtau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.ABS_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.ABS_value" title="Link to this definition"></a></dt>
 <dd><p>Calculate the absolute value for quantiles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -305,7 +365,7 @@ Forthcoming.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.AICmodx">
-<span class="sig-name descname"><span class="pre">AICmodx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.AICmodx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.AICmodx" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">AICmodx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.AICmodx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.AICmodx" title="Link to this definition"></a></dt>
 <dd><p>Computes the AIC value for a given mean squared error and trace.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -322,7 +382,7 @@ Forthcoming.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.AR">
-<span class="sig-name descname"><span class="pre">AR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zhat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.AR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.AR" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">AR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zhat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.AR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.AR" title="Link to this definition"></a></dt>
 <dd><p>Estimate the AR model and compute residuals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -345,7 +405,7 @@ Forthcoming.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.AW_BT">
-<span class="sig-name descname"><span class="pre">AW_BT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zhat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">betatilde</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.AW_BT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.AW_BT" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">AW_BT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zhat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">betatilde</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.AW_BT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.AW_BT" title="Link to this definition"></a></dt>
 <dd><p>Autoregressive Wild Bootstrap
 Compute a bootstrap sample using the autoregressive wild bootstrap.</p>
 <dl class="field-list simple">
@@ -370,7 +430,7 @@ Compute a bootstrap sample using the autoregressive wild bootstrap.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.GCVmodx">
-<span class="sig-name descname"><span class="pre">GCVmodx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.GCVmodx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.GCVmodx" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">GCVmodx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.GCVmodx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.GCVmodx" title="Link to this definition"></a></dt>
 <dd><p>Computes the GCV value for a bandwidth value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -387,7 +447,7 @@ Compute a bootstrap sample using the autoregressive wild bootstrap.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.K_ZW_Q">
-<span class="sig-name descname"><span class="pre">K_ZW_Q</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vTi_t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.K_ZW_Q"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.K_ZW_Q" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">K_ZW_Q</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vTi_t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.K_ZW_Q"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.K_ZW_Q" title="Link to this definition"></a></dt>
 <dd><p>Kernel function for Multiplier Bootstrap quantile.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -407,7 +467,7 @@ Compute a bootstrap sample using the autoregressive wild bootstrap.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.LBW_BT">
-<span class="sig-name descname"><span class="pre">LBW_BT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zhat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">betatilde</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.LBW_BT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.LBW_BT" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">LBW_BT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zhat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">betatilde</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.LBW_BT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.LBW_BT" title="Link to this definition"></a></dt>
 <dd><p>Local Blockwise Wild Bootstrap
 Performs the local blockwise wild bootstrap algorithm to generate a bootstrap sample.</p>
 <dl class="field-list simple">
@@ -432,7 +492,7 @@ Performs the local blockwise wild bootstrap algorithm to generate a bootstrap sa
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.MC_ZW">
-<span class="sig-name descname"><span class="pre">MC_ZW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.MC_ZW"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.MC_ZW" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">MC_ZW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.MC_ZW"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.MC_ZW" title="Link to this definition"></a></dt>
 <dd><p>Perform the Multiplier Bootstrap bootstrap algorithm.
 Zhou, Z., &amp; Wu, W. B. (2010). Simultaneous inference of linear models with time varying coefficients.
 Journal of the Royal Statistical Society. Series B (Statistical Methodology), 72(4), 513–531. <a class="reference external" href="http://www.jstor.org/stable/40802223">http://www.jstor.org/stable/40802223</a></p>
@@ -458,7 +518,7 @@ Journal of the Royal Statistical Society. Series B (Statistical Methodology), 72
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.SW_BT">
-<span class="sig-name descname"><span class="pre">SW_BT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilontilde</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">armodel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">betatilde</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.SW_BT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.SW_BT" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">SW_BT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilontilde</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">armodel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">betatilde</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.SW_BT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.SW_BT" title="Link to this definition"></a></dt>
 <dd><p>Sieve Wild Bootstrap
 Calculate the transformed response variable using the local linear regression model.</p>
 <dl class="field-list simple">
@@ -483,7 +543,7 @@ Calculate the transformed response variable using the local linear regression mo
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.S_BT">
-<span class="sig-name descname"><span class="pre">S_BT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilontilde</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">armodel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">betatilde</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.S_BT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.S_BT" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">S_BT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilontilde</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_lag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">armodel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">betatilde</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.S_BT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.S_BT" title="Link to this definition"></a></dt>
 <dd><p>Sieve Bootstrap
 Calculate the transformed response variable using the local linear regression model.</p>
 <dl class="field-list simple">
@@ -508,7 +568,7 @@ Calculate the transformed response variable using the local linear regression mo
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.W_BT">
-<span class="sig-name descname"><span class="pre">W_BT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zhat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">betatilde</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.W_BT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.W_BT" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">W_BT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zhat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">betatilde</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.W_BT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.W_BT" title="Link to this definition"></a></dt>
 <dd><p>Wild Bootstrap
 Calculate the transformed response variable using the local linear regression model.</p>
 <dl class="field-list simple">
@@ -533,7 +593,7 @@ Calculate the transformed response variable using the local linear regression mo
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.bandwidth_selection">
-<span class="sig-name descname"><span class="pre">bandwidth_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">LB_bw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UB_bw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.bandwidth_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.bandwidth_selection" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bandwidth_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">LB_bw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">UB_bw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.bandwidth_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.bandwidth_selection" title="Link to this definition"></a></dt>
 <dd><p>Calculate the optimal bandwidth for the local linear regression model using LMCV, AIC and GCV.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -553,7 +613,7 @@ Calculate the transformed response variable using the local linear regression mo
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">confidence_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bootstrap_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'LBWB'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Gsubs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Chtilde</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1299</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plots</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.confidence_bands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">confidence_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bootstrap_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LBWB'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Gsubs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Chtilde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1299</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.confidence_bands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -569,6 +629,7 @@ Default is 2, if none or negative is specified.</p></li>
 <li><p><strong>B</strong> (<em>int</em>) – The number of bootstrap samples.
 Deafult is 1299, if not provided by the user.</p></li>
 <li><p><strong>plots</strong> (<em>bool</em>) – If True, plots are shown of the estimated coefficients and corresponding confidence bands.</p></li>
+<li><p><strong>bootstrap_type</strong> (<em>str</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -585,7 +646,7 @@ Deafult is 1299, if not provided by the user.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.construct_confidence_bands">
-<span class="sig-name descname"><span class="pre">construct_confidence_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bootstraptype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Gsubs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Chtilde</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1299</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.construct_confidence_bands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.construct_confidence_bands" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">construct_confidence_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bootstraptype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Gsubs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Chtilde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1299</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.construct_confidence_bands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.construct_confidence_bands" title="Link to this definition"></a></dt>
 <dd><p>Construct confidence bands using bootstrap methods.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -615,7 +676,7 @@ and beta coefficients for each sub-range.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
 <dd><p>Fits the local linear regression model to the data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -629,7 +690,7 @@ and beta coefficients for each sub-range.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.getDelta">
-<span class="sig-name descname"><span class="pre">getDelta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vEps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iM</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.getDelta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.getDelta" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getDelta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vEps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iM</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.getDelta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.getDelta" title="Link to this definition"></a></dt>
 <dd><p>Calculate delta values for Multiplier Bootstrap samples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -650,7 +711,7 @@ and beta coefficients for each sub-range.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.getLambda">
-<span class="sig-name descname"><span class="pre">getLambda</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mmDelta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iM</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">taut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dGamma</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.getLambda"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.getLambda" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getLambda</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mmDelta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iM</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">taut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dTau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dGamma</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.getLambda"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.getLambda" title="Link to this definition"></a></dt>
 <dd><p>Calculate lambda values for Multiplier Bootstrap samples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -675,7 +736,7 @@ and beta coefficients for each sub-range.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.getM">
-<span class="sig-name descname"><span class="pre">getM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.getM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.getM" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.getM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.getM" title="Link to this definition"></a></dt>
 <dd><p>Calculate M values for Multiplier Bootstrap samples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -697,7 +758,7 @@ and beta coefficients for each sub-range.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.getQ">
-<span class="sig-name descname"><span class="pre">getQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">taut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.getQ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.getQ" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">taut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.getQ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.getQ" title="Link to this definition"></a></dt>
 <dd><p>Calculate quantile for Multiplier Bootstrap samples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -720,7 +781,7 @@ and beta coefficients for each sub-range.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.getSigma">
-<span class="sig-name descname"><span class="pre">getSigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mM</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mLam</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.getSigma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.getSigma" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">getSigma</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mM</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mLam</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.getSigma"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.getSigma" title="Link to this definition"></a></dt>
 <dd><p>Calculate sigma values for Multiplier Bootstrap samples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -740,7 +801,7 @@ and beta coefficients for each sub-range.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.min_alphap">
-<span class="sig-name descname"><span class="pre">min_alphap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.min_alphap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.min_alphap" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">min_alphap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.min_alphap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.min_alphap" title="Link to this definition"></a></dt>
 <dd><p>Calculate the minimum alpha value for confidence bands.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -762,19 +823,19 @@ and beta coefficients for each sub-range.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">plot_betas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_betas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_betas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_betas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
 <dd><p>Plot the beta coefficients over a normalized x-axis from 0 to 1.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">plot_predicted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_predicted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_predicted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_predicted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
 <dd><p>Plot the actual values of Y against the predicted values of Y over a normalized x-axis from 0 to 1.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">plot_residuals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_residuals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_residuals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.plot_residuals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
 <dd><p>Plot the residuals over a normalized x-axis from 0 to 1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -788,7 +849,7 @@ and beta coefficients for each sub-range.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="id5">
-<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
 <dd><p>Print a summary of the regression results.</p>
 </dd></dl>
 
@@ -796,134 +857,39 @@ and beta coefficients for each sub-range.</p>
 
 </section>
 <section id="module-PyTimeVar.locallinear">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-PyTimeVar.locallinear" title="Link to this heading">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-PyTimeVar.locallinear" title="Link to this heading"></a></h2>
 </section>
 </section>
 
 
-            <div class="clearer"></div>
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
-        <div class="sphinxsidebarwrapper">
-  <div>
-    <h3><a href="index.html">Table of Contents</a></h3>
-    <ul>
-<li><a class="reference internal" href="#">PyTimeVar.locallinear package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-PyTimeVar.locallinear.LLR">PyTimeVar.locallinear.LLR module</a><ul>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear"><code class="docutils literal notranslate"><span class="pre">LocalLinear</span></code></a><ul>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.vY"><code class="docutils literal notranslate"><span class="pre">LocalLinear.vY</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.mX"><code class="docutils literal notranslate"><span class="pre">LocalLinear.mX</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.n"><code class="docutils literal notranslate"><span class="pre">LocalLinear.n</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.times"><code class="docutils literal notranslate"><span class="pre">LocalLinear.times</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.tau"><code class="docutils literal notranslate"><span class="pre">LocalLinear.tau</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.n_est"><code class="docutils literal notranslate"><span class="pre">LocalLinear.n_est</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.kernel"><code class="docutils literal notranslate"><span class="pre">LocalLinear.kernel</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.bw_selection"><code class="docutils literal notranslate"><span class="pre">LocalLinear.bw_selection</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.lmcv_type"><code class="docutils literal notranslate"><span class="pre">LocalLinear.lmcv_type</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.dict_bw"><code class="docutils literal notranslate"><span class="pre">LocalLinear.dict_bw</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.h"><code class="docutils literal notranslate"><span class="pre">LocalLinear.h</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.betahat"><code class="docutils literal notranslate"><span class="pre">LocalLinear.betahat</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.predicted_y"><code class="docutils literal notranslate"><span class="pre">LocalLinear.predicted_y</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.residuals"><code class="docutils literal notranslate"><span class="pre">LocalLinear.residuals</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.fit"><code class="docutils literal notranslate"><span class="pre">LocalLinear.fit()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.summary"><code class="docutils literal notranslate"><span class="pre">LocalLinear.summary()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.plot_betas"><code class="docutils literal notranslate"><span class="pre">LocalLinear.plot_betas()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.plot_predicted"><code class="docutils literal notranslate"><span class="pre">LocalLinear.plot_predicted()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.plot_residuals"><code class="docutils literal notranslate"><span class="pre">LocalLinear.plot_residuals()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.confidence_bands"><code class="docutils literal notranslate"><span class="pre">LocalLinear.confidence_bands()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.ABS_value"><code class="docutils literal notranslate"><span class="pre">LocalLinear.ABS_value()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.AICmodx"><code class="docutils literal notranslate"><span class="pre">LocalLinear.AICmodx()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.AR"><code class="docutils literal notranslate"><span class="pre">LocalLinear.AR()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.AW_BT"><code class="docutils literal notranslate"><span class="pre">LocalLinear.AW_BT()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.GCVmodx"><code class="docutils literal notranslate"><span class="pre">LocalLinear.GCVmodx()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.K_ZW_Q"><code class="docutils literal notranslate"><span class="pre">LocalLinear.K_ZW_Q()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.LBW_BT"><code class="docutils literal notranslate"><span class="pre">LocalLinear.LBW_BT()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.MC_ZW"><code class="docutils literal notranslate"><span class="pre">LocalLinear.MC_ZW()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.SW_BT"><code class="docutils literal notranslate"><span class="pre">LocalLinear.SW_BT()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.S_BT"><code class="docutils literal notranslate"><span class="pre">LocalLinear.S_BT()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.W_BT"><code class="docutils literal notranslate"><span class="pre">LocalLinear.W_BT()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.bandwidth_selection"><code class="docutils literal notranslate"><span class="pre">LocalLinear.bandwidth_selection()</span></code></a></li>
-<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">LocalLinear.confidence_bands()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.construct_confidence_bands"><code class="docutils literal notranslate"><span class="pre">LocalLinear.construct_confidence_bands()</span></code></a></li>
-<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">LocalLinear.fit()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.getDelta"><code class="docutils literal notranslate"><span class="pre">LocalLinear.getDelta()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.getLambda"><code class="docutils literal notranslate"><span class="pre">LocalLinear.getLambda()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.getM"><code class="docutils literal notranslate"><span class="pre">LocalLinear.getM()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.getQ"><code class="docutils literal notranslate"><span class="pre">LocalLinear.getQ()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.getSigma"><code class="docutils literal notranslate"><span class="pre">LocalLinear.getSigma()</span></code></a></li>
-<li><a class="reference internal" href="#PyTimeVar.locallinear.LLR.LocalLinear.min_alphap"><code class="docutils literal notranslate"><span class="pre">LocalLinear.min_alphap()</span></code></a></li>
-<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">LocalLinear.plot_betas()</span></code></a></li>
-<li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">LocalLinear.plot_predicted()</span></code></a></li>
-<li><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">LocalLinear.plot_residuals()</span></code></a></li>
-<li><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">LocalLinear.summary()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-PyTimeVar.locallinear">Module contents</a></li>
-</ul>
-</li>
-</ul>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="PyTimeVar.kalman.html" class="btn btn-neutral float-left" title="PyTimeVar.kalman package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PyTimeVar.powerlaw.html" class="btn btn-neutral float-right" title="PyTimeVar.powerlaw package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.</p>
   </div>
-  <div>
-    <h4>Previous topic</h4>
-    <p class="topless"><a href="PyTimeVar.kalman.html"
-                          title="previous chapter">PyTimeVar.kalman package</a></p>
-  </div>
-  <div>
-    <h4>Next topic</h4>
-    <p class="topless"><a href="PyTimeVar.powerlaw.html"
-                          title="next chapter">PyTimeVar.powerlaw package</a></p>
-  </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/PyTimeVar.locallinear.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="Related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="PyTimeVar.powerlaw.html" title="PyTimeVar.powerlaw package"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="PyTimeVar.kalman.html" title="PyTimeVar.kalman package"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyTimeVar 0.0.8 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="modules.html" >PyTimeVar</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="PyTimeVar.html" >PyTimeVar package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">PyTimeVar.locallinear package</a></li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
-    </div>
-  </body>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>
