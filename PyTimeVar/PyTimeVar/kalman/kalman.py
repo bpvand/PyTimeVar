@@ -93,12 +93,13 @@ class Kalman:
                 k = mX.shape[1]
                 self.mX = mX
 
-            self.T = T if T is not None else np.eye(k)
+            self.T = np.array([T]).reshape((k,k)) if T is not None else np.eye(k)
 
             # Create a Z array that can be indexed by t to return the appropriate regressor
             self.Z_reg = np.array([self.mX[t]
                                   for t in range(self.mX.shape[0])])
-        self.T = self.T if self.T is not None else np.array(
+        
+        self.T = np.array(self.T).reshape((k,k)) if self.T is not None else np.array(
             [[1]])                # Transition matrix
         self.Z = np.array(
             [[1]])                # Observation vector
@@ -107,17 +108,19 @@ class Kalman:
         if self.Q is None:
             # Transition covariance matrix
             self.bEst_Q = True
+        else: 
+            self.Q = np.array(self.Q).reshape((k,k))
         self.H = sigma_u
         if self.H is None:
             # Observation covariance matrix
             self.bEst_H = True
         else: 
             self.H = np.array([sigma_u])
-        self.a_1 = b_1 if b_1 is not None else np.zeros(
+        self.a_1 = np.array(b_1).reshape(k,) if b_1 is not None else np.zeros(
             self.T.shape[0])            # Initial state mean
-        self.P_1 = P_1 if P_1 is not None else np.eye(
+        self.P_1 = np.array(P_1).reshape((k,k)) if P_1 is not None else np.eye(
             self.T.shape[0])*100000       # Initial state covariance
-        self.R = R if R is not None else np.eye(
+        self.R = np.array(R).reshape((k,k)) if R is not None else np.eye(
             self.a_1.shape[0])         # Transition covariance matrix
         # Dimension of the state space
         self.p_dim = self.T.shape[0]
@@ -378,44 +381,124 @@ class Kalman:
         print(f"T: {self.T}\n")
 
 
-    def plot(self):
+    def plot(self, individual=False):
         """
         Plot the estimated beta coefficients over a normalized x-axis from 0 to 1 or over a date range.
+        
+        Parameters
+        ----------
+        individual : bool, optional
+            If True, the filtered states, the predictions, and smoothed states are shown in separate figures.
+        
         """
 
         x_vals = np.linspace(0, 1, self.n)
         
-        if self.p_dim == 1:
-            plt.figure(figsize=(12, 6))
-            plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
-            if self.smooth is not None:
-                plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
-            if self.pred is not None:
-                plt.plot(x_vals[1:], self.pred[1:-1], label="Estimated $\\beta_{0}$ - Predict", linestyle="--", linewidth=2)
-            if self.filt is not None:
-                plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="-", linewidth=2)
-            
-            plt.grid(linestyle='dashed')
-            plt.xlabel('$t/n$',fontsize="xx-large")
-
-            plt.tick_params(axis='both', labelsize=16)
-            plt.legend(fontsize="x-large")
-            plt.show()
-            
-        else:
-            plt.figure(figsize=(10, 6 * self.p_dim))
-            for i in range(self.p_dim):
-                plt.subplot(self.p_dim, 1, i + 1)
+        if not individual:
+            if self.p_dim == 1:
+                plt.figure(figsize=(12, 6))
+                plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
                 if self.smooth is not None:
-                    plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
-                if self.smooth is not None:
-                    plt.plot(x_vals[1:], self.pred[1:-1, i], label="Estimated $\\beta_{0}$ - Predict", linestyle="--", linewidth=2)
+                    plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
+                if self.pred is not None:
+                    plt.plot(x_vals[1:], self.pred[1:-1], label="Estimated $\\beta_{0}$ - Predict", linestyle="-", linewidth=2)
                 if self.filt is not None:
-                    plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-", linewidth=2)
-
+                    plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="-.", linewidth=2)
+                
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")
-
+    
                 plt.tick_params(axis='both', labelsize=16)
                 plt.legend(fontsize="x-large")
-            plt.show()
+                plt.show()
+                
+            else:
+                plt.figure(figsize=(10, 6 * self.p_dim))
+                for i in range(self.p_dim):
+                    plt.subplot(self.p_dim, 1, i + 1)
+                    if self.smooth is not None:
+                        plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
+                    if self.smooth is not None:
+                        plt.plot(x_vals[1:], self.pred[1:-1, i], label="Estimated $\\beta_{0}$ - Predict", linestyle="-", linewidth=2)
+                    if self.filt is not None:
+                        plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-.", linewidth=2)
+    
+                    plt.grid(linestyle='dashed')
+                    plt.xlabel('$t/n$',fontsize="xx-large")
+    
+                    plt.tick_params(axis='both', labelsize=16)
+                    plt.legend(fontsize="x-large")
+                plt.show()
+                
+        if individual:
+            if self.p_dim == 1:
+                if self.smooth is not None:
+                    plt.figure(figsize=(12, 6))
+                    plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
+                    plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
+                    plt.grid(linestyle='dashed')
+                    plt.xlabel('$t/n$',fontsize="xx-large")
+        
+                    plt.tick_params(axis='both', labelsize=16)
+                    plt.legend(fontsize="x-large")
+                    plt.show()
+                    
+                if self.pred is not None:
+                    plt.figure(figsize=(12, 6))
+                    plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
+                    plt.plot(x_vals[1:], self.pred[1:-1], label="Estimated $\\beta_{0}$ - Predict", linestyle="--", linewidth=2)
+                    plt.grid(linestyle='dashed')
+                    plt.xlabel('$t/n$',fontsize="xx-large")
+        
+                    plt.tick_params(axis='both', labelsize=16)
+                    plt.legend(fontsize="x-large")
+                    plt.show()
+                    
+                if self.filt is not None:
+                    plt.figure(figsize=(12, 6))
+                    plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
+                    plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="--", linewidth=2)
+                    plt.grid(linestyle='dashed')
+                    plt.xlabel('$t/n$',fontsize="xx-large")
+        
+                    plt.tick_params(axis='both', labelsize=16)
+                    plt.legend(fontsize="x-large")
+                    plt.show()
+                    
+            
+            else:
+                if self.smooth is not None:
+                    plt.figure(figsize=(10, 6 * self.p_dim))
+                    for i in range(self.p_dim):
+                        plt.subplot(self.p_dim, 1, i + 1)
+                        plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
+                        plt.grid(linestyle='dashed')
+                        plt.xlabel('$t/n$',fontsize="xx-large")
+        
+                        plt.tick_params(axis='both', labelsize=16)
+                        plt.legend(fontsize="x-large")
+                    plt.show()
+                if self.pred is not None:
+                    plt.figure(figsize=(10, 6 * self.p_dim))
+                    for i in range(self.p_dim):
+                        plt.subplot(self.p_dim, 1, i + 1)
+                        plt.plot(x_vals[1:], self.pred[1:-1, i], label="Estimated $\\beta_{0}$ - Predict", linestyle="--", linewidth=2)
+                        plt.grid(linestyle='dashed')
+                        plt.xlabel('$t/n$',fontsize="xx-large")
+        
+                        plt.tick_params(axis='both', labelsize=16)
+                        plt.legend(fontsize="x-large")
+                    plt.show()
+                if self.filt is not None:
+                    plt.figure(figsize=(10, 6 * self.p_dim))
+                    for i in range(self.p_dim):
+                        plt.subplot(self.p_dim, 1, i + 1)
+                        plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="--", linewidth=2)
+                        plt.grid(linestyle='dashed')
+                        plt.xlabel('$t/n$',fontsize="xx-large")
+        
+                        plt.tick_params(axis='both', labelsize=16)
+                        plt.legend(fontsize="x-large")
+                    plt.show()
+
+            
