@@ -57,7 +57,7 @@ auxPwr.summary()
 # illustrate Kalman smoother
 from PyTimeVar import Kalman
 kalmanmodel = Kalman(vY=vY)
-smooth_trend = kalmanmodel.fit('all')
+[kl_filter, kl_predictor, kl_smoother] = kalmanmodel.fit('all')
 kalmanmodel.plot(individual=False)
 
 # # illustrate GAS model

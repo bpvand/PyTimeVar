@@ -146,23 +146,6 @@
 <span class="sd">        The fitted values for the response variable.</span>
 <span class="sd">    residuals : np.ndarray</span>
 <span class="sd">        The residuals resulting from the local linear regression.</span>
-<span class="sd">    </span>
-<span class="sd">    </span>
-
-<span class="sd">    Methods</span>
-<span class="sd">    -------</span>
-<span class="sd">    fit()</span>
-<span class="sd">        Fit the model by local linear estimation and return estimated coefficients.</span>
-<span class="sd">    summary()</span>
-<span class="sd">        Print a summary of local linear regression results, including bandwidth, number of observations, and beta coefficients.</span>
-<span class="sd">    plot_betas()</span>
-<span class="sd">        Plot estimated coefficients curve over a normalized x-axis from 0 to 1.</span>
-<span class="sd">    plot_predicted()</span>
-<span class="sd">        Plot true data against fitted values.</span>
-<span class="sd">    plot_residuals()</span>
-<span class="sd">        Plot residuals.</span>
-<span class="sd">    confidence_bands()</span>
-<span class="sd">        Construct and plot bootstrap confidence intervals/bands for each coefficient curve.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -246,7 +229,7 @@
 
 
             <span class="k">if</span> <span class="n">bw_selection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">dict_bw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth_selection</span><span class="p">(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dict_bw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bandwidth_selection</span><span class="p">(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-----------------------------------------------------------&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimal bandwidth selected by individual method:&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- AIC method:&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dict_bw</span><span class="p">[</span><span class="s1">&#39;aic&#39;</span><span class="p">],</span> <span class="s1">&#39;.4f&#39;</span><span class="p">))</span>
@@ -268,18 +251,18 @@
 
 
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;lmcv&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth_selection</span><span class="p">(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bandwidth_selection</span><span class="p">(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;- LMCV-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lmcv_type</span><span class="si">}</span><span class="s1"> method: &#39;</span><span class="p">,</span> <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span><span class="s1">&#39;.4f&#39;</span><span class="p">))</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal bandwidth used is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="si">:</span><span class="s1"> .4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-----------------------------------------------------------&#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommended.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommended.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="c1"># print(</span>
                 <span class="c1">#     f&#39;Note: If a residual-based bootstrap method (LBWB, WB, SB, SWB, AWB) is adopted, the {self.bw_selection} bandwidth {self.h: .4f} is used.&#39;)</span>
                 <span class="c1"># print(f&#39;If the MB is implemented, the GCV bandwidth {self.the_gcv_h: .4f} is used.&#39;)</span>
 
             <span class="c1"># self.h = self.dict_bw[self.bw_selection]</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">dict_bw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth_selection</span><span class="p">(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dict_bw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bandwidth_selection</span><span class="p">(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-----------------------------------------------------------&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optimal bandwidth selected by individual method:&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;- AIC method:&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dict_bw</span><span class="p">[</span><span class="s1">&#39;aic&#39;</span><span class="p">],</span> <span class="s1">&#39;.4f&#39;</span><span class="p">))</span>
@@ -291,13 +274,13 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-----------------------------------------------------------&#39;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">dict_bw</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dict_bw</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict_bw</span><span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal bandwidth used is the avg. of all methods: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="si">:</span><span class="s1"> .4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal bandwidth used is the avg. of all methods: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="si">:</span><span class="s1"> .4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-----------------------------------------------------------&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Note: For constructing confidence intervals/bands using the MB method, a GCV bandwidth is recommended.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="c1"># print(f&#39;If the MB is implemented, the GCV bandwidth {self.the_gcv_h: .4f} is used.&#39;)</span>
 
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span> <span class="o">==</span> <span class="s1">&#39;gcv&#39;</span> <span class="ow">or</span> <span class="s1">&#39;aic&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">h</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth_selection</span><span class="p">(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bandwidth_selection</span><span class="p">(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal bandwidth used is </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="si">:</span><span class="s1"> .4f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-----------------------------------------------------------&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span> <span class="o">==</span> <span class="s1">&#39;gcv&#39;</span><span class="p">:</span>
@@ -763,9 +746,7 @@
             <span class="n">h</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_optimalh_lmcv</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lmcv_type</span><span class="p">),</span> <span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">h</span>
 
-<div class="viewcode-block" id="LocalLinear.AICmodx">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.AICmodx">[docs]</a>
-    <span class="k">def</span> <span class="nf">AICmodx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_AICmodx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Computes the AIC value for a given mean squared error and trace.</span>
 
@@ -781,8 +762,7 @@
 
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">s2</span><span class="p">,</span> <span class="n">traceh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_loss_aic_gcv</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">traceh</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="o">-</span><span class="n">traceh</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span></div>
-
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">traceh</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="o">-</span><span class="n">traceh</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_loss_aic_gcv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
@@ -911,14 +891,12 @@
 <span class="sd">            Optimal bandwidth value</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AICmodx</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)])</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_AICmodx</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)])</span>
         <span class="n">h_opt</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">h_opt</span>
 
-<div class="viewcode-block" id="LocalLinear.GCVmodx">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.GCVmodx">[docs]</a>
-    <span class="k">def</span> <span class="nf">GCVmodx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_GCVmodx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Computes the GCV value for a bandwidth value.</span>
 
@@ -934,8 +912,7 @@
 
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">s2</span><span class="p">,</span> <span class="n">traceh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_loss_aic_gcv</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">s2</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">traceh</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span></div>
-
+        <span class="k">return</span> <span class="n">s2</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">traceh</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
 
     <span class="k">def</span> <span class="nf">_get_gcv_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
@@ -954,14 +931,12 @@
 <span class="sd">            Optimal bandwidth value</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>        
-        <span class="n">res</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GCVmodx</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)])</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_GCVmodx</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">)])</span>
         <span class="n">h_opt</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">h_opt</span>
 
-<div class="viewcode-block" id="LocalLinear.bandwidth_selection">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.bandwidth_selection">[docs]</a>
-    <span class="k">def</span> <span class="nf">bandwidth_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_bandwidth_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">LB_bw</span><span class="p">,</span> <span class="n">UB_bw</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the optimal bandwidth for the local linear regression model using LMCV, AIC and GCV.</span>
 <span class="sd">        </span>
@@ -999,16 +974,13 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmcv_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">d</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lmcv_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">list_h</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">d</span></div>
-
+        <span class="k">return</span> <span class="n">d</span>
 
     <span class="c1">############################################################################################################</span>
     <span class="c1"># Bootstrap</span>
     <span class="c1">############################################################################################################</span>
 
-<div class="viewcode-block" id="LocalLinear.AR">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.AR">[docs]</a>
-    <span class="k">def</span> <span class="nf">AR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zhat</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">ic</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_AR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zhat</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">ic</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Estimate the AR model and compute residuals.</span>
 
@@ -1046,8 +1018,7 @@
             <span class="n">max_lag</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">arm_selection</span><span class="o">.</span><span class="n">ar_lags</span><span class="p">)</span>
             <span class="n">epsilonhat</span> <span class="o">=</span> <span class="n">armodel</span><span class="o">.</span><span class="n">resid</span>
 
-        <span class="k">return</span> <span class="n">epsilonhat</span><span class="p">,</span> <span class="n">max_lag</span><span class="p">,</span> <span class="n">armodel</span></div>
-
+        <span class="k">return</span> <span class="n">epsilonhat</span><span class="p">,</span> <span class="n">max_lag</span><span class="p">,</span> <span class="n">armodel</span>
 
     <span class="k">def</span> <span class="nf">_get_Zstar_AR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_lags</span><span class="p">,</span> <span class="n">armodel</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">epsilonstar</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1082,9 +1053,7 @@
             <span class="n">zstar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zstar</span><span class="p">,</span> <span class="n">ar_component</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">zstar</span>
 
-<div class="viewcode-block" id="LocalLinear.S_BT">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.S_BT">[docs]</a>
-    <span class="k">def</span> <span class="nf">S_BT</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_S_BT</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">epsilontilde</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">max_lag</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -1095,7 +1064,7 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sieve Bootstrap</span>
-<span class="sd">        Calculate the transformed response variable using the local linear regression model.</span>
+<span class="sd">        Compute a bootstrap sample using the sieve bootstrap.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1115,7 +1084,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        vYstar : np.ndarray</span>
-<span class="sd">            Transformed response variable.</span>
+<span class="sd">            The bootstrap sample generated by the _S_BT algorithm.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">epsilonstar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">epsilontilde</span><span class="p">,</span> <span class="n">T</span> <span class="o">-</span> <span class="n">max_lag</span> <span class="o">+</span> <span class="mi">50</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">max_lag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1130,13 +1099,10 @@
             <span class="k">return</span> <span class="n">vYstar</span>
         <span class="k">elif</span> <span class="n">mX</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">vYstar</span> <span class="o">=</span> <span class="p">(</span><span class="n">mX</span> <span class="o">@</span> <span class="n">betatilde</span> <span class="o">+</span> <span class="n">zstar_array</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">vYstar</span></div>
-
+            <span class="k">return</span> <span class="n">vYstar</span>
 
     <span class="c1">######### Autoregressive Bootstrap #########</span>
-<div class="viewcode-block" id="LocalLinear.AW_BT">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.AW_BT">[docs]</a>
-    <span class="k">def</span> <span class="nf">AW_BT</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_AW_BT</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">zhat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">mX</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -1167,7 +1133,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        vYstar : np.ndarray</span>
-<span class="sd">            Transformed response variable.</span>
+<span class="sd">            The bootstrap sample generated by the _AW_BT algorithm.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># v_nv_star=np.random.normal(0,np.sqrt(1-gamma**2),200)</span>
         <span class="n">xi_star0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -1182,12 +1148,9 @@
 
         <span class="n">vYstar</span> <span class="o">=</span> <span class="p">(</span><span class="n">mX</span> <span class="o">@</span> <span class="n">betatilde</span> <span class="o">+</span> <span class="n">zstar</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">vYstar</span></div>
+        <span class="k">return</span> <span class="n">vYstar</span>
 
-
-<div class="viewcode-block" id="LocalLinear.W_BT">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.W_BT">[docs]</a>
-    <span class="k">def</span> <span class="nf">W_BT</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_W_BT</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">zhat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">mX</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -1198,7 +1161,7 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Wild Bootstrap</span>
-<span class="sd">        Calculate the transformed response variable using the local linear regression model.</span>
+<span class="sd">        Compute a bootstrap sample using the wild bootstrap.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1218,7 +1181,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        vYstar : np.ndarray</span>
-<span class="sd">            Transformed response variable.</span>
+<span class="sd">            The bootstrap sample generated by the _W_BT algorithm.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># generate zstar by</span>
         <span class="n">zstar</span> <span class="o">=</span> <span class="n">zhat</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
@@ -1228,12 +1191,9 @@
             <span class="k">return</span> <span class="n">vYstar</span>
         <span class="k">elif</span> <span class="n">mX</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">vYstar</span> <span class="o">=</span> <span class="p">(</span><span class="n">mX</span> <span class="o">@</span> <span class="n">betatilde</span> <span class="o">+</span> <span class="n">zstar</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">vYstar</span></div>
+            <span class="k">return</span> <span class="n">vYstar</span>
 
-
-<div class="viewcode-block" id="LocalLinear.SW_BT">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.SW_BT">[docs]</a>
-    <span class="k">def</span> <span class="nf">SW_BT</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_SW_BT</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">epsilontilde</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">max_lag</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -1244,7 +1204,7 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sieve Wild Bootstrap</span>
-<span class="sd">        Calculate the transformed response variable using the local linear regression model.</span>
+<span class="sd">        Compute a bootstrap sample using the sieve wild bootstrap.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1264,7 +1224,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        vYstar : np.ndarray</span>
-<span class="sd">            Transformed response variable.</span>
+<span class="sd">            The bootstrap sample generated by the _SW_BT algorithm.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">epsilonstar</span> <span class="o">=</span> <span class="n">epsilontilde</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">T</span> <span class="o">-</span> <span class="n">max_lag</span><span class="p">)</span>
         <span class="n">epsilonstar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">epsilonstar</span><span class="p">,</span> <span class="n">T</span> <span class="o">-</span> <span class="n">max_lag</span> <span class="o">+</span> <span class="mi">50</span><span class="p">)</span>
@@ -1280,17 +1240,14 @@
             <span class="k">return</span> <span class="n">vYstar</span>
         <span class="k">elif</span> <span class="n">mX</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">vYstar</span> <span class="o">=</span> <span class="p">(</span><span class="n">mX</span> <span class="o">@</span> <span class="n">betatilde</span> <span class="o">+</span> <span class="n">zstar_array</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">vYstar</span></div>
+            <span class="k">return</span> <span class="n">vYstar</span>
 
-
-<div class="viewcode-block" id="LocalLinear.LBW_BT">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.LBW_BT">[docs]</a>
-    <span class="k">def</span> <span class="nf">LBW_BT</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_LBW_BT</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">zhat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mX</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">betatilde</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Local Blockwise Wild Bootstrap</span>
-<span class="sd">        Performs the local blockwise wild bootstrap algorithm to generate a bootstrap sample.</span>
+<span class="sd">        Compute a bootstrap sample using the local blockwise wild bootstrap.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1310,7 +1267,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        vYstar : np.ndarray</span>
-<span class="sd">            The bootstrap sample generated by the LBW_BT algorithm.</span>
+<span class="sd">            The bootstrap sample generated by the _LBW_BT algorithm.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">l</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">4.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">T</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">)))</span>
         <span class="n">number_blocks</span> <span class="o">=</span> <span class="n">T</span> <span class="o">-</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">1</span>
@@ -1345,8 +1302,7 @@
             <span class="k">return</span> <span class="n">vYstar</span>
         <span class="k">elif</span> <span class="n">mX</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">vYstar</span> <span class="o">=</span> <span class="p">(</span><span class="n">mX</span> <span class="o">@</span> <span class="n">betatilde</span> <span class="o">+</span> <span class="n">zstar</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">vYstar</span></div>
-
+            <span class="k">return</span> <span class="n">vYstar</span>
 
         <span class="c1">############################################################################################################</span>
         <span class="c1"># Confidence Bands</span>
@@ -1376,9 +1332,7 @@
             <span class="n">qtau</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">diff</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alphap</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">qtau</span>
 
-<div class="viewcode-block" id="LocalLinear.ABS_value">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.ABS_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">ABS_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qtau</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_ABS_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qtau</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the absolute value for quantiles.</span>
 
@@ -1407,12 +1361,9 @@
             <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">check</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">tau</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">B</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">check</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">tau</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">B</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">))</span>
 
-
-<div class="viewcode-block" id="LocalLinear.min_alphap">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.min_alphap">[docs]</a>
-    <span class="k">def</span> <span class="nf">min_alphap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_min_alphap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the minimum alpha value for confidence bands.</span>
 
@@ -1433,11 +1384,11 @@
 <span class="sd">            Minimum alpha value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="n">last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ABS_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_qtau</span><span class="p">(</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ABS_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_qtau</span><span class="p">(</span>
             <span class="mi">1</span> <span class="o">/</span> <span class="n">B</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">tau</span><span class="p">),</span> <span class="n">diff</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">alphap</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">B</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">B</span><span class="p">):</span>
             <span class="n">qtau</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_qtau</span><span class="p">(</span><span class="n">alphap</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">tau</span><span class="p">)</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ABS_value</span><span class="p">(</span><span class="n">qtau</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ABS_value</span><span class="p">(</span><span class="n">qtau</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="n">last</span><span class="p">:</span>
                 <span class="n">last</span> <span class="o">=</span> <span class="n">value</span>
                 <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">B</span> <span class="o">*</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
@@ -1446,12 +1397,9 @@
                 <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">return</span> <span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">B</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">/</span> <span class="n">B</span></div>
+                    <span class="k">return</span> <span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">/</span> <span class="n">B</span>
 
-
-<div class="viewcode-block" id="LocalLinear.K_ZW_Q">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.K_ZW_Q">[docs]</a>
-    <span class="k">def</span> <span class="nf">K_ZW_Q</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vTi_t</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_K_ZW_Q</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vTi_t</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Kernel function for Multiplier Bootstrap quantile.</span>
 
@@ -1467,12 +1415,9 @@
 <span class="sd">        np.ndarray</span>
 <span class="sd">            Array of kernel values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">vTi_t</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="p">(</span><span class="n">vTi_t</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">vTi_t</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="p">(</span><span class="n">vTi_t</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="LocalLinear.getQ">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.getQ">[docs]</a>
-    <span class="k">def</span> <span class="nf">getQ</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">taut</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_getQ</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">taut</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate quantile for Multiplier Bootstrap samples.</span>
 
@@ -1507,16 +1452,13 @@
                 <span class="n">vMu</span> <span class="o">=</span> <span class="n">mMu</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
                 <span class="n">vTi_t</span> <span class="o">=</span> <span class="n">mTi_t</span><span class="p">[:,</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
                 <span class="n">vV</span> <span class="o">=</span> <span class="n">mV</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
-                <span class="n">vKernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">K_ZW_Q</span><span class="p">(</span><span class="n">vTi_t</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+                <span class="n">vKernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_K_ZW_Q</span><span class="p">(</span><span class="n">vTi_t</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
                 <span class="n">vMu</span><span class="p">[</span><span class="n">t</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">vV</span> <span class="o">@</span> <span class="n">vKernel</span>
             <span class="n">vQ</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">vMu</span><span class="p">))</span> <span class="o">/</span> <span class="n">dDenum</span>
         <span class="n">dQ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">vQ</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">dQ</span></div>
+        <span class="k">return</span> <span class="n">dQ</span>
 
-
-<div class="viewcode-block" id="LocalLinear.getLambda">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.getLambda">[docs]</a>
-    <span class="k">def</span> <span class="nf">getLambda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mmDelta</span><span class="p">,</span> <span class="n">iN</span><span class="p">,</span> <span class="n">iM</span><span class="p">,</span> <span class="n">taut</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">dTau</span><span class="p">,</span> <span class="n">dGamma</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_getLambda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mmDelta</span><span class="p">,</span> <span class="n">iN</span><span class="p">,</span> <span class="n">iM</span><span class="p">,</span> <span class="n">taut</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">dTau</span><span class="p">,</span> <span class="n">dGamma</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate lambda values for Multiplier Bootstrap samples.</span>
 
@@ -1553,12 +1495,9 @@
         <span class="n">mLam</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">mmDelta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mmDelta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">taut</span><span class="p">)):</span>
             <span class="n">mLam</span> <span class="o">=</span> <span class="n">mLam</span> <span class="o">+</span> <span class="n">vWeights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">mmDelta</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">mLam</span></div>
+        <span class="k">return</span> <span class="n">mLam</span>
 
-
-<div class="viewcode-block" id="LocalLinear.getDelta">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.getDelta">[docs]</a>
-    <span class="k">def</span> <span class="nf">getDelta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mX</span><span class="p">,</span> <span class="n">vEps</span><span class="p">,</span> <span class="n">iM</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_getDelta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mX</span><span class="p">,</span> <span class="n">vEps</span><span class="p">,</span> <span class="n">iM</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate delta values for Multiplier Bootstrap samples.</span>
 
@@ -1589,12 +1528,9 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mL</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="n">iM</span><span class="p">):</span><span class="nb">min</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">iM</span><span class="p">,</span> <span class="n">T</span><span class="p">),</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">mDeltai</span> <span class="o">=</span> <span class="p">(</span><span class="n">mQi</span> <span class="o">@</span> <span class="n">mQi</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="n">dDenum</span>
             <span class="n">mmDelta</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mDeltai</span>
-        <span class="k">return</span> <span class="n">mmDelta</span></div>
+        <span class="k">return</span> <span class="n">mmDelta</span>
 
-
-<div class="viewcode-block" id="LocalLinear.getSigma">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.getSigma">[docs]</a>
-    <span class="k">def</span> <span class="nf">getSigma</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mM</span><span class="p">,</span> <span class="n">mLam</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_getSigma</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mM</span><span class="p">,</span> <span class="n">mLam</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate sigma values for Multiplier Bootstrap samples.</span>
 
@@ -1613,12 +1549,9 @@
         <span class="n">mM_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">mM</span><span class="p">)</span>
         <span class="n">vSigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mM_inv</span><span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mLam</span><span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
                           <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mLam</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
-        <span class="k">return</span> <span class="n">vSigma</span></div>
+        <span class="k">return</span> <span class="n">vSigma</span>
 
-
-<div class="viewcode-block" id="LocalLinear.getM">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.getM">[docs]</a>
-    <span class="k">def</span> <span class="nf">getM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mX</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_getM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mX</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">dT</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate M values for Multiplier Bootstrap samples.</span>
 
@@ -1644,12 +1577,9 @@
         <span class="n">vKernel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kernel</span><span class="p">(</span><span class="n">vTi_t</span> <span class="o">/</span> <span class="n">h</span><span class="p">)</span>
         <span class="n">mX_tilde</span> <span class="o">=</span> <span class="n">mX</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vKernel</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">mM</span> <span class="o">=</span> <span class="n">mX_tilde</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">mX_tilde</span> <span class="o">/</span> <span class="p">(</span><span class="n">T</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">mM</span></div>
+        <span class="k">return</span> <span class="n">mM</span>
 
-
-<div class="viewcode-block" id="LocalLinear.MC_ZW">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.MC_ZW">[docs]</a>
-    <span class="k">def</span> <span class="nf">MC_ZW</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">vY</span><span class="p">,</span> <span class="n">mX</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_MC_ZW</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">vY</span><span class="p">,</span> <span class="n">mX</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform the Multiplier Bootstrap bootstrap algorithm.</span>
 <span class="sd">        Zhou, Z., &amp; Wu, W. B. (2010). Simultaneous inference of linear models with time varying coefficients.</span>
@@ -1695,10 +1625,10 @@
         <span class="n">betahat_jk</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">betahat_k</span> <span class="o">-</span> <span class="n">betahat_j</span>
 
         <span class="c1"># Simulation quantile</span>
-        <span class="n">dQ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getQ</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">taut</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+        <span class="n">dQ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getQ</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">taut</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
 
         <span class="n">vEps</span> <span class="o">=</span> <span class="n">vY</span> <span class="o">-</span> <span class="p">(</span><span class="n">mX</span> <span class="o">@</span> <span class="n">betahat</span><span class="p">)</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
-        <span class="n">mmDelta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDelta</span><span class="p">(</span><span class="n">mX</span><span class="p">,</span> <span class="n">vEps</span><span class="p">,</span> <span class="n">iM</span><span class="p">)</span>
+        <span class="n">mmDelta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getDelta</span><span class="p">(</span><span class="n">mX</span><span class="p">,</span> <span class="n">vEps</span><span class="p">,</span> <span class="n">iM</span><span class="p">)</span>
 
         <span class="n">vT_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">h</span><span class="p">]</span> <span class="o">*</span> <span class="n">T</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">taut</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span>
 
@@ -1706,13 +1636,13 @@
 
         <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
             <span class="c1"># Construct mMHat(tau)</span>
-            <span class="n">mM</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getM</span><span class="p">(</span><span class="n">mX</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">vT_star</span><span class="p">[</span><span class="n">l</span><span class="p">],</span> <span class="n">h</span><span class="p">)</span>
+            <span class="n">mM</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getM</span><span class="p">(</span><span class="n">mX</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">vT_star</span><span class="p">[</span><span class="n">l</span><span class="p">],</span> <span class="n">h</span><span class="p">)</span>
 
             <span class="c1"># Construct mLambdaTilde(tau)</span>
-            <span class="n">mLam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLambda</span><span class="p">(</span><span class="n">mmDelta</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">iM</span><span class="p">,</span> <span class="n">taut</span><span class="p">,</span> <span class="n">taut</span><span class="p">[</span><span class="n">l</span><span class="p">],</span> <span class="n">dTau</span><span class="p">,</span> <span class="n">dGamma</span><span class="p">)</span>
+            <span class="n">mLam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getLambda</span><span class="p">(</span><span class="n">mmDelta</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">iM</span><span class="p">,</span> <span class="n">taut</span><span class="p">,</span> <span class="n">taut</span><span class="p">[</span><span class="n">l</span><span class="p">],</span> <span class="n">dTau</span><span class="p">,</span> <span class="n">dGamma</span><span class="p">)</span>
 
             <span class="c1"># Construct LRV</span>
-            <span class="n">vSigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSigma</span><span class="p">(</span><span class="n">mM</span><span class="p">,</span> <span class="n">mLam</span><span class="p">)</span>
+            <span class="n">vSigma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getSigma</span><span class="p">(</span><span class="n">mM</span><span class="p">,</span> <span class="n">mLam</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mX</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
                 <span class="n">mmSCT</span><span class="p">[</span><span class="n">l</span><span class="p">,</span> <span class="p">:,</span> <span class="n">d</span><span class="p">]</span> <span class="o">=</span> <span class="n">betahat_jk</span><span class="p">[</span><span class="n">d</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">+</span> \
                     <span class="n">vSigma</span><span class="p">[</span><span class="n">d</span><span class="p">]</span> <span class="o">*</span> <span class="n">dQ</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
@@ -1728,12 +1658,9 @@
         <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">S_LB_beta</span><span class="p">,</span> <span class="n">S_UB_beta</span><span class="p">,</span> <span class="n">P_LB_beta</span><span class="p">,</span> <span class="n">P_UB_beta</span><span class="p">))</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">betahat_jk</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">results</span></div>
+        <span class="k">return</span> <span class="n">results</span>
 
-
-<div class="viewcode-block" id="LocalLinear.construct_confidence_bands">
-<a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.construct_confidence_bands">[docs]</a>
-    <span class="k">def</span> <span class="nf">construct_confidence_bands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bootstraptype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">Gsubs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">Chtilde</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1299</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_construct_confidence_bands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bootstraptype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">Gsubs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">Chtilde</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">B</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1299</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct confidence bands using bootstrap methods.</span>
 
@@ -1777,7 +1704,7 @@
 
         <span class="k">if</span> <span class="n">bootstraptype</span> <span class="o">==</span> <span class="s2">&quot;MB&quot;</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calculating MB Bootstrap Samples&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">MC_ZW</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vY</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mX</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vY</span><span class="p">),</span> <span class="n">B</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_MC_ZW</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vY</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mX</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vY</span><span class="p">),</span> <span class="n">B</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">Chtilde</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">Chtilde</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">Chtilde</span> <span class="o">=</span> <span class="mi">2</span>
@@ -1794,11 +1721,11 @@
 
         <span class="c1"># Determine the appropriate bootstrap function</span>
         <span class="n">bootstrap_functions</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;SB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">S_BT</span><span class="p">,</span>
-            <span class="s2">&quot;WB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">W_BT</span><span class="p">,</span>
-            <span class="s2">&quot;SWB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">SW_BT</span><span class="p">,</span>
-            <span class="s2">&quot;LBWB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">LBW_BT</span><span class="p">,</span>
-            <span class="s2">&quot;AWB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">AW_BT</span>
+            <span class="s2">&quot;SB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_S_BT</span><span class="p">,</span>
+            <span class="s2">&quot;WB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_W_BT</span><span class="p">,</span>
+            <span class="s2">&quot;SWB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_SW_BT</span><span class="p">,</span>
+            <span class="s2">&quot;LBWB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_LBW_BT</span><span class="p">,</span>
+            <span class="s2">&quot;AWB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_AW_BT</span>
         <span class="p">}</span>
         
         <span class="k">if</span> <span class="n">B</span> <span class="o">&lt;</span> <span class="mi">1299</span><span class="p">:</span>
@@ -1829,7 +1756,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calculating </span><span class="si">{</span><span class="n">bootstraptype</span><span class="si">}</span><span class="s2"> Bootstrap Samples&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">B</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">bootstraptype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;SB&quot;</span><span class="p">,</span> <span class="s2">&quot;SWB&quot;</span><span class="p">]:</span>
-                <span class="n">epsilonhat</span><span class="p">,</span> <span class="n">max_lag</span><span class="p">,</span> <span class="n">armodel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">AR</span><span class="p">(</span><span class="n">zhat</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">ic</span><span class="p">)</span>
+                <span class="n">epsilonhat</span><span class="p">,</span> <span class="n">max_lag</span><span class="p">,</span> <span class="n">armodel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_AR</span><span class="p">(</span><span class="n">zhat</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">ic</span><span class="p">)</span>
                 <span class="n">epsilontilde</span> <span class="o">=</span> <span class="n">epsilonhat</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">epsilonhat</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">bootstraptype</span> <span class="o">==</span> <span class="s1">&#39;SWB&#39;</span><span class="p">:</span>
                     <span class="n">vYstar</span> <span class="o">=</span> <span class="n">bootstrap_function</span><span class="p">(</span>
@@ -1861,7 +1788,7 @@
                 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_est</span><span class="p">):</span>
                     <span class="n">diff_beta_G</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">diff_G</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 
-            <span class="n">optimal_alphap_G</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">min_alphap</span><span class="p">(</span>
+            <span class="n">optimal_alphap_G</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_min_alphap</span><span class="p">(</span>
                 <span class="n">diff_beta_G</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">G</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_est</span><span class="p">)]</span>
 
             <span class="n">S_LB_beta</span> <span class="o">=</span> <span class="p">[</span><span class="n">betahat_G</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_qtau</span><span class="p">(</span><span class="n">optimal_alphap_G</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">diff_beta_G</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">G</span><span class="p">)[</span>
@@ -1876,8 +1803,7 @@
 
             <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">S_LB_beta</span><span class="p">,</span> <span class="n">S_UB_beta</span><span class="p">,</span> <span class="n">P_LB_beta</span><span class="p">,</span> <span class="n">P_UB_beta</span><span class="p">))</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">betahat</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">results</span></div>
-
+        <span class="k">return</span> <span class="n">results</span>
 
 <div class="viewcode-block" id="LocalLinear.summary">
 <a class="viewcode-back" href="../../../PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.summary">[docs]</a>
@@ -1887,7 +1813,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Local Linear Regression Results&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bandwidth: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="si">:</span><span class="s2"> .4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Kernel: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Bandwidth selection method: AVG&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Bandwidth selection method: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bw_selection</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bandwidth used: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="si">:</span><span class="s2"> .4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of observations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vY</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of predictors: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">betahat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
@@ -1900,7 +1831,7 @@
             <span class="s2">&quot;You can choose out of 6 types of Bootstrap to construct confidence bands:&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SB, WB, SWB, MB, LBWB, AWB&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">30</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Use the &#39;plot_residuals()&#39; method to plot the residuals.&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Use the &#39;plot_residuals()&#39; method to plot the residuals.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 
@@ -2038,7 +1969,7 @@
         
         <span class="c1"># Construct confidence bands</span>
         <span class="k">if</span> <span class="n">Gsubs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">confidence_bands_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">construct_confidence_bands</span><span class="p">(</span>
+            <span class="n">confidence_bands_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_construct_confidence_bands</span><span class="p">(</span>
                 <span class="n">bootstrap_type</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">ic</span><span class="o">=</span><span class="n">ic</span><span class="p">,</span> <span class="n">Chtilde</span><span class="o">=</span><span class="n">Chtilde</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">B</span><span class="p">)</span>
             <span class="n">confidence_bands</span> <span class="o">=</span> <span class="n">confidence_bands_list</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">betahat</span> <span class="o">=</span> <span class="n">confidence_bands_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -2048,7 +1979,7 @@
             <span class="n">P_UB</span> <span class="o">=</span> <span class="n">confidence_bands</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
             <span class="n">G_full</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vY</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">confidence_bands_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">construct_confidence_bands</span><span class="p">(</span>
+            <span class="n">confidence_bands_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_construct_confidence_bands</span><span class="p">(</span>
                 <span class="n">bootstrap_type</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">ic</span><span class="o">=</span><span class="n">ic</span><span class="p">,</span> <span class="n">Gsubs</span><span class="o">=</span><span class="n">Gsubs</span><span class="p">,</span> <span class="n">Chtilde</span><span class="o">=</span><span class="n">Chtilde</span><span class="p">,</span> <span class="n">B</span><span class="o">=</span><span class="n">B</span><span class="p">)</span>
             <span class="n">confidence_bands_list</span> <span class="o">=</span> <span class="n">confidence_bands_dict</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">betahat</span> <span class="o">=</span> <span class="n">confidence_bands_dict</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>

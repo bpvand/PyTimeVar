@@ -54,14 +54,6 @@ class GAS:
     params : np.ndarray
         The estimated GAS parameters.
         
-        
-    Methods
-    -------
-    fit()
-        Fit score-driven model, according to the specified method (’gaussian’ or ’student’)
-    plot()
-        Plot estimated coefficients against true data
-    
 
     """
 

@@ -12,6 +12,7 @@
 #
 import os
 import sys
+import autodocsumm
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'PyTimeVar'))
 sys.path.insert(0, basedir)
 

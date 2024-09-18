@@ -35,14 +35,6 @@ class BoostedHP:
         the information criteria values, the number of iterations,
         and the estimated trend.
 
-    Methods
-    -------
-    fit()
-        Fits the Boosted HP filter to the data.
-    summary()
-        Prints a summary of the results.
-    plot()
-        Plot true data against estimated trend.
     """
 
     def __init__(self, vY, dLambda=1600, iMaxIter=100):

@@ -302,36 +302,22 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.fit" title="Link to this definition"></a></dt>
-<dd><p>Fit state-space model by Kalman filter or smoother, according to the specified option
-(’filter’, ‘predict’, or ’smoother’)</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.summary">
-<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.summary" title="Link to this definition"></a></dt>
-<dd><p>Print a summary of the state-space specifications, including the values of H, Q, R and T</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.plot" title="Link to this definition"></a></dt>
-<dd><p>Plot filtered/predicted/smoothed estimates against true data</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'filter'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.fit" title="Link to this definition"></a></dt>
 <dd><p>Computes the Kalman filtered states, one-step ahead predicted states or smoothed states for the data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>option</strong> (<em>string</em>) – Denotes the fitted trend: filter, predict or smoother.</p>
+<dd class="field-odd"><p><strong>option</strong> (<em>string</em>) – Denotes the fitted trend: filter, predictor, smoother, or all.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – No valid option is provided.</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Estimated trend.</p>
+<dd class="field-odd"><p><p>Estimated trend.
+If option=’all’, a list of trends is returned:</p>
+<blockquote>
+<div><p>[filter, predictor, smoother]</p>
+</div></blockquote>
+</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>np.ndarray</p>
@@ -340,14 +326,19 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.plot" title="Link to this definition"></a></dt>
 <dd><p>Plot the estimated beta coefficients over a normalized x-axis from 0 to 1 or over a date range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>individual</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the filtered states, the predictions, and smoothed states are shown in separate figures.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.summary">
+<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.summary" title="Link to this definition"></a></dt>
 <dd><p>Prints a summary of the state-space model specification.</p>
 </dd></dl>
 

@@ -65,17 +65,6 @@ class Kalman:
         The smoothed coefficients.
     
     
-    Methods
-    -------
-    fit()
-        Fit state-space model by Kalman filter or smoother, according to the specified option
-        (’filter', 'predictor', ’smoother’, or 'all')
-    summary()
-        Print a summary of the state-space specifications, including the values of H, Q, R and T
-    plot()
-        Plot filtered/predicted/smoothed estimates against true data
-    
-    
     
     """
 

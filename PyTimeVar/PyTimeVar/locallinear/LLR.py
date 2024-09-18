@@ -69,23 +69,6 @@ class LocalLinear:
         The fitted values for the response variable.
     residuals : np.ndarray
         The residuals resulting from the local linear regression.
-    
-    
-
-    Methods
-    -------
-    fit()
-        Fit the model by local linear estimation and return estimated coefficients.
-    summary()
-        Print a summary of local linear regression results, including bandwidth, number of observations, and beta coefficients.
-    plot_betas()
-        Plot estimated coefficients curve over a normalized x-axis from 0 to 1.
-    plot_predicted()
-        Plot true data against fitted values.
-    plot_residuals()
-        Plot residuals.
-    confidence_bands()
-        Construct and plot bootstrap confidence intervals/bands for each coefficient curve.
 
     Notes
     -----

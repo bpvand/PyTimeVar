@@ -38,15 +38,6 @@ class PowerLaw:
     coeffHat : np.ndarray
         The estimated coefficients.
         
-        
-    Methods
-    -------
-    fit()
-       Fit by power-law model and return trend estimates and parameter estimates .
-    summary()
-        Print fitted prediction equation.
-    plot()
-        Plot true data against estimated trend
     
     """
 
@@ -108,7 +99,7 @@ class PowerLaw:
 
     def fit(self):
         '''
-        
+        Fits the Power-Law model to the data.        
 
         Returns
         -------
