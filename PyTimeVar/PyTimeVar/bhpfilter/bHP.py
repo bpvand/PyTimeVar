@@ -83,15 +83,15 @@ class BoostedHP:
 
         mTrends, vCurrentRes, vIC_values, iM, vBHP = self.results
         print("Boosted HP Filter Results")
-        print('='*30)
+        print('='*60)
         print(f"Stopping Criterion: {self.stop}")
         print(f"Max Iterations: {self.iMaxIter}")
         print(f"Iterations Run: {iM}")
-        print('='*30)
+        print('='*60)
         print(f"Lambda: {self.dLambda}")
         print(f"Alpha: {self.dAlpha}")
         print("Information Criteria Values:", vIC_values)
-        print('='*30)
+        print('='*60)
 
     def plot(self, tau: list = None):
         """
