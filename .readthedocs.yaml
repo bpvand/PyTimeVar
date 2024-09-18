@@ -35,3 +35,6 @@ python:
       - requirements: PyTimeVar/docs/requirements.txt
       - method: pip
         path: PyTimeVar/
+        extra_requirements:
+        - autodocsumm
+        - sphinx-mdinclude
