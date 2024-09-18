@@ -12,7 +12,6 @@
 #
 import os
 import sys
-import autodocsumm
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'PyTimeVar'))
 sys.path.insert(0, basedir)
 
@@ -47,6 +46,8 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+autodoc_mock_imports = ["autodocsumm", 'sphinx-mdinclude']
 
 
 # -- Options for HTML output -------------------------------------------------

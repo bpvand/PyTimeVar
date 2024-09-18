@@ -42,7 +42,7 @@ bHPmodel.plot()
 
 # illustrate power-law trend
 from PyTimeVar import PowerLaw
-PwrLaw = PowerLaw(vY, n_powers=1)
+PwrLaw = PowerLaw(vY, n_powers=2)
 pwrTrend, pwrGamma = PwrLaw.fit()
 PwrLaw.summary()
 PwrLaw.plot()
