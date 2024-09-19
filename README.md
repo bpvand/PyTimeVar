@@ -1,5 +1,5 @@
-# PyTimeVar: A Python package for Trending Time-Varying Time Series Models
-Authors: Mingxuan Song, Bernhard van der Sluis, Yicong Lin
+# PyTimeVar: A Python Package for Trending Time-Varying Time Series Models
+Authors: Mingxuan Song (m3.song@student.vu.nl, Vrije Universiteit Amsterdam), Bernhard van der Sluis (vandersluis@ese.eur.nl, Erasmus Universiteit Rotterdam), Yicong Lin (yc.lin@vu.nl, Vrije Universiteit Amsterdam & Tinbergen Institute)
 
 ## Purpose of the Package
 
@@ -9,32 +9,42 @@ It provides a range of bootstrap techniques for constructing pointwise confidenc
 Additionally, the package includes four widely used methods for modeling trends and time-varying relationships. 
 This allows users to compare different approaches within a unified environment.
 
-The package is build upon the methods of several papers and books. We list the key references below.
+The package is built upon several papers and books. We list the key references below.
+
 ### Local linear regression and bootstrap inference
-Bühlmann (1998) (doi: 10.1214/aos/1030563978); Zhou and Wu (2010) (doi: https://doi.org/10.1111/j.1467-9868.2010.00743.x); Friedrich et al. (2020, doi: https://doi.org/10.1016/j.jeconom.2019.05.006); Friedrich
-and Lin (2024, https://doi.org/10.1016/j.jeconom.2022.09.004); Lin et al. (2024) (doi: https://doi.org/10.1080/10618600.2024.2403705)
+Friedrich and Lin (2024) (doi: https://doi.org/10.1016/j.jeconom.2022.09.004); 
+Lin et al. (2024) (doi: https://doi.org/10.1080/10618600.2024.2403705);
+Friedrich et al. (2020) (doi: https://doi.org/10.1016/j.jeconom.2019.05.006); 
+Smeekes and Urbain (2014) (doi: 10.1017/S0266466611000387)
+Zhou and Wu (2010) (doi: https://doi.org/10.1111/j.1467-9868.2010.00743.x); 
+Bühlmann (1998) (doi: 10.1214/aos/1030563978); 
+
 
 ### Boosted HP filter
-Phillips and Shi (2021) (doi: https://doi.org/10.1111/iere.12495);  Mei et al. (2024) (doi: doi:https://doi.org/10.1002/jae)
-3086)
+Mei et al. (2024) (doi: doi:https://doi.org/10.1002/jae.3086);
+Biswas et al. (2024) (doi:10.1080/07474938.2024.2380704);
+Phillips and Shi (2021) (doi: https://doi.org/10.1111/iere.12495); 
 
+ 
 ### Power-law trend models
-Robinson (2012) (doi: 10.3150/10-BEJ349); Lin and Reuvers (2024)
+Lin and Reuvers (2024);
+Robinson (2012) (doi: 10.3150/10-BEJ349); 
+
 
 ### State-space models
-Durbin and Koopman (2012) (doi: 10.1093/acprof:oso/9780199641178.001.0001.)
+Durbi
+n and Koopman (2012) (doi: 10.1093/acprof:oso/9780199641178.001.0001.)
 
 ### Score-drive models 
-Harvey (2013) (doi: 
-https://doi.org/10.1017/CBO9781139540933); Creal et al. (2013) (doi: https://doi.org/10.
-1002/jae.1279.)
+Creal et al. (2013) (doi: https://doi.org/10.1002/jae.1279);
+Harvey (2013) (doi: https://doi.org/10.1017/CBO9781139540933); 
 
 ## Features
 
-- Nonparametric estimation of time-varying time series models, along with multiple bootstrap-assisted inference methods
-- Alternative estimation methods for modelling trend and time-varying relationships.
+- Nonparametric estimation of time-varying time series models, along with various bootstrap-assisted methods for inference, including local blockwise wild bootstrap, wild bootstrap, sieve bootstrap, sieve wild bootstrap, autoregressive wild bootstrap
+- Alternative estimation methods for modelling trend and time-varying relationships, including boosted HP filter, power-law trend models, state-space and score-driven models.
 - Unified framework for comparison of methods.
-- Four datasets for illustration.
+- Multiple datasets for illustration.
 
 ## Getting Started
 
@@ -45,4 +55,4 @@ pip install PyTimeVar
 
 ## Support
 The documentation of the package can found at the github repository https://github.com/bpvand/PyTimeVar, and at ReadTheDocs https://pytimevar.readthedocs.io/en/latest/
-Any questions and comments on the PyTimeVar package can be raised via email to vandersluis@ese.eur.nl.
+For any questions or feedback regarding the PyTimeVar package, please feel free to contact the authors via email: vandersluis@ese.eur.nl; m3.song@student.vu.nl; yc.lin@vu.nl.
