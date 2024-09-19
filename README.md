@@ -4,7 +4,8 @@
 ![PyPI](https://img.shields.io/pypi/v/PyTimeVar?label=pypi%20package)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/PyTimeVar)
 <!-- badges: end -->
-Authors: Mingxuan Song, Bernhard van der Sluis, Yicong Lin
+
+Authors: Mingxuan Song (m3.song@student.vu.nl, Vrije Universiteit Amsterdam), Bernhard van der Sluis (vandersluis@ese.eur.nl, Erasmus Universiteit Rotterdam), and Yicong Lin (yc.lin@vu.nl, Vrije Universiteit Amsterdam & Tinbergen Institute)
 
 ## Purpose of the Package
 
