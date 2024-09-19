@@ -410,7 +410,7 @@ class Kalman:
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
         
-        x_vals = np.linspace(0, 1, self.n)
+        x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
         
         if not individual:
             if self.p_dim == 1:
