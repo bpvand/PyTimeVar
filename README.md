@@ -38,8 +38,7 @@ Robinson (2012) (doi: 10.3150/10-BEJ349);
 
 
 ### State-space models
-Durbi
-n and Koopman (2012) (doi: 10.1093/acprof:oso/9780199641178.001.0001.)
+Durbin and Koopman (2012) (doi: 10.1093/acprof:oso/9780199641178.001.0001.)
 
 ### Score-drive models
 Creal et al. (2013) (doi: https://doi.org/10.1002/jae.1279);
