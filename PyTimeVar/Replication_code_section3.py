@@ -22,14 +22,13 @@ betaHatLLR = model.fit()
 model.summary()
 
 # plot trend and data
-model.plot_predicted()
+model.plot_predicted(tau=[0.4,0.8])
 
 # plot confidence bands using LBWB
 S_LB, S_UB, P_LB, P_UB = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
 # auxiliary LLR model to illustrate kernel, bandwidth selection, and tau
-tau = np.array([0, 0.5])
-model2LLR = LocalLinear(vY, mX, kernel='Gaussian', bw_selection='lmcv_8', tau=tau)
+model2LLR = LocalLinear(vY, mX, kernel='Gaussian', bw_selection='lmcv_8')
 beta_hat_model2 = model2LLR.fit()
 
 # illustrate boosted HP filter
@@ -42,15 +41,16 @@ bHPmodel.plot()
 
 # illustrate power-law trend
 from PyTimeVar import PowerLaw
-PwrLaw = PowerLaw(vY, n_powers=2)
+PwrLaw = PowerLaw(vY, n_powers=1)
 pwrTrend, pwrGamma = PwrLaw.fit()
 PwrLaw.summary()
 PwrLaw.plot()
 
 # auxiliary power-law model to illustrate options
-vgamma0 = np.arange(0, 0.1, 0.1)
+vgamma0 = np.arange(0, 0.1, 0.05)
 options = {'maxiter': 5E5, 'disp': False}
-auxPwr = PowerLaw(vY, n_powers=1, vgamma0=vgamma0, options=options)
+bounds = ((0,0),(-0.4, 9), )
+auxPwr = PowerLaw(vY, n_powers=2, vgamma0=vgamma0, bounds=bounds, options=options)
 auxPwrTrend, auxPwrGamma = auxPwr.fit()
 auxPwr.summary()
 
@@ -65,3 +65,18 @@ from PyTimeVar import GAS
 N_gasmodel = GAS(vY=vY, mX=mX, method='gaussian', niter=10)
 N_GAStrend, N_GASparams = N_gasmodel.fit()
 N_gasmodel.plot()
+
+
+# from PyTimeVar.datasets import co2
+# import numpy as np
+# data = co2.load(
+#     regions=['Austria'], start_date='1900', end_date='2023')
+# vY = data.values
+# mX = np.ones_like(vY)
+
+# from PyTimeVar import Kalman
+# kalmanmodel = Kalman(vY=vY)
+# [kl_filter, kl_predictor, kl_smoother] = kalmanmodel.fit('all')
+# kalmanmodel.plot(individual=True, tau=[0.1, 0.5])
+# kalmanmodel.summary()
+

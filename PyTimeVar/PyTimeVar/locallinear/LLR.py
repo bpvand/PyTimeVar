@@ -69,6 +69,11 @@ class LocalLinear:
         The fitted values for the response variable.
     residuals : np.ndarray
         The residuals resulting from the local linear regression.
+        
+    Raises
+    ------
+    ValueError
+        No valid bandwidth selection procedure is provided.
 
     Notes
     -----
@@ -130,9 +135,8 @@ class LocalLinear:
 
             if self.bw_selection not in ['all', 'aic', 'gcv']:
                 if self.bw_selection[:4] != 'lmcv':
-                    print(
-                        'Error: bandwidth selection method is invalid. \nPlease provide an expression from the following options: [\'all\', \'aic\', \'gcv\'] or use \'lmcv_l\'')
-                    exit(1)
+                    raise ValueError(
+                        'Bandwidth selection method is invalid. \nPlease provide an expression from the following options: [\'all\', \'aic\', \'gcv\'] or use \'lmcv_l\'')
                 else:
                     self.lmcv_type=self.bw_selection[5]
 
@@ -219,6 +223,11 @@ class LocalLinear:
         ----------
         u : np.ndarray
             An array of scaled distances.
+            
+        Raises
+        ------
+        ValueError
+            No valid kernel name is provided.
 
         Returns
         -------
@@ -1592,6 +1601,11 @@ class LocalLinear:
         B : int
             The number of bootstrap samples.
             Deafult is 1299, if not provided by the user.
+            
+        Raises
+        ------
+        ValueError
+            No valid bootstrap type is provided.
 
         Returns
         -------
@@ -1747,17 +1761,32 @@ class LocalLinear:
 
         """
         Plot the beta coefficients over a normalized x-axis from 0 to 1.
+        
+        Parameters
+        ----------
+        tau : list, optional
+            The list looks the  following: tau = [start,end].
+            The function will plot all data and estimates between start and end.
+            
+        Raises
+        ------
+        ValueError
+            No valid tau is provided.
+        
         """
-        tau_index=None
-        x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
+        tau_index = None
         if tau is None:
-
             tau_index=np.array([0,self.n])
         elif isinstance(tau, list):
             if min(tau) <= 0:
                 tau_index = np.array([int(0), int(max(tau) * self.n)])
             else:
                 tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+        else:
+            raise ValueError('The optional parameter tau is required to be a list.')
+            
+        x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
+        
         if self.n_est == 1:
     
             plt.figure(figsize=(12, 6))
@@ -1784,17 +1813,42 @@ class LocalLinear:
                 plt.legend(fontsize="x-large")
             plt.show()
     
-    def plot_predicted(self):
+    def plot_predicted(self, tau : list=None):
 
         """
         Plot the actual values of Y against the predicted values of Y over a normalized x-axis from 0 to 1.
+        
+        Parameters
+        ----------
+        tau : list, optional
+            The list looks the  following: tau = [start,end].
+            The function will plot all data and estimates between start and end.
+        
+        Raises
+        ------
+        ValueError
+            No valid tau is provided.
+        
         """
+        tau_index = None
+        if tau is None:
+            tau_index=np.array([0,self.n])
+        elif isinstance(tau, list):
+            if min(tau) <= 0:
+                tau_index = np.array([int(0), int(max(tau) * self.n)])
+            else:
+                tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+        else:
+            raise ValueError('The optional parameter tau is required to be a list.')
+            
         plt.figure(figsize=(12, 6))
 
         x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
+        
+        
 
-        plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
-        plt.plot(x_vals, self.predicted_y, label="Fit", linewidth=2)        
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2,color='black')
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.predicted_y[tau_index[0]:tau_index[1]], label="Fit", linewidth=2)        
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
         plt.tick_params(axis='both', labelsize=16)
@@ -1802,10 +1856,21 @@ class LocalLinear:
         
         plt.show()
 
-    def plot_residuals(self):
+    def plot_residuals(self, tau : list=None):
         '''
         Plot the residuals over a normalized x-axis from 0 to 1.
-
+        
+        Parameters
+        ----------
+        tau : list, optional
+            The list looks the  following: tau = [start,end].
+            The function will plot all data and estimates between start and end.
+        
+        Raises
+        ------
+        ValueError
+            No valid tau is provided.
+        
         Returns
         -------
         self.residuals : np.ndarray
@@ -1815,8 +1880,18 @@ class LocalLinear:
         plt.figure(figsize=(12, 6))
 
         x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
+        tau_index = None
+        if tau is None:
+            tau_index=np.array([0,self.n])
+        elif isinstance(tau, list):
+            if min(tau) <= 0:
+                tau_index = np.array([int(0), int(max(tau) * self.n)])
+            else:
+                tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+        else:
+            raise ValueError('The optional parameter tau is required to be a list.')
 
-        plt.plot(x_vals, self.residuals, label="Residuals")       
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.residuals[tau_index[0]:tau_index[1]], label="Residuals")       
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
         plt.tick_params(axis='both', labelsize=16)

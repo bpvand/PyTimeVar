@@ -54,6 +54,12 @@ class GAS:
     params : np.ndarray
         The estimated GAS parameters.
         
+    
+    Raises
+    ------
+    ValueError
+        No valid number of initial parameters is provided.
+    
 
     """
 
@@ -66,10 +72,10 @@ class GAS:
         self.vgamma0 = vgamma0
         if self.vgamma0 is not None:
             if self.method == 'gaussian' and len(self.vgamma0) == 3*self.n_est+1:
-                ValueError(
+                raise ValueError(
                     "Incorrect number of initial parameters are provided. Provide either 3*n_est + 1 or no initial parameters.")
             if self.method == 'student' and len(self.vgamma0) == 3*self.n_est + 2:
-                ValueError(
+                raise ValueError(
                     "Incorrect number of initial parameters are provided. Provide either 3*n_est + 2 or no initial parameters.")
 
         self.bounds = bounds
@@ -272,6 +278,17 @@ class GAS:
     def plot(self, tau: list = None):
         '''
         Plot the beta coefficients over a normalized x-axis from 0 to 1.
+        
+        Parameters
+        ----------
+        tau : list, optional
+            The list looks the  following: tau = [start,end].
+            The function will plot all data and estimates between start and end.
+            
+        Raises
+        ------
+        ValueError
+            No valid tau is provided.
 
         '''
         
@@ -285,6 +302,8 @@ class GAS:
                 tau_index = np.array([int(0), int(max(tau) * self.n)])
             else:
                 tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+        else:
+            raise ValueError('The optional parameter tau is required to be a list.')
         
         if self.n_est == 1:
     

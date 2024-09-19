@@ -327,11 +327,18 @@ If option=’all’, a list of trends is returned:</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.plot" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.plot" title="Link to this definition"></a></dt>
 <dd><p>Plot the estimated beta coefficients over a normalized x-axis from 0 to 1 or over a date range.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>individual</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the filtered states, the predictions, and smoothed states are shown in separate figures.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>individual</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the filtered states, the predictions, and smoothed states are shown in separate figures.</p></li>
+<li><p><strong>tau</strong> (<em>list</em><em>, </em><em>optional</em>) – The list looks the  following: tau = [start,end].
+The function will plot all data and estimates between start and end.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – No valid tau is provided.</p>
 </dd>
 </dl>
 </dd></dl>

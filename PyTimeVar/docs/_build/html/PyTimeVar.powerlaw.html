@@ -100,7 +100,7 @@
 <span id="pytimevar-powerlaw-pwr-module"></span><h2>PyTimeVar.powerlaw.pwr module<a class="headerlink" href="#module-PyTimeVar.powerlaw.pwr" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="PyTimeVar.powerlaw.pwr.PowerLaw">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PyTimeVar.powerlaw.pwr.</span></span><span class="sig-name descname"><span class="pre">PowerLaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_powers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vgamma0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/powerlaw/pwr.html#PowerLaw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.powerlaw.pwr.PowerLaw" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PyTimeVar.powerlaw.pwr.</span></span><span class="sig-name descname"><span class="pre">PowerLaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_powers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vgamma0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/powerlaw/pwr.html#PowerLaw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.powerlaw.pwr.PowerLaw" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for implementing the Power-Law method.</p>
 <dl class="field-list simple">
@@ -110,6 +110,7 @@
 <li><p><strong>n_powers</strong> (<em>int</em>) – The number of powers.</p></li>
 <li><p><strong>vgamma0</strong> (<em>np.ndarray</em>) – The initial parameter vector.</p></li>
 <li><p><strong>options</strong> (<em>dict</em>) – Stopping criteria for optimization.</p></li>
+<li><p><strong>bounds</strong> (<em>tuple</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -171,7 +172,7 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.powerlaw.pwr.PowerLaw.cons">
 <span class="sig-name descname"><span class="pre">cons</span></span><a class="headerlink" href="#PyTimeVar.powerlaw.pwr.PowerLaw.cons" title="Link to this definition"></a></dt>
-<dd><p>Dictionary to define constraints.</p>
+<dd><p>Dictionary that defines the constraints.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
@@ -212,6 +213,20 @@
 </dl>
 </dd></dl>
 
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – No valid bounds are provided.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>vY</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>n_powers</strong> (<em>float</em>)</p></li>
+<li><p><strong>vgamma0</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>bounds</strong> (<em>tuple</em>)</p></li>
+<li><p><strong>options</strong> (<em>dict</em>)</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.powerlaw.pwr.PowerLaw.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/powerlaw/pwr.html#PowerLaw.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.powerlaw.pwr.PowerLaw.fit" title="Link to this definition"></a></dt>
@@ -229,8 +244,17 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.powerlaw.pwr.PowerLaw.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/powerlaw/pwr.html#PowerLaw.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.powerlaw.pwr.PowerLaw.plot" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/powerlaw/pwr.html#PowerLaw.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.powerlaw.pwr.PowerLaw.plot" title="Link to this definition"></a></dt>
 <dd><p>Plots the original series and the trend component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tau</strong> (<em>list</em><em>, </em><em>optional</em>) – The list looks the  following: tau = [start,end].
+The function will plot all data and estimates between start and end.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – No valid tau is provided.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

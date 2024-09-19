@@ -97,6 +97,18 @@ class BoostedHP:
     def plot(self, tau: list = None):
         """
         Plots the true data against estimated trend
+        
+        Parameters
+        ----------
+        tau : list, optional
+            The list looks the  following: tau = [start,end].
+            The function will plot all data and estimates between start and end.
+            
+        Raises
+        ------
+        ValueError
+            No valid tau is provided.
+            
         """
         if self.results is None:
             print("Model is not fitted yet.")
@@ -112,6 +124,8 @@ class BoostedHP:
                 tau_index = np.array([int(0), int(max(tau) * self.n)])
             else:
                 tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+        else:
+            raise ValueError('The optional parameter tau is required to be a list.')
         
         _, _, _, _, vBHP = self.results
         plt.figure(figsize=(12, 6))

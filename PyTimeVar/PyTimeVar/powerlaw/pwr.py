@@ -30,7 +30,7 @@ class PowerLaw:
     bounds : list
         List to define parameter space.
     cons : dict
-        Dictionary to define constraints.
+        Dictionary that defines the constraints.
     trendHat : np.ndarray
         The estimated trend.
     gammaHat : np.ndarray
@@ -38,10 +38,15 @@ class PowerLaw:
     coeffHat : np.ndarray
         The estimated coefficients.
         
+    Raises
+    ------
+    ValueError
+        No valid bounds are provided.
+        
     
     """
 
-    def __init__(self, vY: np.ndarray, n_powers: float = None, vgamma0: np.ndarray=None, options: dict=None):
+    def __init__(self, vY: np.ndarray, n_powers: float = None, vgamma0: np.ndarray=None, bounds : tuple=None, options: dict=None):
         self.vY = vY.reshape(-1,1)
         self.n = len(self.vY)
         self.p = 2 if n_powers is None else n_powers
@@ -49,7 +54,10 @@ class PowerLaw:
             print('The number of powers is set to 2 by default. \nConsider setting n_powers to 3 or higher if a visual inspection of the data leads you to believe the trend is curly.\n')
 
         self.vgamma0 =vgamma0 if vgamma0 is not None else np.arange(0, 1*self.p, 1)
-        self.bounds = ((-0.495, 8),)*self.p
+        self.bounds = bounds if bounds is not None else ((-0.495, 8),)*self.p
+        for j in range(self.p):
+            if self.bounds[j][0]<= -0.5:
+                raise ValueError('Parameters are not identified if the power is smaller or equal than -1/2.\n The lower bounds need to be larger than -1/2.')
         self.options = options if options is not None else {'maxiter': 5E5}
         self.cons = {'type': 'ineq', 'fun': self._nonlcon}
 
@@ -57,19 +65,43 @@ class PowerLaw:
         self.gammaHat = None
         self.coeffHat = None
 
-    def plot(self):
+    def plot(self, tau : list=None):
         """
         Plots the original series and the trend component.
+        
+        Parameters
+        ----------
+        tau : list, optional
+            The list looks the  following: tau = [start,end].
+            The function will plot all data and estimates between start and end.
+            
+        Raises
+        ------
+        ValueError
+            No valid tau is provided.
+            
         """
         if self.trendHat is None:
             print("Model is not fitted yet.")
             return
         
         x_vals = np.linspace(0, 1, self.n)
+        tau_index=None
+        x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
+        if tau is None:
+
+            tau_index=np.array([0,self.n])
+        elif isinstance(tau, list):
+            if min(tau) <= 0:
+                tau_index = np.array([int(0), int(max(tau) * self.n)])
+            else:
+                tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+        else:
+            raise ValueError('The optional parameter tau is required to be a list.')
 
         plt.figure(figsize=(12, 6))
-        plt.plot(x_vals, self.vY, label="True data", linewidth=2, color = 'black')
-        plt.plot(x_vals, self.trendHat, label="Estimated $\\beta_{0}$", linestyle="--", linewidth=2)
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2, color = 'black')
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.trendHat[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$", linestyle="--", linewidth=2)
         
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
@@ -87,8 +119,11 @@ class PowerLaw:
         def term(coef, power):
             coef = coef if coef != 1 else ''
             coef, power = round(coef, 3), round(power, 3)
-            power = (f'^{power}') if power > 1 else ''
-            return f'{coef} t{power}'
+            if power >0:
+                power = (f'^{power}') if power > 1 else ''
+                return f'{coef} t{power}'
+            else:
+                return f'{coef}'
         terms = []
         for j in range(len(self.coeffHat)):
           if self.coeffHat[j][0] != 0:
@@ -109,7 +144,6 @@ class PowerLaw:
             The estimated power parameters.
 
         '''
-
         res = minimize(self._construct_pwrlaw_ssr, self.vgamma0,
                        bounds=self.bounds, constraints=self.cons, options=self.options)
         self.gammaHat = res.x.reshape(1, self.p)

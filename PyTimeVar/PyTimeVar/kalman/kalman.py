@@ -87,6 +87,8 @@ class Kalman:
             # Create a Z array that can be indexed by t to return the appropriate regressor
             self.Z_reg = np.array([self.mX[t]
                                   for t in range(self.mX.shape[0])])
+        else:
+            k=1
         
         self.T = np.array(self.T).reshape((k,k)) if self.T is not None else np.array(
             [[1]])                # Transition matrix
@@ -108,7 +110,7 @@ class Kalman:
         self.a_1 = np.array(b_1).reshape(k,) if b_1 is not None else np.zeros(
             self.T.shape[0])            # Initial state mean
         self.P_1 = np.array(P_1).reshape((k,k)) if P_1 is not None else np.eye(
-            self.T.shape[0])*100000       # Initial state covariance
+            self.T.shape[0])*1000      # Initial state covariance
         self.R = np.array(R).reshape((k,k)) if R is not None else np.eye(
             self.a_1.shape[0])         # Transition covariance matrix
         # Dimension of the state space
@@ -135,34 +137,35 @@ class Kalman:
 
         '''
         if self.bEst_H and self.bEst_Q:
-            vH_init, vQ_init = np.ones(
-                self.m_dim**2)*100, np.ones(self.p_dim**2)*100
+            vH_init, vQ_init = np.ones(1)*1, np.ones(self.p_dim**2)*1
             vTheta = np.hstack([vH_init, vQ_init])
         elif self.bEst_H and not self.bEst_Q:
-            vTheta = np.ones(self.m_dim**2)*100
+            vTheta = np.ones(1)*1
             mQ = self.Q
         elif not self.bEst_H and self.bEst_Q:
-            vTheta = np.ones(self.p_dim**2)*100
+            vTheta = np.ones(self.p_dim**2)*1
             mH = self.H
         else:
             return self.H, self.Q
-
-        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='SLSQP', bounds=(
-            (0.00001, None),)*len(vTheta), options={'maxiter': 3000})
+        
+        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='L-BFGS-B', bounds = ((1e-8, None),)*len(vTheta),options={'maxiter': 5e5})
         if LL_model.success == False:
             print('Optimization failed')
         else:
             print('Optimization success')
 
         if self.bEst_H and self.bEst_Q:
-            mH, mQ = LL_model.x[:self.m_dim**2].reshape(
-                self.m_dim, self.m_dim), LL_model.x[self.m_dim**2:].reshape(self.p_dim, self.p_dim)
+            mH, mQ = LL_model.x[0].reshape(1, 1), LL_model.x[1:].reshape(self.p_dim, self.p_dim)
         elif self.bEst_H and not self.bEst_Q:
-            mH = LL_model.x.reshape(self.m_dim, self.m_dim)
+            mH = LL_model.x.reshape(1,1)
         elif not self.bEst_H and self.bEst_Q:
             mQ = LL_model.x.reshape(self.p_dim, self.p_dim)
-
-        return np.array([[mH]]), np.array([[mQ]])
+        
+        k = self.T.shape[0]
+        mH = np.array(mH).reshape((1,1))
+        mQ = np.array(mQ).reshape((k,k))
+        
+        return mH, mQ
 
     def _compute_likelihood_LL(self, vTheta):
         '''
@@ -180,20 +183,17 @@ class Kalman:
 
         '''
         if self.bEst_H and self.bEst_Q:
-            self.H, self.Q = vTheta[:self.m_dim**2].reshape(
-                self.m_dim, self.m_dim), vTheta[self.m_dim**2:].reshape(self.p_dim, self.p_dim)
+            self.H, self.Q = vTheta[0].reshape(1,1), vTheta[1:].reshape(self.p_dim, self.p_dim)
         elif self.bEst_H and not self.bEst_Q:
-            self.H = vTheta.reshape(self.m_dim, self.m_dim)
+            self.H = vTheta.reshape(1,1)
         elif not self.bEst_H and self.bEst_Q:
             self.Q = vTheta.reshape(self.p_dim, self.p_dim)
-
+        
         a_filt, a_pred, P, v, F, K = self._KalmanFilter()
         dLL = -(self.n*self.m_dim/2)*np.log(2*np.pi)
         for t in range(self.n):
-            dLL = dLL - 0.5 * \
-                (np.linalg.det(F[t, :, :]) + v[t, :, :].T @
+            dLL = dLL - 0.5 * (np.log(np.linalg.det(F[t, :, :])) + v[t, :, :].T @
                  np.linalg.inv(F[t, :, :])@v[t, :, :])
-
         return -dLL
 
     def _KalmanFilter(self):
@@ -229,8 +229,11 @@ class Kalman:
             if self.isReg:
                 self.Z = self.Z_reg[t].reshape(1, -1)
             v[t] = self.vY[t] - self.Z @ a_pred[t]
+            # print('H',self.H)
+            # print('P',self.Z @ P[t] @ self.Z.T)
+            # print('F',self.Z @ P[t] @ self.Z.T + self.H)
             F[t] = self.Z @ P[t] @ self.Z.T + self.H
-
+            
             if not np.isnan(self.vY[t]):
                 mAux = P[t] @ self.Z.T @ np.linalg.inv(F[t])
                 K[t] = self.T @ mAux
@@ -242,7 +245,8 @@ class Kalman:
                 a_pred[t + 1] = self.T @ a_pred[t]
 
             P[t + 1] = self.T @ P[t] @ (self.T - K[t]
-                                        @ self.Z).T + self.R @ self.Q @ self.R.T
+                                        @ self.Z).T + self.R @ self.Q @ self.R.T  
+        
         return a_filt, a_pred, P, v, F, K
 
     def _filter(self):
@@ -377,7 +381,7 @@ class Kalman:
         print(f"T: {self.T}\n")
 
 
-    def plot(self, individual=False):
+    def plot(self, individual=False, tau: list = None):
         """
         Plot the estimated beta coefficients over a normalized x-axis from 0 to 1 or over a date range.
         
@@ -385,21 +389,39 @@ class Kalman:
         ----------
         individual : bool, optional
             If True, the filtered states, the predictions, and smoothed states are shown in separate figures.
+        tau : list, optional
+            The list looks the  following: tau = [start,end].
+            The function will plot all data and estimates between start and end.
+            
+        Raises
+        ------
+        ValueError
+            No valid tau is provided.
         
         """
-
+        tau_index = None
+        if tau is None:
+            tau_index=np.array([0,self.n])
+        elif isinstance(tau, list):
+            if min(tau) <= 0:
+                tau_index = np.array([int(0), int(max(tau) * self.n)])
+            else:
+                tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+        else:
+            raise ValueError('The optional parameter tau is required to be a list.')
+        
         x_vals = np.linspace(0, 1, self.n)
         
         if not individual:
             if self.p_dim == 1:
                 plt.figure(figsize=(12, 6))
-                plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
+                plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2,color='black')
                 if self.smooth is not None:
-                    plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
                 if self.pred is not None:
-                    plt.plot(x_vals[1:], self.pred[1:-1], label="Estimated $\\beta_{0}$ - Predictor", linestyle="-", linewidth=2)
+                    plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1]], label="Estimated $\\beta_{0}$ - Predictor", linestyle="-", linewidth=2)
                 if self.filt is not None:
-                    plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="-.", linewidth=2)
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], self.filt[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - Filter", linestyle="-.", linewidth=2)
                 
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")
@@ -413,11 +435,11 @@ class Kalman:
                 for i in range(self.p_dim):
                     plt.subplot(self.p_dim, 1, i + 1)
                     if self.smooth is not None:
-                        plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
+                        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[tau_index[0]:tau_index[1], i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
                     if self.smooth is not None:
-                        plt.plot(x_vals[1:], self.pred[1:-1, i], label="Estimated $\\beta_{0}$ - Predictor", linestyle="-", linewidth=2)
+                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1], i], label="Estimated $\\beta_{0}$ - Predictor", linestyle="-", linewidth=2)
                     if self.filt is not None:
-                        plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-.", linewidth=2)
+                        plt.plot(x_vals, self.filt[tau_index[0]:tau_index[1], i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-.", linewidth=2)
     
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
@@ -430,8 +452,8 @@ class Kalman:
             if self.p_dim == 1:
                 if self.smooth is not None:
                     plt.figure(figsize=(12, 6))
-                    plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
-                    plt.plot(x_vals, self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2,color='black')
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -441,8 +463,8 @@ class Kalman:
                     
                 if self.pred is not None:
                     plt.figure(figsize=(12, 6))
-                    plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
-                    plt.plot(x_vals[1:], self.pred[1:-1], label="Estimated $\\beta_{0}$ - Predictor", linestyle="--", linewidth=2)
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2,color='black')
+                    plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1]], label="Estimated $\\beta_{0}$ - Predictor", linestyle="--", linewidth=2)
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -452,8 +474,8 @@ class Kalman:
                     
                 if self.filt is not None:
                     plt.figure(figsize=(12, 6))
-                    plt.plot(x_vals, self.vY, label="True data", linewidth=2,color='black')
-                    plt.plot(x_vals, self.filt[:], label="Estimated $\\beta_{0}$ - Filter", linestyle="--", linewidth=2)
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2,color='black')
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], self.filt[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - Filter", linestyle="--", linewidth=2)
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -467,7 +489,7 @@ class Kalman:
                     plt.figure(figsize=(10, 6 * self.p_dim))
                     for i in range(self.p_dim):
                         plt.subplot(self.p_dim, 1, i + 1)
-                        plt.plot(x_vals, self.smooth[:, i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
+                        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[tau_index[0]:tau_index[1], i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -478,7 +500,7 @@ class Kalman:
                     plt.figure(figsize=(10, 6 * self.p_dim))
                     for i in range(self.p_dim):
                         plt.subplot(self.p_dim, 1, i + 1)
-                        plt.plot(x_vals[1:], self.pred[1:-1, i], label="Estimated $\\beta_{0}$ - Predictor", linestyle="--", linewidth=2)
+                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1], i], label="Estimated $\\beta_{0}$ - Predictor", linestyle="--", linewidth=2)
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -489,7 +511,7 @@ class Kalman:
                     plt.figure(figsize=(10, 6 * self.p_dim))
                     for i in range(self.p_dim):
                         plt.subplot(self.p_dim, 1, i + 1)
-                        plt.plot(x_vals, self.filt[:, i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="--", linewidth=2)
+                        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.filt[tau_index[0]:tau_index[1], i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="--", linewidth=2)
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
         
