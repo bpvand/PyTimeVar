@@ -1,6 +1,8 @@
 # PyTimeVar: A Python package for Trending Time-Varying Time Series Models
 <!-- badges: start -->
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![PyPI](https://img.shields.io/pypi/v/PyTimeVar?label=pypi%20package)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/PyTimeVar)
 <!-- badges: end -->
 Authors: Mingxuan Song, Bernhard van der Sluis, Yicong Lin
 
