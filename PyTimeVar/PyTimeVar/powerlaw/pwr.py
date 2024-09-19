@@ -85,7 +85,7 @@ class PowerLaw:
             print("Model is not fitted yet.")
             return
         
-        x_vals = np.linspace(0, 1, self.n)
+        
         tau_index=None
         x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
         if tau is None:
