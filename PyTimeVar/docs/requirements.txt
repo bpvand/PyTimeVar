@@ -4,5 +4,5 @@ matplotlib
 scipy
 statsmodels 
 tqdm
-autoducsumm==0.2.13
+autodocsumm==0.2.13
 sphinx_mdinclude 
