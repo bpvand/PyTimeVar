@@ -146,6 +146,7 @@ class LocalLinear:
 
             if bw_selection is None:
                 self.dict_bw = self._bandwidth_selection(LB_bw, UB_bw)
+                print('\n')
                 print("=" * 60)
                 print('Optimal bandwidth selected by individual method:')
                 print('- AIC method:', format(self.dict_bw['aic'], '.4f'))
@@ -167,6 +168,7 @@ class LocalLinear:
 
             elif self.bw_selection[:4] == 'lmcv':
                 self.h = self._bandwidth_selection(LB_bw, UB_bw)
+                print('\n')
                 print(f'- LMCV-{self.lmcv_type} method: ', format(self.h,'.4f'))
                 print(f'Optimal bandwidth used is {self.bw_selection}: {self.h: .4f}')
                 print("=" * 60)
@@ -178,6 +180,7 @@ class LocalLinear:
             # self.h = self.dict_bw[self.bw_selection]
             elif self.bw_selection == 'all':
                 self.dict_bw = self._bandwidth_selection(LB_bw, UB_bw)
+                print('\n')
                 print("=" * 60)
                 print('Optimal bandwidth selected by individual method:')
                 print('- AIC method:', format(self.dict_bw['aic'], '.4f'))
@@ -622,7 +625,8 @@ class LocalLinear:
         vh = np.arange(LB_bw, UB_bw, 0.005)
         
         betasss = np.zeros(shape=(len(vh), self.n_est, self.n))
-        for index, h in enumerate(vh):
+        print('Progress LMCV:')
+        for index, h in enumerate(tqdm(vh)):
             betasss[index] = self._beta_estimation_lmcv(
                 h, tau=self.times, lmcv_type=lmcv_type)
 
@@ -656,7 +660,7 @@ class LocalLinear:
             return self._get_optimalh_lmcv(self.lmcv_type, LB_bw, UB_bw)
         h = []
         lmcv_types = [0, 2, 4, 6]
-        for r in tqdm(range(len(lmcv_types))):
+        for r in range(len(lmcv_types)):
             lmcv_type = lmcv_types[r]
             h.append(self._get_optimalh_lmcv(lmcv_type, LB_bw, UB_bw))
         AVG = np.mean(h)

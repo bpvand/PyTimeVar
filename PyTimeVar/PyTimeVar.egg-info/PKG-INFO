@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: PyTimeVar
-Version: 0.0.10
+Version: 0.0.11
 Summary: The PyTimeVar package offers state-of-the-art estimation and statistical inference methods for time series regression models with flexible trends and/or time- varying coefficients.
 Home-page: https://github.com/bpvand/PyTimeVar
 Author: Mingxuan Song, Bernhard van der Sluis, Yicong Lin
@@ -8,6 +8,7 @@ Author-email: 678270ms@eur.nl, vandersluis@ese.eur.nl, yc.lin@vu.nl
 License: GPLv3+
 Keywords: time-varying,bootstrap,nonparametric estimation,filtering
 Requires-Python: >=3.9
+Description-Content-Type: text/markdown
 License-File: LICENSE.txt
 Requires-Dist: numpy
 Requires-Dist: pandas
