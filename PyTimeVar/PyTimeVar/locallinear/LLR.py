@@ -625,7 +625,7 @@ class LocalLinear:
         vh = np.arange(LB_bw, UB_bw, 0.005)
         
         betasss = np.zeros(shape=(len(vh), self.n_est, self.n))
-        print('Progress LMCV:')
+        print(f'Progress LMCV-{lmcv_type}:')
         for index, h in enumerate(tqdm(vh)):
             betasss[index] = self._beta_estimation_lmcv(
                 h, tau=self.times, lmcv_type=lmcv_type)
