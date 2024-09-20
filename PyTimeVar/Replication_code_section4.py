@@ -39,7 +39,7 @@ kalmanmodel = Kalman(vY=vY, mX=mX)
 smooth_trend = kalmanmodel.fit('smoother')
 
 ############### Replication code for Figure 7
-x_axis_trend =np.arange(0,1,1/len(vY))
+x_axis_trend = np.arange(1/len(vY),(len(vY)+1)/len(vY),1/len(vY))
 plt.figure(figsize=(14, 6))
 
 line2, = plt.plot(x_axis_trend, vY, label='True data',color='black')
