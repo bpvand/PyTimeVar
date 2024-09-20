@@ -7,3 +7,4 @@ tqdm
 autodocsumm==0.2.13
 sphinx_mdinclude 
 sphinx-rtd-theme
+pathlib
