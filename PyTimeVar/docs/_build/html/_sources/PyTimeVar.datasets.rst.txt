@@ -11,6 +11,7 @@ Subpackages
    PyTimeVar.datasets.herding
    PyTimeVar.datasets.temperature
    PyTimeVar.datasets.usd
+   PyTimeVar.datasets.inflation
 
 Submodules
 ----------

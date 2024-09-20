@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyTimeVar.datasets.usd package &mdash; PyTimeVar 0.0.10 documentation</title>
+  <title>PyTimeVar.datasets.inflation package &mdash; PyTimeVar 0.0.10 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -21,8 +21,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="PyTimeVar.datasets.inflation package" href="PyTimeVar.datasets.inflation.html" />
-    <link rel="prev" title="PyTimeVar.datasets.temperature package" href="PyTimeVar.datasets.temperature.html" /> 
+    <link rel="next" title="PyTimeVar.gas package" href="PyTimeVar.gas.html" />
+    <link rel="prev" title="PyTimeVar.datasets.usd package" href="PyTimeVar.datasets.usd.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -83,9 +83,9 @@
           <li class="breadcrumb-item"><a href="modules.html">PyTimeVar</a></li>
           <li class="breadcrumb-item"><a href="PyTimeVar.html">PyTimeVar package</a></li>
           <li class="breadcrumb-item"><a href="PyTimeVar.datasets.html">PyTimeVar.datasets package</a></li>
-      <li class="breadcrumb-item active">PyTimeVar.datasets.usd package</li>
+      <li class="breadcrumb-item active">PyTimeVar.datasets.inflation package</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/PyTimeVar.datasets.usd.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/PyTimeVar.datasets.inflation.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -93,49 +93,43 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pytimevar-datasets-usd-package">
-<h1>PyTimeVar.datasets.usd package<a class="headerlink" href="#pytimevar-datasets-usd-package" title="Link to this heading"></a></h1>
+  <section id="pytimevar-datasets-inflation-package">
+<h1>PyTimeVar.datasets.inflation package<a class="headerlink" href="#pytimevar-datasets-inflation-package" title="Link to this heading"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="module-PyTimeVar.datasets.usd.data">
-<span id="pytimevar-datasets-usd-data-module"></span><h2>PyTimeVar.datasets.usd.data module<a class="headerlink" href="#module-PyTimeVar.datasets.usd.data" title="Link to this heading"></a></h2>
+<section id="module-PyTimeVar.datasets.inflation.data">
+<span id="pytimevar-datasets-inflation-data-module"></span><h2>PyTimeVar.datasets.inflation.data module<a class="headerlink" href="#module-PyTimeVar.datasets.inflation.data" title="Link to this heading"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="PyTimeVar.datasets.usd.data.load">
-<span class="sig-prename descclassname"><span class="pre">PyTimeVar.datasets.usd.data.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Open'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/datasets/usd/data.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.datasets.usd.data.load" title="Link to this definition"></a></dt>
-<dd><p>Load the USD index dataset and optionally filter by date range.
-This dataset contains the USD index data from 1961 to 2023.</p>
+<dt class="sig sig-object py" id="PyTimeVar.datasets.inflation.data.load">
+<span class="sig-prename descclassname"><span class="pre">PyTimeVar.datasets.inflation.data.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/datasets/inflation/data.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.datasets.inflation.data.load" title="Link to this definition"></a></dt>
+<dd><p>Load the inflation dataset, construct inflation rate dataset and optionally filter by date range.
+This dataset contains the inflation rate data from 1947 to 2024.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start_date</strong> (<em>str</em><em>, </em><em>optional</em>) – The start date to filter the data.
-Format ‘YYYY-MM-DD’.
-Minimum start date is 2015-01-20.</p></li>
-<li><p><strong>end_date</strong> (<em>str</em><em>, </em><em>optional</em>) – The end date to filter the data.
-Format ‘YYYY-MM-DD’.
-Maximum end date is 2024-09-06.</p></li>
-<li><p><strong>type</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of data to load.
-Available options are:
-[‘Open’, ‘High’, ‘Low’, ‘Close’]</p></li>
+<li><p><strong>start_date</strong> (<em>str</em><em>, </em><em>optional</em>) – The start year-month to filter the data.
+Format ‘YYYY-MM’.
+Minimum start year-month is 1947-02.</p></li>
+<li><p><strong>end_date</strong> (<em>str</em><em>, </em><em>optional</em>) – The end year-month to filter the data.
+Format ‘YYYY’.
+Maximum end year is 2024-08.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>DataFrame containing the filtered data.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>pandas.DataFrame</em> – DataFrame containing the filtered data with columns ‘Date’ and CPIAUCSI.</p></li>
+<li><p><em>Warnings</em></p></li>
+<li><p><em>Prints warnings if the start year is earlier than the minimum year in the data or the end year is later than the maximum year in the data.</em></p></li>
+</ul>
+</p>
 </dd>
 </dl>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Prints warnings if any provided currencies are not found in the dataset.
-Prints warnings if the start_date is earlier than the minimum date in the data or the end_date is later than the maximum date in the data.</p>
-</div>
 </dd></dl>
 
 </section>
-<section id="module-PyTimeVar.datasets.usd">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-PyTimeVar.datasets.usd" title="Link to this heading"></a></h2>
+<section id="module-PyTimeVar.datasets.inflation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-PyTimeVar.datasets.inflation" title="Link to this heading"></a></h2>
 </section>
 </section>
 
@@ -143,8 +137,8 @@ Prints warnings if the start_date is earlier than the minimum date in the data o
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="PyTimeVar.datasets.temperature.html" class="btn btn-neutral float-left" title="PyTimeVar.datasets.temperature package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="PyTimeVar.datasets.inflation.html" class="btn btn-neutral float-right" title="PyTimeVar.datasets.inflation package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="PyTimeVar.datasets.usd.html" class="btn btn-neutral float-left" title="PyTimeVar.datasets.usd package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PyTimeVar.gas.html" class="btn btn-neutral float-right" title="PyTimeVar.gas package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
