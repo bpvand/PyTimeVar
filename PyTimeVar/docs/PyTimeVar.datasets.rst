@@ -8,7 +8,6 @@ Subpackages
    :maxdepth: 4
 
    PyTimeVar.datasets.co2
-   PyTimeVar.datasets.gold
    PyTimeVar.datasets.herding
    PyTimeVar.datasets.temperature
    PyTimeVar.datasets.usd

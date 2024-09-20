@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Readme File &mdash; PyTimeVar 0.0.9 documentation</title>
+  <title>Readme File &mdash; PyTimeVar 0.0.10 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=f7cdbf68"></script>
+        <script src="_static/documentation_options.js?v=a83ce22a"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -47,9 +47,9 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Readme File</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#pytimevar-a-python-package-for-trending-time-varying-time-series-models">PyTimeVar: A Python package for Trending Time-Varying Time Series Models</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#purpose-of-the-package">Purpose of the Package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#local-linear-regression-and-bootstrap-inference">Local linear regression and bootstrap inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pytimevar-a-python-package-for-trending-time-varying-time-series-models">PyTimeVar: A Python Package for Trending Time-Varying Time Series Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#purpose-of-the-package">Purpose of the package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#local-linear-kernel-estimation-and-bootstrap-inference">Local linear kernel estimation and bootstrap inference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#boosted-hp-filter">Boosted HP filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#power-law-trend-models">Power-law trend models</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#state-space-models">State-space models</a></li>
@@ -57,7 +57,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#support">Support</a></li>
 </ul>
 </li>
@@ -92,52 +92,59 @@
 <h1>Readme File<a class="headerlink" href="#readme-file" title="Link to this heading"></a></h1>
 </section>
 <section id="pytimevar-a-python-package-for-trending-time-varying-time-series-models">
-<h1>PyTimeVar: A Python package for Trending Time-Varying Time Series Models<a class="headerlink" href="#pytimevar-a-python-package-for-trending-time-varying-time-series-models" title="Link to this heading"></a></h1>
-<p>Authors: Mingxuan Song, Bernhard van der Sluis, Yicong Lin</p>
+<h1>PyTimeVar: A Python Package for Trending Time-Varying Time Series Models<a class="headerlink" href="#pytimevar-a-python-package-for-trending-time-varying-time-series-models" title="Link to this heading"></a></h1>
+<!-- badges: start --><a class="reference external image-reference" href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg" />
+</a>
+<a class="reference external image-reference" href="https://img.shields.io/pypi/v/PyTimeVar?label=pypi%20package"><img alt="PyPI" src="https://img.shields.io/pypi/v/PyTimeVar?label=pypi%20package" />
+</a>
+<a class="reference external image-reference" href="https://img.shields.io/pypi/dm/PyTimeVar"><img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/PyTimeVar" />
+</a>
+<!-- badges: end --><p>Authors: Mingxuan Song (<a class="reference external" href="mailto:m3&#46;song&#37;&#52;&#48;student&#46;vu&#46;nl">m3<span>&#46;</span>song<span>&#64;</span>student<span>&#46;</span>vu<span>&#46;</span>nl</a>, Vrije Universiteit Amsterdam), Bernhard van der Sluis (<a class="reference external" href="mailto:vandersluis&#37;&#52;&#48;ese&#46;eur&#46;nl">vandersluis<span>&#64;</span>ese<span>&#46;</span>eur<span>&#46;</span>nl</a>, Erasmus Universiteit Rotterdam), and Yicong Lin (<a class="reference external" href="mailto:yc&#46;lin&#37;&#52;&#48;vu&#46;nl">yc<span>&#46;</span>lin<span>&#64;</span>vu<span>&#46;</span>nl</a>, Vrije Universiteit Amsterdam &amp; Tinbergen Institute)</p>
 <section id="purpose-of-the-package">
-<h2>Purpose of the Package<a class="headerlink" href="#purpose-of-the-package" title="Link to this heading"></a></h2>
-<p>The PyTimeVar package offers state-of-the-art estimation and statistical inference methods for time series regression models with flexible trends and/or time-
-varying coefficients. The package implements nonparametric estimation along with multiple new bootstrap-assisted inference methods.
-It provides a range of bootstrap techniques for constructing pointwise confidence intervals and simultaneous bands for parameter curves.
-Additionally, the package includes four widely used methods for modeling trends and time-varying relationships.
-This allows users to compare different approaches within a unified environment.</p>
-<p>The package is build upon the methods of several papers and books. We list the key references below.</p>
-<section id="local-linear-regression-and-bootstrap-inference">
-<h3>Local linear regression and bootstrap inference<a class="headerlink" href="#local-linear-regression-and-bootstrap-inference" title="Link to this heading"></a></h3>
-<p>Bühlmann (1998) (doi: 10.1214/aos/1030563978); Zhou and Wu (2010) (doi: <a class="reference external" href="https://doi.org/10.1111/j.1467-9868.2010.00743.x">https://doi.org/10.1111/j.1467-9868.2010.00743.x</a>); Friedrich et al. (2020, doi: <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2019.05.006">https://doi.org/10.1016/j.jeconom.2019.05.006</a>); Friedrich
-and Lin (2024, <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2022.09.004">https://doi.org/10.1016/j.jeconom.2022.09.004</a>); Lin et al. (2024) (doi: <a class="reference external" href="https://doi.org/10.1080/10618600.2024.2403705">https://doi.org/10.1080/10618600.2024.2403705</a>)</p>
+<h2>Purpose of the package<a class="headerlink" href="#purpose-of-the-package" title="Link to this heading"></a></h2>
+<p>The PyTimeVar package offers state-of-the-art estimation and statistical inference methods for time series regression models with flexible trends and/or time-varying coefficients. The package implements nonparametric estimation along with multiple recently proposed bootstrap-assisted inference methods. Pointwise confidence intervals and simultaneous bands of parameter curves via bootstrap can be easily obtained using user-friendly commands. The package also includes four commonly used methods for modeling trends and time-varying relationships: boosted Hodrick-Prescot filter, power-law trend models, state-space models, and score-driven models. This allows users to compare different approaches within a unified environment.</p>
+<p>The package is built upon several papers and books. We list the key references below.</p>
+<section id="local-linear-kernel-estimation-and-bootstrap-inference">
+<h3>Local linear kernel estimation and bootstrap inference<a class="headerlink" href="#local-linear-kernel-estimation-and-bootstrap-inference" title="Link to this heading"></a></h3>
+<p>Friedrich and Lin (2024) (doi: <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2022.09.004">https://doi.org/10.1016/j.jeconom.2022.09.004</a>);
+Lin et al. (2024) (doi: <a class="reference external" href="https://doi.org/10.1080/10618600.2024.2403705">https://doi.org/10.1080/10618600.2024.2403705</a>);
+Friedrich et al. (2020) (doi: <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2019.05.006">https://doi.org/10.1016/j.jeconom.2019.05.006</a>);
+Smeekes and Urbain (2014) (doi: <a class="reference external" href="https://doi.org/10.26481/umagsb.2014008">https://doi.org/10.26481/umagsb.2014008</a>)
+Zhou and Wu (2010) (doi: <a class="reference external" href="https://doi.org/10.1111/j.1467-9868.2010.00743.x">https://doi.org/10.1111/j.1467-9868.2010.00743.x</a>);
+Bühlmann (1998) (doi: <a class="reference external" href="https://doi.org/10.1214/aos/1030563978">https://doi.org/10.1214/aos/1030563978</a>);</p>
 </section>
 <section id="boosted-hp-filter">
 <h3>Boosted HP filter<a class="headerlink" href="#boosted-hp-filter" title="Link to this heading"></a></h3>
-<p>Phillips and Shi (2021) (doi: <a class="reference external" href="https://doi.org/10.1111/iere.12495">https://doi.org/10.1111/iere.12495</a>);  Mei et al. (2024) (doi: doi:https://doi.org/10.1002/jae)
-3086)</p>
+<p>Mei et al. (2024) (doi: doi: <a class="reference external" href="https://doi.org/10.1002/jae.3086">https://doi.org/10.1002/jae.3086</a>);
+Biswas et al. (2024) (doi: <a class="reference external" href="https://doi.org/10.1080/07474938.2024.2380704">https://doi.org/10.1080/07474938.2024.2380704</a>);
+Phillips and Shi (2021) (doi: <a class="reference external" href="https://doi.org/10.1111/iere.12495">https://doi.org/10.1111/iere.12495</a>);</p>
 </section>
 <section id="power-law-trend-models">
 <h3>Power-law trend models<a class="headerlink" href="#power-law-trend-models" title="Link to this heading"></a></h3>
-<p>Robinson (2012) (doi: 10.3150/10-BEJ349); Lin and Reuvers (2024)</p>
+<p>Lin and Reuvers (2024) (<a class="reference external" href="https://tinbergen.nl/discussion-paper/6214/22-092-iii-cointegrating-polynomial-regressions-with-power-law-trends-environmental-kuznets-curve-or-omitted-time-effects">https://tinbergen.nl/discussion-paper/6214/22-092-iii-cointegrating-polynomial-regressions-with-power-law-trends-environmental-kuznets-curve-or-omitted-time-effects</a>);
+Robinson (2012) (doi: <a class="reference external" href="https://doi.org/10.3150/10-BEJ349">https://doi.org/10.3150/10-BEJ349</a>);</p>
 </section>
 <section id="state-space-models">
 <h3>State-space models<a class="headerlink" href="#state-space-models" title="Link to this heading"></a></h3>
-<p>Durbin and Koopman (2012) (doi: 10.1093/acprof:oso/9780199641178.001.0001.)</p>
+<p>Durbin and Koopman (2012) (doi: <a class="reference external" href="https://doi.org/10.1093/acprof:oso/9780199641178.001.0001">https://doi.org/10.1093/acprof:oso/9780199641178.001.0001</a>)</p>
 </section>
 <section id="score-drive-models">
 <h3>Score-drive models<a class="headerlink" href="#score-drive-models" title="Link to this heading"></a></h3>
-<p>Harvey (2013) (doi:
-<a class="reference external" href="https://doi.org/10.1017/CBO9781139540933">https://doi.org/10.1017/CBO9781139540933</a>); Creal et al. (2013) (doi: <a class="reference external" href="https://doi.org/10">https://doi.org/10</a>.
-1002/jae.1279.)</p>
+<p>Creal et al. (2013) (doi: <a class="reference external" href="https://doi.org/10.1002/jae.1279">https://doi.org/10.1002/jae.1279</a>);
+Harvey (2013) (doi: <a class="reference external" href="https://doi.org/10.1017/CBO9781139540933">https://doi.org/10.1017/CBO9781139540933</a>);</p>
 </section>
 </section>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Nonparametric estimation of time-varying time series models, along with multiple bootstrap-assisted inference methods</p></li>
-<li><p>Alternative estimation methods for modelling trend and time-varying relationships.</p></li>
+<li><p>Nonparametric estimation of time-varying time series models, along with various bootstrap-assisted methods for inference, including local blockwise wild bootstrap, wild bootstrap, sieve bootstrap, sieve wild bootstrap, autoregressive wild bootstrap</p></li>
+<li><p>Alternative estimation methods for modeling trend and time-varying relationships, including boosted HP filter, power-law trend models, state-space, and score-driven models.</p></li>
 <li><p>Unified framework for comparison of methods.</p></li>
-<li><p>Four datasets for illustration.</p></li>
+<li><p>Multiple datasets for illustration.</p></li>
 </ul>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
 <p>The PyTimeVar can implemented as a PyPI package. To download the package in your Python environment, use the following command:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">PyTimeVar</span>
 </pre></div>
@@ -145,8 +152,11 @@ and Lin (2024, <a class="reference external" href="https://doi.org/10.1016/j.jec
 </section>
 <section id="support">
 <h2>Support<a class="headerlink" href="#support" title="Link to this heading"></a></h2>
-<p>The documentation of the package can found at the github repository <a class="reference external" href="https://github.com/bpvand/PyTimeVar">https://github.com/bpvand/PyTimeVar</a>, and at ReadTheDocs <a class="reference external" href="https://pytimevar.readthedocs.io/en/latest/">https://pytimevar.readthedocs.io/en/latest/</a>
-Any questions and comments on the PyTimeVar package can be raised via email to <a class="reference external" href="mailto:vandersluis&#37;&#52;&#48;ese&#46;eur&#46;nl">vandersluis<span>&#64;</span>ese<span>&#46;</span>eur<span>&#46;</span>nl</a>.</p>
+<p>The documentation of the package can be found at the GitHub repository <a class="reference external" href="https://github.com/bpvand/PyTimeVar">https://github.com/bpvand/PyTimeVar</a>, and ReadTheDocs <a class="reference external" href="https://pytimevar.readthedocs.io/en/latest/">https://pytimevar.readthedocs.io/en/latest/</a>.</p>
+<p>For any questions or feedback regarding the PyTimeVar package, please feel free to contact the authors via email:
+<a class="reference external" href="mailto:m3&#46;song&#37;&#52;&#48;student&#46;vu&#46;nl">m3<span>&#46;</span>song<span>&#64;</span>student<span>&#46;</span>vu<span>&#46;</span>nl</a>;
+<a class="reference external" href="mailto:vandersluis&#37;&#52;&#48;ese&#46;eur&#46;nl">vandersluis<span>&#64;</span>ese<span>&#46;</span>eur<span>&#46;</span>nl</a>;
+<a class="reference external" href="mailto:yc&#46;lin&#37;&#52;&#48;vu&#46;nl">yc<span>&#46;</span>lin<span>&#64;</span>vu<span>&#46;</span>nl</a>.</p>
 </section>
 </section>
 

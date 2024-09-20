@@ -48,8 +48,8 @@ PwrLaw.plot()
 
 # auxiliary power-law model to illustrate options
 vgamma0 = np.arange(0, 0.1, 0.05)
-options = {'maxiter': 5E5, 'disp': False}
-bounds = ((0,0),(-0.4, 9), )
+options = {'maxiter': 1E3, 'disp': False}
+bounds = ((0,0),(0.1, 5), )
 auxPwr = PowerLaw(vY, n_powers=2, vgamma0=vgamma0, bounds=bounds, options=options)
 auxPwrTrend, auxPwrGamma = auxPwr.fit()
 auxPwr.summary()
@@ -65,18 +65,4 @@ from PyTimeVar import GAS
 N_gasmodel = GAS(vY=vY, mX=mX, method='gaussian', niter=10)
 N_GAStrend, N_GASparams = N_gasmodel.fit()
 N_gasmodel.plot()
-
-
-# from PyTimeVar.datasets import co2
-# import numpy as np
-# data = co2.load(
-#     regions=['Austria'], start_date='1900', end_date='2023')
-# vY = data.values
-# mX = np.ones_like(vY)
-
-# from PyTimeVar import Kalman
-# kalmanmodel = Kalman(vY=vY)
-# [kl_filter, kl_predictor, kl_smoother] = kalmanmodel.fit('all')
-# kalmanmodel.plot(individual=True, tau=[0.1, 0.5])
-# kalmanmodel.summary()
 

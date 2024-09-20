@@ -1804,7 +1804,7 @@ class LocalLinear:
             for i in range(self.n_est):
                 plt.subplot(self.n_est, 1, i + 1)
                 plt.plot(x_vals[tau_index[0]:tau_index[1]], self.betahat[i][tau_index[0]:tau_index[1]],
-                            label=f'Estimated $\\beta_{i}$', color='black')
+                            label=f'Estimated $\\beta_{i}$', linestyle="--", color='black')
 
                 
                 plt.grid(linestyle='dashed')
@@ -1848,7 +1848,7 @@ class LocalLinear:
         
 
         plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2,color='black')
-        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.predicted_y[tau_index[0]:tau_index[1]], label="Fit", linewidth=2)        
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.predicted_y[tau_index[0]:tau_index[1]], label="Fit", linestyle="--", linewidth=2)        
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
         plt.tick_params(axis='both', labelsize=16)
@@ -1891,7 +1891,7 @@ class LocalLinear:
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
 
-        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.residuals[tau_index[0]:tau_index[1]], label="Residuals")       
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.residuals[tau_index[0]:tau_index[1]], linestyle="--", label="Residuals")       
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
         plt.tick_params(axis='both', labelsize=16)

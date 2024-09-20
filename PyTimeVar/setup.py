@@ -6,14 +6,14 @@ def read(fname):
 
 setuptools.setup(
     name='PyTimeVar',
-    version="0.0.9",
+    version="0.0.10",
     author='Mingxuan Song, Bernhard van der Sluis, Yicong Lin',
     author_email='678270ms@eur.nl, vandersluis@ese.eur.nl, yc.lin@vu.nl',
     description = ("The PyTimeVar package offers state-of-the-art estimation and statistical inference methods for time series regression models with flexible trends and/or time- varying coefficients."),
     python_requires=">=3.9",
     keywords = 'time-varying, bootstrap, nonparametric estimation, filtering',
     packages=['PyTimeVar', 'PyTimeVar.bhpfilter', 'PyTimeVar.locallinear','PyTimeVar.kalman', 'PyTimeVar.powerlaw', 'PyTimeVar.gas', 'PyTimeVar.datasets', \
-              'PyTimeVar.datasets.co2', 'PyTimeVar.datasets.gold', 'PyTimeVar.datasets.herding','PyTimeVar.datasets.temperature', 'PyTimeVar.datasets.usd'],
+              'PyTimeVar.datasets.co2', 'PyTimeVar.datasets.inflation', 'PyTimeVar.datasets.herding','PyTimeVar.datasets.temperature', 'PyTimeVar.datasets.usd'],
     install_requires=['numpy', 'pandas', 'matplotlib',
                       'scipy', 'statsmodels', 'tqdm'],
     long_description=read('README.md'),

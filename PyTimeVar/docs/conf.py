@@ -23,7 +23,7 @@ copyright = '2024, Mingxuan Song, Bernhard van der Sluis, Yicong Lin'
 author = 'Mingxuan Song, Bernhard van der Sluis, Yicong Lin'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.9'
+release = '0.0.10'
 
 
 # -- General configuration ---------------------------------------------------
