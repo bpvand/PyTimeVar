@@ -308,7 +308,7 @@ class GAS:
         if self.n_est == 1:
     
             plt.figure(figsize=(12, 6))
-            plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2,color='black')
+            plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=1,color='black')
             if self.method=='student':
                 plt.plot(x_vals[tau_index[0]:tau_index[1]], self.betas[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - tGAS", linestyle="--", linewidth=2)
             elif self.method=='gaussian':

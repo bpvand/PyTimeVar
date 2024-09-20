@@ -655,7 +655,9 @@ class LocalLinear:
         if self.bw_selection != 'all':
             return self._get_optimalh_lmcv(self.lmcv_type, LB_bw, UB_bw)
         h = []
-        for lmcv_type in [0, 2, 4, 6]:
+        lmcv_types = [0, 2, 4, 6]
+        for r in tqdm(range(len(lmcv_types))):
+            lmcv_type = lmcv_types[r]
             h.append(self._get_optimalh_lmcv(lmcv_type, LB_bw, UB_bw))
         AVG = np.mean(h)
         h.append(AVG)
@@ -1538,7 +1540,7 @@ class LocalLinear:
         # Jackknife bias-corrected estimator
         h_jk = 2 * h
         betahat_j = self._est_betas(vY, mX, h, taut, taut, self.n_est)
-        betahat_k = self._est_betas(vY, mX, h_jk, taut, taut, self.n_est)
+        betahat_k = self._est_betas(vY, mX, h_jk/np.sqrt(2), taut, taut, self.n_est)
         betahat_jk = 2 * betahat_k - betahat_j
 
         # Simulation quantile
@@ -1790,7 +1792,7 @@ class LocalLinear:
         if self.n_est == 1:
     
             plt.figure(figsize=(12, 6))
-            plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2,color='black')
+            plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=1,color='black')
             plt.plot(x_vals[tau_index[0]:tau_index[1]], self.betahat.reshape(-1,1)[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$", linestyle="--", linewidth=2)
             
             plt.grid(linestyle='dashed')
@@ -1847,8 +1849,8 @@ class LocalLinear:
         
         
 
-        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2,color='black')
-        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.predicted_y[tau_index[0]:tau_index[1]], label="Fit", linestyle="--", linewidth=2)        
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=1,color='black')
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.predicted_y[tau_index[0]:tau_index[1]], label="Fit", linestyle="--",  linewidth=2)        
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
         plt.tick_params(axis='both', labelsize=16)
@@ -1891,7 +1893,7 @@ class LocalLinear:
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
 
-        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.residuals[tau_index[0]:tau_index[1]], linestyle="--", label="Residuals")       
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.residuals[tau_index[0]:tau_index[1]],  linestyle="--", label="Residuals")       
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
         plt.tick_params(axis='both', labelsize=16)

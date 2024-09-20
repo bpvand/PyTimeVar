@@ -100,7 +100,7 @@ class PowerLaw:
             raise ValueError('The optional parameter tau is required to be a list.')
 
         plt.figure(figsize=(12, 6))
-        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2, color = 'black')
+        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=1, color = 'black')
         plt.plot(x_vals[tau_index[0]:tau_index[1]], self.trendHat[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$", linestyle="--", linewidth=2)
         
         plt.grid(linestyle='dashed')

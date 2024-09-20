@@ -58,16 +58,10 @@ auxPwr.summary()
 from PyTimeVar import Kalman
 kalmanmodel = Kalman(vY=vY)
 [kl_filter, kl_predictor, kl_smoother] = kalmanmodel.fit('all')
-kalmanmodel.plot(individual=False, tau=[0.4,0.8])
+kalmanmodel.plot(individual=False)
 
 # # illustrate GAS model
 from PyTimeVar import GAS
 N_gasmodel = GAS(vY=vY, mX=mX, method='gaussian', niter=10)
 N_GAStrend, N_GASparams = N_gasmodel.fit()
 N_gasmodel.plot()
-
-from PyTimeVar.datasets import inflation
-import numpy as np
-data = inflation.load(start_date='1947-02', end_date='2024-08')
-vY = data.values
-mX = np.ones_like(vY)
