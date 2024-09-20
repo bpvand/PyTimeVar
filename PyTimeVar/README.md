@@ -17,9 +17,9 @@ The package is built upon several papers and books. We list the key references b
 Friedrich and Lin (2024) (doi: https://doi.org/10.1016/j.jeconom.2022.09.004);
 Lin et al. (2024) (doi: https://doi.org/10.1080/10618600.2024.2403705);
 Friedrich et al. (2020) (doi: https://doi.org/10.1016/j.jeconom.2019.05.006);
-Smeekes and Urbain (2014) (doi: 10.1017/S0266466611000387)
+Smeekes and Urbain (2014) (doi: https://doi.org/10.26481/umagsb.2014008)
 Zhou and Wu (2010) (doi: https://doi.org/10.1111/j.1467-9868.2010.00743.x);
-Bühlmann (1998) (doi: 10.1214/aos/1030563978);
+Bühlmann (1998) (doi: https://doi.org/10.1214/aos/1030563978);
 
 
 ### Boosted HP filter
@@ -30,11 +30,11 @@ Phillips and Shi (2021) (doi: https://doi.org/10.1111/iere.12495);
 
 ### Power-law trend models
 Lin and Reuvers (2024) (https://tinbergen.nl/discussion-paper/6214/22-092-iii-cointegrating-polynomial-regressions-with-power-law-trends-environmental-kuznets-curve-or-omitted-time-effects);
-Robinson (2012) (doi: 10.3150/10-BEJ349);
+Robinson (2012) (doi: https://doi.org/10.3150/10-BEJ349);
 
 
 ### State-space models
-Durbin and Koopman (2012) (doi: 10.1093/acprof:oso/9780199641178.001.0001.)
+Durbin and Koopman (2012) (doi: https://doi.org/10.1093/acprof:oso/9780199641178.001.0001)
 
 ### Score-drive models
 Creal et al. (2013) (doi: https://doi.org/10.1002/jae.1279);

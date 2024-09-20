@@ -17,7 +17,7 @@ The package is built upon several papers and books. We list the key references b
 Friedrich and Lin (2024) (doi: https://doi.org/10.1016/j.jeconom.2022.09.004);
 Lin et al. (2024) (doi: https://doi.org/10.1080/10618600.2024.2403705);
 Friedrich et al. (2020) (doi: https://doi.org/10.1016/j.jeconom.2019.05.006);
-Smeekes and Urbain (2014) (doi: 10.1017/S0266466611000387)
+Smeekes and Urbain (2014) (doi: https://doi.org/10.26481/umagsb.2014008)
 Zhou and Wu (2010) (doi: https://doi.org/10.1111/j.1467-9868.2010.00743.x);
 Bühlmann (1998) (doi: https://doi.org/10.1214/aos/1030563978);
 
