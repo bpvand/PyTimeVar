@@ -3,4 +3,6 @@ pandas
 matplotlib 
 scipy
 statsmodels 
-tqdm 
+tqdm
+autoducsumm
+sphinx-mdinclude 
