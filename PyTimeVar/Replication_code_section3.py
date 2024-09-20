@@ -15,7 +15,7 @@ np.random.seed(123)
 
 # illustrate LLR
 from PyTimeVar import LocalLinear
-model = LocalLinear(vY, mX)
+model = LocalLinear(vY=vY, mX=mX)
 betaHatLLR = model.fit()
 
 # print summary
@@ -28,12 +28,12 @@ model.plot_predicted(tau=[0.4,0.8])
 S_LB, S_UB, P_LB, P_UB = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
 # auxiliary LLR model to illustrate kernel, bandwidth selection, and tau
-model2LLR = LocalLinear(vY, mX, kernel='Gaussian', bw_selection='lmcv_8')
+model2LLR = LocalLinear(vY=vY, mX=mX, kernel='Gaussian', bw_selection='lmcv_8')
 beta_hat_model2 = model2LLR.fit()
 
 # illustrate boosted HP filter
 from PyTimeVar import BoostedHP
-bHPmodel = BoostedHP(vY, dLambda=1600, iMaxIter=100)
+bHPmodel = BoostedHP(vY=vY, dLambda=1600, iMaxIter=100)
 bHPtrend, bHPresiduals = bHPmodel.fit(
     boost=True, stop="adf", dAlpha=0.05, verbose=False)
 bHPmodel.summary()
@@ -41,7 +41,7 @@ bHPmodel.plot()
 
 # illustrate power-law trend
 from PyTimeVar import PowerLaw
-PwrLaw = PowerLaw(vY, n_powers=1)
+PwrLaw = PowerLaw(vY=vY, n_powers=1)
 pwrTrend, pwrGamma = PwrLaw.fit()
 PwrLaw.summary()
 PwrLaw.plot()
