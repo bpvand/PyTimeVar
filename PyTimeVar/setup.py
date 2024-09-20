@@ -10,7 +10,7 @@ setuptools.setup(
     author='Mingxuan Song, Bernhard van der Sluis, Yicong Lin',
     author_email='678270ms@eur.nl, vandersluis@ese.eur.nl, yc.lin@vu.nl',
     description = ("The PyTimeVar package offers state-of-the-art estimation and statistical inference methods for time series regression models with flexible trends and/or time- varying coefficients."),
-    python_requires=">=3.9",
+    python_requires=">=3.10",
     keywords = 'time-varying, bootstrap, nonparametric estimation, filtering',
     packages=['PyTimeVar', 'PyTimeVar.bhpfilter', 'PyTimeVar.locallinear','PyTimeVar.kalman', 'PyTimeVar.powerlaw', 'PyTimeVar.gas', 'PyTimeVar.datasets', \
               'PyTimeVar.datasets.co2', 'PyTimeVar.datasets.inflation', 'PyTimeVar.datasets.herding','PyTimeVar.datasets.temperature', 'PyTimeVar.datasets.usd'],
