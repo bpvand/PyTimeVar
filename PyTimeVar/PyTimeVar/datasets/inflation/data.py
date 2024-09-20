@@ -56,5 +56,3 @@ def load(start_date=None, end_date=None):
 
     
     return data
-
-# load(start_date='1967-1-1', end_date=None)

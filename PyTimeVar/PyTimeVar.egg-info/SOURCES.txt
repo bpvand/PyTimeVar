@@ -14,12 +14,12 @@ PyTimeVar/datasets/utils.py
 PyTimeVar/datasets/co2/Emissions_19002017.csv
 PyTimeVar/datasets/co2/__init__.py
 PyTimeVar/datasets/co2/data.py
-PyTimeVar/datasets/gold/__init__.py
-PyTimeVar/datasets/gold/data.py
-PyTimeVar/datasets/gold/gold.csv
 PyTimeVar/datasets/herding/CN HERDING.csv
 PyTimeVar/datasets/herding/__init__.py
 PyTimeVar/datasets/herding/data.py
+PyTimeVar/datasets/inflation/CPIAUCSL.csv
+PyTimeVar/datasets/inflation/__init__.py
+PyTimeVar/datasets/inflation/data.py
 PyTimeVar/datasets/temperature/__init__.py
 PyTimeVar/datasets/temperature/data.py
 PyTimeVar/datasets/temperature/temperature.csv

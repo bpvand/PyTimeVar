@@ -417,7 +417,7 @@ class Kalman:
                 plt.figure(figsize=(12, 6))
                 plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=2,color='black')
                 if self.smooth is not None:
-                    plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[:], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
                 if self.pred is not None:
                     plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1]], label="Estimated $\\beta_{0}$ - Predictor", linestyle="-", linewidth=2)
                 if self.filt is not None:

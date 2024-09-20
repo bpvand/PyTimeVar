@@ -18,6 +18,8 @@ PyTimeVar/datasets/herding/__init__.py
 PyTimeVar/datasets/herding/data.py
 PyTimeVar/datasets/temperature/__init__.py
 PyTimeVar/datasets/temperature/data.py
+PyTimeVar/datasets/inflation/__init__.py
+PyTimeVar/datasets/inflation/data.py
 PyTimeVar/datasets/usd/__init__.py
 PyTimeVar/datasets/usd/data.py
 PyTimeVar/gas/GAS.py
