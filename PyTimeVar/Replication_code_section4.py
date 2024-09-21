@@ -32,7 +32,7 @@ bHPtrend, bHPresiduals = bHPmodel.fit(boost=True, stop="bic",dAlpha=0.05, verbos
 
 ############### t-GAS model                    
 gasmodel = GAS(vY=vY, mX=mX, method='student')
-tGAStrend, tGASparams = gasmodel.fit()                        ##### this function takes around 85 seconds
+tGAStrend, tGASparams = gasmodel.fit()                        ##### this function takes around 190 seconds
 
 ############### Kalman smoother
 kalmanmodel = Kalman(vY=vY, mX=mX)
