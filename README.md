@@ -36,7 +36,7 @@ Robinson (2012) (doi: https://doi.org/10.3150/10-BEJ349);
 ### State-space models
 Durbin and Koopman (2012) (doi: https://doi.org/10.1093/acprof:oso/9780199641178.001.0001)
 
-### Score-drive models
+### Score-driven models
 Creal et al. (2013) (doi: https://doi.org/10.1002/jae.1279);
 Harvey (2013) (doi: https://doi.org/10.1017/CBO9781139540933);
 
