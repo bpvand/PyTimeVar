@@ -7,6 +7,8 @@
 
 Authors: Mingxuan Song (m3.song@student.vu.nl, Vrije Universiteit Amsterdam), Bernhard van der Sluis (vandersluis@ese.eur.nl, Erasmus Universiteit Rotterdam), and Yicong Lin (yc.lin@vu.nl, Vrije Universiteit Amsterdam & Tinbergen Institute)
 
+Discussion paper titled "PyTimeVar: A Python Package for Trending Time-Varying Time Series Models" is available at https://tinbergen.nl/discussion-paper/6365/24-060-iii-pytimevar-a-python-package-for-trending-time-varying-time-series-models.  
+
 ## Purpose of the package
 
 The PyTimeVar package offers state-of-the-art estimation and statistical inference methods for time series regression models with flexible trends and/or time-varying coefficients. The package implements nonparametric estimation along with multiple recently proposed bootstrap-assisted inference methods. Pointwise confidence intervals and simultaneous bands of parameter curves via bootstrap can be easily obtained using user-friendly commands. The package also includes four commonly used methods for modeling trends and time-varying relationships: boosted Hodrick-Prescot filter, power-law trend models, state-space models, and score-driven models. This allows users to compare different approaches within a unified environment.
