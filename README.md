@@ -44,7 +44,7 @@ Harvey (2013) (doi: https://doi.org/10.1017/CBO9781139540933);
 
 ## Features
 
-- Nonparametric estimation of time-varying time series models, along with various bootstrap-assisted methods for inference, including local blockwise wild bootstrap, wild bootstrap, sieve bootstrap, sieve wild bootstrap, autoregressive wild bootstrap
+- Nonparametric estimation of time-varying time series models, along with various bootstrap-assisted methods for inference, including local blockwise wild bootstrap, wild bootstrap, sieve bootstrap, sieve wild bootstrap, autoregressive wild bootstrap.
 - Alternative estimation methods for modeling trend and time-varying relationships, including boosted HP filter, power-law trend models, state-space, and score-driven models.
 - Unified framework for comparison of methods.
 - Multiple datasets for illustration.
