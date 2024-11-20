@@ -31,7 +31,7 @@ Phillips and Shi (2021) (doi: https://doi.org/10.1111/iere.12495);
 
 
 ### Power-law trend models
-Lin and Reuvers (2024) (doi: https://10.1111/jtsa.12805);
+Lin and Reuvers (2024) (doi: https://doi.org/10.1111/jtsa.12805);
 Robinson (2012) (doi: https://doi.org/10.3150/10-BEJ349);
 
 
