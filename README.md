@@ -31,7 +31,7 @@ Phillips and Shi (2021) (doi: https://doi.org/10.1111/iere.12495);
 
 
 ### Power-law trend models
-Lin and Reuvers (2024) (https://tinbergen.nl/discussion-paper/6214/22-092-iii-cointegrating-polynomial-regressions-with-power-law-trends-environmental-kuznets-curve-or-omitted-time-effects);
+Lin and Reuvers (2024) (doi: https://10.1111/jtsa.12805);
 Robinson (2012) (doi: https://doi.org/10.3150/10-BEJ349);
 
 
