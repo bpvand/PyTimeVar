@@ -25,7 +25,7 @@ Bühlmann (1998) (doi: https://doi.org/10.1214/aos/1030563978);
 
 
 ### Boosted HP filter
-Mei et al. (2024) (doi: doi: https://doi.org/10.1002/jae.3086);
+Mei et al. (2024) (doi: https://doi.org/10.1002/jae.3086);
 Biswas et al. (2024) (doi: https://doi.org/10.1080/07474938.2024.2380704);
 Phillips and Shi (2021) (doi: https://doi.org/10.1111/iere.12495);
 
