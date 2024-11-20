@@ -5,7 +5,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Readme File &mdash; PyTimeVar 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
   
@@ -53,7 +53,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#boosted-hp-filter">Boosted HP filter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#power-law-trend-models">Power-law trend models</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#state-space-models">State-space models</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#score-drive-models">Score-drive models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#score-driven-models">Score-driven models</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#features">Features</a></li>
@@ -93,13 +93,13 @@
 </section>
 <section id="pytimevar-a-python-package-for-trending-time-varying-time-series-models">
 <h1>PyTimeVar: A Python Package for Trending Time-Varying Time Series Models<a class="headerlink" href="#pytimevar-a-python-package-for-trending-time-varying-time-series-models" title="Link to this heading"></a></h1>
-<!-- badges: start --><a class="reference external image-reference" href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg" />
-</a>
+<!-- badges: start --><a class="reference external image-reference" href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPLv3-blue.svg" /></a>
 <a class="reference external image-reference" href="https://img.shields.io/pypi/v/PyTimeVar?label=pypi%20package"><img alt="PyPI" src="https://img.shields.io/pypi/v/PyTimeVar?label=pypi%20package" />
 </a>
-<a class="reference external image-reference" href="https://img.shields.io/pypi/dm/PyTimeVar"><img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/PyTimeVar" />
+<a class="reference external image-reference" href="https://static.pepy.tech/badge/pytimevar"><img alt="PyPI Downloads" src="https://static.pepy.tech/badge/pytimevar" />
 </a>
 <!-- badges: end --><p>Authors: Mingxuan Song (<a class="reference external" href="mailto:m3&#46;song&#37;&#52;&#48;student&#46;vu&#46;nl">m3<span>&#46;</span>song<span>&#64;</span>student<span>&#46;</span>vu<span>&#46;</span>nl</a>, Vrije Universiteit Amsterdam), Bernhard van der Sluis (<a class="reference external" href="mailto:vandersluis&#37;&#52;&#48;ese&#46;eur&#46;nl">vandersluis<span>&#64;</span>ese<span>&#46;</span>eur<span>&#46;</span>nl</a>, Erasmus Universiteit Rotterdam), and Yicong Lin (<a class="reference external" href="mailto:yc&#46;lin&#37;&#52;&#48;vu&#46;nl">yc<span>&#46;</span>lin<span>&#64;</span>vu<span>&#46;</span>nl</a>, Vrije Universiteit Amsterdam &amp; Tinbergen Institute)</p>
+<p>Discussion paper titled “PyTimeVar: A Python Package for Trending Time-Varying Time Series Models” is available at <a class="reference external" href="https://tinbergen.nl/discussion-paper/6365/24-060-iii-pytimevar-a-python-package-for-trending-time-varying-time-series-models">https://tinbergen.nl/discussion-paper/6365/24-060-iii-pytimevar-a-python-package-for-trending-time-varying-time-series-models</a>.</p>
 <section id="purpose-of-the-package">
 <h2>Purpose of the package<a class="headerlink" href="#purpose-of-the-package" title="Link to this heading"></a></h2>
 <p>The PyTimeVar package offers state-of-the-art estimation and statistical inference methods for time series regression models with flexible trends and/or time-varying coefficients. The package implements nonparametric estimation along with multiple recently proposed bootstrap-assisted inference methods. Pointwise confidence intervals and simultaneous bands of parameter curves via bootstrap can be easily obtained using user-friendly commands. The package also includes four commonly used methods for modeling trends and time-varying relationships: boosted Hodrick-Prescot filter, power-law trend models, state-space models, and score-driven models. This allows users to compare different approaches within a unified environment.</p>
@@ -115,21 +115,21 @@ Bühlmann (1998) (doi: <a class="reference external" href="https://doi.org/10.12
 </section>
 <section id="boosted-hp-filter">
 <h3>Boosted HP filter<a class="headerlink" href="#boosted-hp-filter" title="Link to this heading"></a></h3>
-<p>Mei et al. (2024) (doi: doi: <a class="reference external" href="https://doi.org/10.1002/jae.3086">https://doi.org/10.1002/jae.3086</a>);
+<p>Mei et al. (2024) (doi: <a class="reference external" href="https://doi.org/10.1002/jae.3086">https://doi.org/10.1002/jae.3086</a>);
 Biswas et al. (2024) (doi: <a class="reference external" href="https://doi.org/10.1080/07474938.2024.2380704">https://doi.org/10.1080/07474938.2024.2380704</a>);
 Phillips and Shi (2021) (doi: <a class="reference external" href="https://doi.org/10.1111/iere.12495">https://doi.org/10.1111/iere.12495</a>);</p>
 </section>
 <section id="power-law-trend-models">
 <h3>Power-law trend models<a class="headerlink" href="#power-law-trend-models" title="Link to this heading"></a></h3>
-<p>Lin and Reuvers (2024) (<a class="reference external" href="https://tinbergen.nl/discussion-paper/6214/22-092-iii-cointegrating-polynomial-regressions-with-power-law-trends-environmental-kuznets-curve-or-omitted-time-effects">https://tinbergen.nl/discussion-paper/6214/22-092-iii-cointegrating-polynomial-regressions-with-power-law-trends-environmental-kuznets-curve-or-omitted-time-effects</a>);
+<p>Lin and Reuvers (2024) (doi: <a class="reference external" href="https://doi.org/10.1111/jtsa.12805">https://doi.org/10.1111/jtsa.12805</a>);
 Robinson (2012) (doi: <a class="reference external" href="https://doi.org/10.3150/10-BEJ349">https://doi.org/10.3150/10-BEJ349</a>);</p>
 </section>
 <section id="state-space-models">
 <h3>State-space models<a class="headerlink" href="#state-space-models" title="Link to this heading"></a></h3>
-<p>Durbin and Koopman (2012) (doi: <a class="reference external" href="https://doi.org/10.1093/acprof:oso/9780199641178.001.0001">https://doi.org/10.1093/acprof:oso/9780199641178.001.0001</a>)</p>
+<p>Durbin and Koopman (2012) (doi: <a class="reference external" href="https://doi.org/10.1093/acprof:oso/9780199641178.001.0001">https://doi.org/10.1093/acprof:oso/9780199641178.001.0001</a>);</p>
 </section>
-<section id="score-drive-models">
-<h3>Score-drive models<a class="headerlink" href="#score-drive-models" title="Link to this heading"></a></h3>
+<section id="score-driven-models">
+<h3>Score-driven models<a class="headerlink" href="#score-driven-models" title="Link to this heading"></a></h3>
 <p>Creal et al. (2013) (doi: <a class="reference external" href="https://doi.org/10.1002/jae.1279">https://doi.org/10.1002/jae.1279</a>);
 Harvey (2013) (doi: <a class="reference external" href="https://doi.org/10.1017/CBO9781139540933">https://doi.org/10.1017/CBO9781139540933</a>);</p>
 </section>
@@ -137,7 +137,7 @@ Harvey (2013) (doi: <a class="reference external" href="https://doi.org/10.1017/
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Nonparametric estimation of time-varying time series models, along with various bootstrap-assisted methods for inference, including local blockwise wild bootstrap, wild bootstrap, sieve bootstrap, sieve wild bootstrap, autoregressive wild bootstrap</p></li>
+<li><p>Nonparametric estimation of time-varying time series models, along with various bootstrap-assisted methods for inference, including local blockwise wild bootstrap, wild bootstrap, sieve bootstrap, sieve wild bootstrap, autoregressive wild bootstrap.</p></li>
 <li><p>Alternative estimation methods for modeling trend and time-varying relationships, including boosted HP filter, power-law trend models, state-space, and score-driven models.</p></li>
 <li><p>Unified framework for comparison of methods.</p></li>
 <li><p>Multiple datasets for illustration.</p></li>

@@ -2,10 +2,12 @@
 <!-- badges: start -->
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![PyPI](https://img.shields.io/pypi/v/PyTimeVar?label=pypi%20package)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/PyTimeVar)
+![PyPI Downloads](https://static.pepy.tech/badge/pytimevar)
 <!-- badges: end -->
 
 Authors: Mingxuan Song (m3.song@student.vu.nl, Vrije Universiteit Amsterdam), Bernhard van der Sluis (vandersluis@ese.eur.nl, Erasmus Universiteit Rotterdam), and Yicong Lin (yc.lin@vu.nl, Vrije Universiteit Amsterdam & Tinbergen Institute)
+
+Discussion paper titled "PyTimeVar: A Python Package for Trending Time-Varying Time Series Models" is available at https://tinbergen.nl/discussion-paper/6365/24-060-iii-pytimevar-a-python-package-for-trending-time-varying-time-series-models.  
 
 ## Purpose of the package
 
@@ -23,26 +25,26 @@ Bühlmann (1998) (doi: https://doi.org/10.1214/aos/1030563978);
 
 
 ### Boosted HP filter
-Mei et al. (2024) (doi: doi: https://doi.org/10.1002/jae.3086);
+Mei et al. (2024) (doi: https://doi.org/10.1002/jae.3086);
 Biswas et al. (2024) (doi: https://doi.org/10.1080/07474938.2024.2380704);
 Phillips and Shi (2021) (doi: https://doi.org/10.1111/iere.12495);
 
 
 ### Power-law trend models
-Lin and Reuvers (2024) (https://tinbergen.nl/discussion-paper/6214/22-092-iii-cointegrating-polynomial-regressions-with-power-law-trends-environmental-kuznets-curve-or-omitted-time-effects);
+Lin and Reuvers (2024) (doi: https://doi.org/10.1111/jtsa.12805);
 Robinson (2012) (doi: https://doi.org/10.3150/10-BEJ349);
 
 
 ### State-space models
-Durbin and Koopman (2012) (doi: https://doi.org/10.1093/acprof:oso/9780199641178.001.0001)
+Durbin and Koopman (2012) (doi: https://doi.org/10.1093/acprof:oso/9780199641178.001.0001);
 
-### Score-drive models
+### Score-driven models
 Creal et al. (2013) (doi: https://doi.org/10.1002/jae.1279);
 Harvey (2013) (doi: https://doi.org/10.1017/CBO9781139540933);
 
 ## Features
 
-- Nonparametric estimation of time-varying time series models, along with various bootstrap-assisted methods for inference, including local blockwise wild bootstrap, wild bootstrap, sieve bootstrap, sieve wild bootstrap, autoregressive wild bootstrap
+- Nonparametric estimation of time-varying time series models, along with various bootstrap-assisted methods for inference, including local blockwise wild bootstrap, wild bootstrap, sieve bootstrap, sieve wild bootstrap, autoregressive wild bootstrap.
 - Alternative estimation methods for modeling trend and time-varying relationships, including boosted HP filter, power-law trend models, state-space, and score-driven models.
 - Unified framework for comparison of methods.
 - Multiple datasets for illustration.
