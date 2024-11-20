@@ -2,7 +2,7 @@
 <!-- badges: start -->
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![PyPI](https://img.shields.io/pypi/v/PyTimeVar?label=pypi%20package)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/PyTimeVar)
+![PyPI Downloads](https://static.pepy.tech/badge/pytimevar)
 <!-- badges: end -->
 
 Authors: Mingxuan Song (m3.song@student.vu.nl, Vrije Universiteit Amsterdam), Bernhard van der Sluis (vandersluis@ese.eur.nl, Erasmus Universiteit Rotterdam), and Yicong Lin (yc.lin@vu.nl, Vrije Universiteit Amsterdam & Tinbergen Institute)
