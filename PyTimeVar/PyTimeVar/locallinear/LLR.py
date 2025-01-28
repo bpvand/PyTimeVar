@@ -103,14 +103,14 @@ class LocalLinear:
         self.vY = vY.reshape(-1,1)
         self.mX = mX
         self.n = len(vY)
-        self.times = np.arange(1 / self.n, ( self.n + 1) /  self.n, 1 /  self.n)
+        self.times = np.linspace(1 / self.n, 1, self.n)
 
-        self.tau = np.arange(1 / self.n, (self.n + 1) / self.n, 1 / self.n)
+        self.tau = np.linspace(1 / self.n, 1, self.n)
         # self.tau_index = np.array([0, self.n])
 
         # elif isinstance(tau, float):
         #     self.tau = np.array([tau])
-        self.tau_bw_selection = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
+        self.tau_bw_selection = np.linspace(1 / self.n, 1, self.n)
 
         if mX.ndim == 1:
             self.mX = mX.reshape(-1, 1)
