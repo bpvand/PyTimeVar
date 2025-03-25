@@ -1934,7 +1934,7 @@ class LocalLinear:
             Default is 2, if none or negative is specified.
         B : int
             The number of bootstrap samples.
-            Deafult is 1299, if not provided by the user.
+            Default is 1299, if not provided by the user.
         plots : bool
             If True, plots are shown of the estimated coefficients and corresponding confidence bands.
             
