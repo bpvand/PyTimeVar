@@ -53,6 +53,8 @@ class GAS:
         The estimated coefficients.
     params : np.ndarray
         The estimated GAS parameters.
+    inv_hessian : np.ndarray
+        The inverse Hessian after optimization.
         
     
     Raises
@@ -85,6 +87,8 @@ class GAS:
         self.success = None
         self.betas = None
         self.params = None
+        
+        self.inv_hessian = None
 
     def fit(self):
         '''
@@ -132,27 +136,10 @@ class GAS:
 
             vparaHat_gGAS = result.x
             self.success = result.success
+            self.inv_hessian = result.hess_inv
 
             # construct betat estimate
-            vbetaNow = vbeta0
-            mBetaHat_gGAS = np.zeros((self.n_est, self.n))
-            vthetaHat_gGAS = vparaHat_gGAS[1:]
-            vomegaHat_gGAS = vthetaHat_gGAS[:self.n_est]
-            mBHat_gGAS = vthetaHat_gGAS[self.n_est:2*self.n_est]
-            mAHat_gGAS = vthetaHat_gGAS[2*self.n_est:]
-
-            for id in range(self.n):
-                vxt = self.mX[id, :].reshape(-1, 1)
-                yt = self.vY[id]
-                epst = yt - vbetaNow.T @ vxt
-
-                mNablat = vxt * epst
-                vbetaNow = vomegaHat_gGAS + mBHat_gGAS * \
-                    vbetaNow + mAHat_gGAS * mNablat.squeeze()
-
-                mBetaHat_gGAS[:, id] = vbetaNow
-
-            mBetaHat = mBetaHat_gGAS.T
+            mBetaHat = self._g_filter(vbeta0, vparaHat_gGAS)
             vparaHat = vparaHat_gGAS
                 
         elif self.method == 'student':  # MLE by t-GAS
@@ -177,37 +164,99 @@ class GAS:
 
             vparaHat_tGAS = result.x
             self.success = result.success
+            self.inv_hessian = result.hess_inv
 
             # construct betat estimate
-            vbetaNow = vbeta0
-            mBetaHat_tGAS = np.zeros((self.n_est, self.n))
-            dnuHat_tGAS = vparaHat_tGAS[0]
-            dsigmauHat_tGAS = vparaHat_tGAS[1]
-            vthetaHat_tGAS = vparaHat_tGAS[2:]
-            vomegaHat_tGAS = vthetaHat_tGAS[:self.n_est]
-            mBHat_tGAS = vthetaHat_tGAS[self.n_est:2*self.n_est]
-            mAHat_tGAS = vthetaHat_tGAS[2*self.n_est:]
-
-            for id in range(self.n):
-                vxt = self.mX[id, :].reshape(-1, 1)
-                yt = self.vY[id]
-                epst = yt - vbetaNow.T @ vxt
-
-                temp1 = (1 + dnuHat_tGAS**(-1)) * (1 + dnuHat_tGAS**(-1)
-                                                   * (epst / dsigmauHat_tGAS)**2)**(-1)
-                mNablat = (1 + dnuHat_tGAS)**(-1) * (3 + dnuHat_tGAS) * \
-                    temp1 * vxt * epst
-                vbetaNow = vomegaHat_tGAS + mBHat_tGAS * \
-                    vbetaNow + mAHat_tGAS * mNablat.squeeze()
-
-                mBetaHat_tGAS[:, id] = vbetaNow
-            
-            mBetaHat = mBetaHat_tGAS.T
+            mBetaHat = self._t_filter(vbeta0, vparaHat_tGAS)
             vparaHat = vparaHat_tGAS
 
         self.betas, self.params = mBetaHat, vparaHat
         print(f"\nTime taken: {time.time() - start_time:.2f} seconds")
         return mBetaHat, vparaHat
+    
+    def _g_filter(self, vbeta0, vparams):
+        '''
+        Run Gaussian score-driven filter.
+
+        Parameters
+        ----------
+        vbeta0 : np.ndarray
+            The initial filter estimates.
+        vparams : np.ndarray
+            The parameter values that specify the filter recursion.
+
+        Returns
+        -------
+        mBetaHat : np.ndarray
+            The estimated coefficients.
+
+        '''
+        
+        vbetaNow = vbeta0
+        mBetaHat_gGAS = np.zeros((self.n_est, self.n))
+        vthetaHat_gGAS = vparams[1:]
+        vomegaHat_gGAS = vthetaHat_gGAS[:self.n_est]
+        mBHat_gGAS = vthetaHat_gGAS[self.n_est:2*self.n_est]
+        mAHat_gGAS = vthetaHat_gGAS[2*self.n_est:]
+
+        for id in range(self.n):
+            vxt = self.mX[id, :].reshape(-1, 1)
+            yt = self.vY[id]
+            epst = yt - vbetaNow.T @ vxt
+
+            mNablat = vxt * epst
+            vbetaNow = vomegaHat_gGAS + mBHat_gGAS * \
+                vbetaNow + mAHat_gGAS * mNablat.squeeze()
+
+            mBetaHat_gGAS[:, id] = vbetaNow
+
+        mBetaHat = mBetaHat_gGAS.T
+        return mBetaHat
+    
+    def _t_filter(self, vbeta0, vparams):
+        '''
+        Run Student-t score-driven filter.
+
+        Parameters
+        ----------
+        vbeta0 : np.ndarray
+            The initial filter estimates.
+        vparams : np.ndarray
+            The parameter values that specify the filter recursion.
+
+        Returns
+        -------
+        mBetaHat : np.ndarray
+            The estimated coefficients.
+
+        '''
+        
+        vbetaNow = vbeta0
+        mBetaHat_tGAS = np.zeros((self.n_est, self.n))
+        dnuHat_tGAS = vparams[0]
+        dsigmauHat_tGAS = vparams[1]
+        vthetaHat_tGAS = vparams[2:]
+        vomegaHat_tGAS = vthetaHat_tGAS[:self.n_est]
+        mBHat_tGAS = vthetaHat_tGAS[self.n_est:2*self.n_est]
+        mAHat_tGAS = vthetaHat_tGAS[2*self.n_est:]
+
+        for id in range(self.n):
+            vxt = self.mX[id, :].reshape(-1, 1)
+            yt = self.vY[id]
+            epst = yt - vbetaNow.T @ vxt
+
+            temp1 = (1 + dnuHat_tGAS**(-1)) * (1 + dnuHat_tGAS**(-1)
+                                               * (epst / dsigmauHat_tGAS)**2)**(-1)
+            mNablat = (1 + dnuHat_tGAS)**(-1) * (3 + dnuHat_tGAS) * \
+                temp1 * vxt * epst
+            vbetaNow = vomegaHat_tGAS + mBHat_tGAS * \
+                vbetaNow + mAHat_tGAS * mNablat.squeeze()
+
+            mBetaHat_tGAS[:, id] = vbetaNow
+        
+        mBetaHat = mBetaHat_tGAS.T
+        return mBetaHat
+        
 
     def _construct_likelihood(self, vbeta0, vpara):
         '''
@@ -273,9 +322,70 @@ class GAS:
                 gammaln(dnu / 2) - 0.5 * np.log(np.pi * dnu) - np.log(dsigmau)
 
         return lhVal
+    
+    def _confidence_bands(self, alpha, iM):
+        '''
+        Compute confidence intervals at each time points by simulation-based methods.
+
+        Parameters
+        ----------
+        alpha : float
+            Significance level for quantiles.
+        iM : int
+            The nunber of simulations for simulation-based confidence intervals.
+
+        Returns
+        -------
+        mCI_l : np.ndarray
+            The lower confidence bounds at each time point, for each parameter.
+        mCI_u : np.ndarray
+            The upper confidence bounds at each time point, for each parameter.
+
+        '''
+        
+        
+        # draw iM parameter values
+        LB = np.concatenate(([0.001], -10 * np.ones(self.n_est), -
+                            np.ones(self.n_est), -10 * np.ones(self.n_est)))
+        UB = np.concatenate(([100], 10 * np.ones(self.n_est),
+                            np.ones(self.n_est), 10 * np.ones(self.n_est)))
+        if self.method == 'student':
+            LB = np.concatenate(([0.01], LB))
+            UB = np.concatenate(([200], UB))
+            
+        
+        mDraws = np.zeros((iM, self.n_est))
+        count = 0
+        while count < iM:
+            mSamples = np.random.multivariate_normal(self.params, -1*self.inv_hessian, size=iM)
+            
+            mMask = np.all((LB <= mSamples) & (mSamples <= UB), axis=1)
+            mValid = mSamples[mMask]
+            
+            iNum_valid = mValid.shape[0]
+            iNum_to_fill = min(iM-count, iNum_valid)
+            
+            mDraws[count:count+iNum_to_fill] = mValid[:iNum_to_fill]
+            count += iNum_to_fill
+        
+        # obtain filter for each simulation
+        dnInitial = int(np.ceil(self.n / 10))
+        vbeta0 = np.linalg.inv((self.mX[:dnInitial, :]).T @ (self.mX[:dnInitial, :])) @ (
+            (self.mX[:dnInitial, :]).T @ self.vY[:dnInitial])
+        mBetaDraws = np.zeros((iM, self.n, self.n_est))
+        filt = self._g_filter if self.method == 'gaussian' else self._t_filter
+        for m in range(iM):
+            mBetaDraws[m,:,:] = filt(vbeta0, self.params) 
+        
+        # get confidence intervals
+        mCI_l = np.percentile(mBetaDraws, 100*(alpha/2), axis=0)
+        mCI_u = np.percentile(mBetaDraws, 100*(1-alpha/2), axis=0)
+        
+        return mCI_l, mCI_u
+        
 
 
-    def plot(self, tau: list = None):
+    def plot(self, tau: list = None, confidence_intervals: bool = False, alpha = 0.05, iM = 1000):
         '''
         Plot the beta coefficients over a normalized x-axis from 0 to 1.
         
@@ -284,6 +394,12 @@ class GAS:
         tau : list, optional
             The list looks the  following: tau = [start,end].
             The function will plot all data and estimates between start and end.
+        confidence_intervals : bool, optional
+            If True, simulation-based confidence intervals will be plotted around the estimates.
+        alpha : float
+            Significance level for confidence intervals.
+        iM : int
+            The nunber of simulations for simulation-based confidence intervals.
             
         Raises
         ------
@@ -304,6 +420,8 @@ class GAS:
                 tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
+            
+        mCI_l, mCI_u = self._confidence_bands(alpha, iM)
         
         if self.n_est == 1:
     
@@ -314,6 +432,8 @@ class GAS:
             elif self.method=='gaussian':
                 plt.plot(x_vals[tau_index[0]:tau_index[1]], self.betas[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - gGAS", linestyle="--", linewidth=2)
          
+            plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_u[tau_index[0]:tau_index[1],0], label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
+            plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],0], color='blue', linewidth=2, linestyle='dashed')
             plt.grid(linestyle='dashed')
             plt.xlabel('$t/n$',fontsize="xx-large")
 
@@ -332,6 +452,8 @@ class GAS:
                     plt.plot(x_vals[tau_index[0]:tau_index[1]], (self.betas[:, i])[tau_index[0]:tau_index[1]],
                             label=f'Estimated $\\beta_{i} - GGAS$', color='black', linewidth=2)
                 
+                plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_u[tau_index[0]:tau_index[1],i], label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
+                plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],i], color='blue', linewidth=2, linestyle='dashed')
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")
 

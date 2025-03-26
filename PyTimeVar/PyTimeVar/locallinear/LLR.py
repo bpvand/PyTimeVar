@@ -1913,7 +1913,7 @@ class LocalLinear:
                          gamma: float = None, ic: str = None, Gsubs=None,
                          Chtilde: float = 2, B: float = 1299, plots: bool = False):
         '''
-        
+        Compute and plot confidence bands.
 
         Parameters
         ----------
