@@ -44,12 +44,6 @@ class Breaks:
     bigvec : np.ndarray
         ((bigt*(bigt+1)//2) x 1) vector storing SSR values.
     
-        
-    
-    Raises
-    ------
-    ValueError
-        No valid number of initial parameters is provided.
     
 
     """
