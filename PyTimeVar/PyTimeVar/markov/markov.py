@@ -87,6 +87,8 @@ class MarkovSwitching:
         # Initialize
         mProb_filt = np.zeros((self.iS, self.n))
         mProb_pred = np.zeros((self.iS, self.n + 1))
+        mProb_pred[:,0] = np.random.uniform(0,1,self.iS)
+        mProb_pred[:,0] /= np.sum(mProb_pred[:,0])
         mProb_smooth = np.zeros((self.iS, self.n))
 
         # Initialization of predicted probabilities
@@ -96,7 +98,6 @@ class MarkovSwitching:
         for t in range(self.n):
             # 1. Prediction step
             mProb_pred[:, t + 1] = mP.T @ mProb_filt[:, t] if t > 0 else mP.T @ mProb_pred[:, 0]
-
             # 2. Calculate likelihood of observation y_t given each state
             vLikelihood = np.array([self._conditional_pdf_state(vBeta, dS2, s, t) for s in range(self.iS)])
 
@@ -110,6 +111,8 @@ class MarkovSwitching:
             vDenominator = mProb_pred[:, t + 1]
             vRatio = vNumerator / vDenominator
             mProb_smooth[:, t] = mProb_filt[:, t] * vRatio
+        
+        print(mProb_pred)
 
         return mProb_filt, mProb_pred, mProb_smooth
     
@@ -123,8 +126,12 @@ class MarkovSwitching:
 
         for s in range(self.iS):
             weights = mProb_smooth[s, :]
-            weighted_X = self.mX * weights[:, np.newaxis]
-            vBeta_new[:, s] = np.linalg.solve(self.mX.T @ weighted_X, self.mX.T @ (weights * self.vY))
+            print(weights)
+            weighted_X = self.mX * weights
+            # print(np.linalg.inv(self.mX.T @ weighted_X))
+            # print((self.mX.T @ weighted_X))
+            vBeta_new[:, s] = np.linalg.inv(self.mX.T @ weighted_X) @ (self.mX.T @ (weights * self.vY))
+            # print(vBeta_new[:,s])
 
             residuals = self.vY - self.mX @ vBeta_new[:, s]
             dS2_new += np.sum(weights * residuals**2)
@@ -135,7 +142,7 @@ class MarkovSwitching:
         mP_new = np.zeros((self.iS, self.iS))
         for i in range(self.iS):
             for j in range(self.iS):
-                numerator = np.sum(mProb_smooth[i, :-1] * mP_prev[i, j] * (mProb_smooth[j, 1:] / mProb_pred[j, 1:]))
+                numerator = np.sum(mProb_smooth[i, :-1] * mP_prev[i, j] * (mProb_smooth[j, 1:] / mProb_pred[j, 1:-1]))
                 denominator = np.sum(mProb_smooth[i, :-1])
                 if denominator > 0:
                     mP_new[i, j] = numerator / denominator
@@ -170,6 +177,7 @@ class MarkovSwitching:
         best_P = None
         best_smoothed_probs = None
         best_loglik = np.inf
+        bBreak = False
 
         for _ in range(self.niter):
             # Initialize parameters randomly for each repetition
@@ -196,7 +204,6 @@ class MarkovSwitching:
                 vBeta = vBeta_new
                 dS2 = dS2_new
                 mP = mP_new
-
                 if np.abs(loglik_diff) < 1e-6:
                     print(f"Convergence reached in repetition {_ + 1} at iteration {it + 1}")
                     break
@@ -287,7 +294,8 @@ class MarkovSwitching:
         coefficient_paths = np.zeros((self.n, self.n_est))
         for t in range(self.n):
             coefficient_paths[t, :] = self.mBetaHat[:, estimated_regimes[t]]
-    
+            
+        print(self.mBetaHat)
         # Infer regime changes
         regime_change_indices = np.where(np.diff(estimated_regimes))[0] + 1
         regime_change_normalized = regime_change_indices / self.n
@@ -298,7 +306,7 @@ class MarkovSwitching:
             plt.figure(figsize=(12, 6))
             plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]],
                      label="True data", linewidth=1, color='black')
-            plt.plot(x_vals[tau_index[0]:tau_index[1]], self.mBetaHat[tau_index[0]:tau_index[1]],
+            plt.plot(x_vals[tau_index[0]:tau_index[1]], coefficient_paths[tau_index[0]:tau_index[1]],
                      label="Estimated $\\beta_{0}$", linestyle="--", linewidth=2)
     
             # Add vertical lines for break dates
@@ -317,7 +325,7 @@ class MarkovSwitching:
             for i in range(self.n_est):
                 plt.subplot(self.n_est, 1, i + 1)
                 plt.plot(x_vals[tau_index[0]:tau_index[1]],
-                         (self.mBetaHat[:, i])[tau_index[0]:tau_index[1]],
+                         (coefficient_paths[:, i])[tau_index[0]:tau_index[1]],
                          label=f'Estimated $\\beta_{i}$', color='black', linewidth=2)
     
                 # Add vertical lines for break dates

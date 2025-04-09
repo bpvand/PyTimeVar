@@ -107,7 +107,7 @@ class Kalman:
             # Observation covariance matrix
             self.bEst_H = True
         else: 
-            self.H = sigma_u*np.ones(self.T)
+            self.H = sigma_u*np.ones(self.n)
         self.a_1 = np.array(b_1).reshape(k,) if b_1 is not None else np.zeros(
             self.T.shape[0])            # Initial state mean
         self.P_1 = np.array(P_1).reshape((k,k)) if P_1 is not None else np.eye(
@@ -160,9 +160,9 @@ class Kalman:
             print('Optimization success')
 
         if self.bEst_H and self.bEst_Q:
-            mH, mQ = np.ones(self.T)*LL_model.x[0], LL_model.x[1:].reshape(self.p_dim, self.p_dim)
+            mH, mQ = np.ones(self.n)*LL_model.x[0], LL_model.x[1:].reshape(self.p_dim, self.p_dim)
         elif self.bEst_H and not self.bEst_Q:
-            mH = np.ones(self.T)*LL_model.x[0]
+            mH = np.ones(self.n)*LL_model.x[0]
         elif not self.bEst_H and self.bEst_Q:
             mQ = LL_model.x.reshape(self.p_dim, self.p_dim)
         
@@ -187,13 +187,13 @@ class Kalman:
 
         '''
         if self.bEst_H and self.bEst_Q:
-            self.H, self.Q = np.ones(self.T)*vTheta[0], vTheta[1:].reshape(self.p_dim, self.p_dim)
+            self.H, self.Q = np.ones(self.n)*vTheta[0], vTheta[1:].reshape(self.p_dim, self.p_dim)
         elif self.bEst_H and not self.bEst_Q:
-            self.H = np.ones(self.T)*vTheta[0]
+            self.H = np.ones(self.n)*vTheta[0]
         elif not self.bEst_H and self.bEst_Q:
             self.Q = vTheta.reshape(self.p_dim, self.p_dim)
         
-        a_filt, a_pred, P, v, F, K = self._KalmanFilter()
+        a_filt, a_pred, P, P_filt, v, F, K = self._KalmanFilter()
         dLL = -(self.n*self.m_dim/2)*np.log(2*np.pi)
         for t in range(self.n):
             dLL = dLL - 0.5 * (np.log(np.linalg.det(F[t, :, :])) + v[t, :, :].T @
@@ -291,7 +291,7 @@ class Kalman:
             The smoothed state covariances at each time step.
         """
 
-        a_filt, a, P, v, F, K = self._KalmanFilter()
+        a_filt, a, P, P_filt, v, F, K = self._KalmanFilter()
         a = a[:-1]
         a_s = np.zeros((self.n, self.p_dim, 1))
         V_s = np.zeros((self.n, self.p_dim, self.p_dim))
@@ -363,9 +363,9 @@ class Kalman:
             self.smooth, self.V = self._smoother()
             return self.smooth
         elif option.lower() == 'all':
-            self.filt = self._filter()
-            self.pred = self._predict()
-            self.smooth = self._smoother()
+            self.filt, self.P_filt = self._filter()
+            self.pred, self.P = self._predict()
+            self.smooth, self.V = self._smoother()
             return [self.filt, self.pred, self.smooth]
         else:
             raise ValueError(
@@ -482,10 +482,10 @@ class Kalman:
                     plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1]], label="Estimated $\\beta_{0}$ - Predictor", linestyle="--", linewidth=2)
                     
                     if confidence_intervals:
-                        vU_bound = self.pred[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],0,0])
-                        vL_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],0,0])
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
+                        vU_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P[1+tau_index[0]:tau_index[1],0,0])
+                        vL_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P[1+tau_index[0]:tau_index[1],0,0])
+                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
+                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
                     
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")

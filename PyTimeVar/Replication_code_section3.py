@@ -58,10 +58,22 @@ auxPwr.summary()
 from PyTimeVar import Kalman
 kalmanmodel = Kalman(vY=vY)
 [kl_filter, kl_predictor, kl_smoother] = kalmanmodel.fit('all')
-kalmanmodel.plot(individual=False)
+kalmanmodel.plot(individual=True, confidence_intervals=True)
 
 # # illustrate GAS model
 from PyTimeVar import GAS
 N_gasmodel = GAS(vY=vY, mX=mX, method='gaussian', niter=10)
 N_GAStrend, N_GASparams = N_gasmodel.fit()
-N_gasmodel.plot()
+N_gasmodel.plot(confidence_intervals=True)
+
+# illustrate srtuctural breaks class
+from PyTimeVar import Breaks
+breaksmodel = Breaks(vY, mX = np.ones((len(vY), 1)), iM=4)
+mBetaHat, glb, datevec = breaksmodel.fit()
+breaksmodel.plot()
+
+# illustrate Markov switching class
+from PyTimeVar import MarkovSwitching
+msmodel = MarkovSwitching(vY, mX = np.ones((len(vY), 1)), iS=2)
+best_beta, best_sigma2, best_P, best_smoothed_probs = msmodel.fit()
+msmodel.plot_coefficients()

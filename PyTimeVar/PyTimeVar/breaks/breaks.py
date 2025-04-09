@@ -43,13 +43,15 @@ class Breaks:
         The matrix with estimated break dates (loc matrix, MATLAB-style).
     bigvec : np.ndarray
         ((bigt*(bigt+1)//2) x 1) vector storing SSR values.
+    break_location : np.ndarray
+        The (iMx1) vector of break locations.
     
     
 
     """
 
-    def __init__(self, vY: np.ndarray, mX: np.ndarray, iH: int = 1, iM: int = 1, dPara_trimming: float = 0.1):
-        self.vY = vY.flatten()
+    def __init__(self, vY: np.ndarray, mX: np.ndarray, iH: int = 1, iM: int = 1, dPara_trimming: float = 0.15):
+        self.vY = vY.reshape(-1,1)
         self.mX = mX
         self.iH = iH
         self.iM = iM
@@ -62,6 +64,7 @@ class Breaks:
         self.glb = None
         self.datevec = None
         self.bigvec = None
+        self.break_location = None
 
 
     def _ssr(self, start, last):
@@ -110,7 +113,8 @@ class Breaks:
     
     def _estimate_coefficients(self):
         mBeta = np.zeros((self.n, self.n_est))
-        vSegments = np.concatenate(([0], self.datevec, [self.n])).astype(int)
+        print(self.datevec.shape)
+        vSegments = np.concatenate(([0], self.break_location, [self.n])).astype(int)
         for i in range(self.iM+1):
             start, end = vSegments[i], vSegments[i+1]
             vY_seg = self.vY[start:end]
@@ -199,12 +203,13 @@ class Breaks:
         self.glb = glb
         self.datevec = datevec
         self.bigvec = bigvec
+        self.break_location = self.datevec[:,-1]
         
         # Fit coefficients between break points
-        mBetaHat = self._estimate_coefficients(self)
+        mBetaHat = self._estimate_coefficients()
         self.mBetaHat = mBetaHat
         
-        return mBetaHat, glb, datevec
+        return mBetaHat, glb, self.break_location
     
     def plot(self, tau: list = None):
         '''
@@ -236,7 +241,7 @@ class Breaks:
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
             
-        vBreaks_normalized = self.datevec / self.n
+        vBreaks_normalized = self.break_location / self.n
         
         if self.n_est == 1:
     
@@ -247,7 +252,7 @@ class Breaks:
             # Add vertical lines for break dates
             for break_point in vBreaks_normalized:
                 if tau is None or (min(tau) <= break_point <= max(tau)):
-                    plt.axvline(x=break_point, color='r', linestyle='--', linewidth=0.8, label='Break Date')
+                    plt.axvline(x=break_point, color='r', linestyle='--', linewidth=0.8, label='Break date' if break_point == vBreaks_normalized[0] else "")
             
             
             plt.grid(linestyle='dashed')
@@ -265,7 +270,7 @@ class Breaks:
                 # Add vertical lines for break dates
                 for break_point in vBreaks_normalized:
                     if tau is None or (min(tau) <= break_point <= max(tau)):
-                        plt.axvline(x=break_point, color='r', linestyle='--', linewidth=0.8, label='Break Date')
+                        plt.axvline(x=break_point, color='r', linestyle='--', linewidth=0.8, label='Break date' if break_point == vBreaks_normalized[0] else "" )
                 
                 
                 plt.grid(linestyle='dashed')

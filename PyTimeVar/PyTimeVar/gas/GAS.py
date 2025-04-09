@@ -129,15 +129,19 @@ class GAS:
             def fgGAS_lh(vpara): return - \
                 self._construct_likelihood(vbeta0, vpara)
                 
-            min_kwargs = {"method":"L-BFGS-B", "bounds": self.bounds, "options": self.options}
-            result = basinhopping(fgGAS_lh, self.vgamma0,
-                              minimizer_kwargs = min_kwargs,
-                              niter = self.niter)
-
-            vparaHat_gGAS = result.x
-            self.success = result.success
-            self.inv_hessian = result.hess_inv
-
+            min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
+            result_bh = basinhopping(fgGAS_lh, self.vgamma0,
+                                        minimizer_kwargs=min_kwargs,
+                                        niter=self.niter)
+            
+            vparaHat_gGAS = result_bh.x
+            self.success = result_bh.success
+            
+            # Run the local minimizer again at the best point found
+            local_result = minimize(fgGAS_lh, vparaHat_gGAS, **min_kwargs)
+            self.inv_hessian = local_result.hess_inv.todense()
+            vparaHat_gGAS = local_result.x
+            
             # construct betat estimate
             mBetaHat = self._g_filter(vbeta0, vparaHat_gGAS)
             vparaHat = vparaHat_gGAS
@@ -157,14 +161,18 @@ class GAS:
             def ftGAS_lh(vpara): return - \
                 self._construct_likelihood(vbeta0, vpara)
                 
-            min_kwargs = {"method":"L-BFGS-B", "bounds": self.bounds, "options": self.options}
-            result = basinhopping(ftGAS_lh, self.vgamma0,
-                              minimizer_kwargs = min_kwargs,
-                              niter = self.niter)
-
-            vparaHat_tGAS = result.x
-            self.success = result.success
-            self.inv_hessian = result.hess_inv
+            min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
+            result_bh = basinhopping(ftGAS_lh, self.vgamma0,
+                                        minimizer_kwargs=min_kwargs,
+                                        niter=self.niter)
+            
+            vparaHat_tGAS = result_bh.x
+            self.success = result_bh.success
+            
+            # Run the local minimizer again at the best point found
+            local_result = minimize(ftGAS_lh, vparaHat_tGAS, **min_kwargs)
+            self.inv_hessian = local_result.hess_inv
+            vparaHat_tGAS = local_result.x
 
             # construct betat estimate
             mBetaHat = self._t_filter(vbeta0, vparaHat_tGAS)
@@ -354,10 +362,10 @@ class GAS:
             UB = np.concatenate(([200], UB))
             
         
-        mDraws = np.zeros((iM, self.n_est))
+        mDraws = np.zeros((iM, len(self.params)))
         count = 0
         while count < iM:
-            mSamples = np.random.multivariate_normal(self.params, -1*self.inv_hessian, size=iM)
+            mSamples = np.random.multivariate_normal(self.params, (-1/self.n)*self.inv_hessian, size=iM)
             
             mMask = np.all((LB <= mSamples) & (mSamples <= UB), axis=1)
             mValid = mSamples[mMask]
@@ -375,7 +383,7 @@ class GAS:
         mBetaDraws = np.zeros((iM, self.n, self.n_est))
         filt = self._g_filter if self.method == 'gaussian' else self._t_filter
         for m in range(iM):
-            mBetaDraws[m,:,:] = filt(vbeta0, self.params) 
+            mBetaDraws[m,:,:] = filt(vbeta0, mDraws[m,:]) 
         
         # get confidence intervals
         mCI_l = np.percentile(mBetaDraws, 100*(alpha/2), axis=0)
@@ -420,8 +428,9 @@ class GAS:
                 tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
-            
-        mCI_l, mCI_u = self._confidence_bands(alpha, iM)
+        
+        if confidence_intervals:
+            mCI_l, mCI_u = self._confidence_bands(alpha, iM)
         
         if self.n_est == 1:
     
@@ -432,8 +441,9 @@ class GAS:
             elif self.method=='gaussian':
                 plt.plot(x_vals[tau_index[0]:tau_index[1]], self.betas[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - gGAS", linestyle="--", linewidth=2)
          
-            plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_u[tau_index[0]:tau_index[1],0], label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
-            plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],0], color='blue', linewidth=2, linestyle='dashed')
+            if confidence_intervals:
+                plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_u[tau_index[0]:tau_index[1],0], label=f'{1-alpha}% confidence interval', color='blue', linewidth=2, linestyle='dashed')
+                plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],0], color='blue', linewidth=2, linestyle='dashed')
             plt.grid(linestyle='dashed')
             plt.xlabel('$t/n$',fontsize="xx-large")
 
@@ -451,9 +461,9 @@ class GAS:
                 elif self.method=='gaussian':
                     plt.plot(x_vals[tau_index[0]:tau_index[1]], (self.betas[:, i])[tau_index[0]:tau_index[1]],
                             label=f'Estimated $\\beta_{i} - GGAS$', color='black', linewidth=2)
-                
-                plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_u[tau_index[0]:tau_index[1],i], label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
-                plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],i], color='blue', linewidth=2, linestyle='dashed')
+                if confidence_intervals:
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_u[tau_index[0]:tau_index[1],i], label=f'{1-alpha}% confidence interval', color='blue', linewidth=2, linestyle='dashed')
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],i], color='blue', linewidth=2, linestyle='dashed')
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")
 
