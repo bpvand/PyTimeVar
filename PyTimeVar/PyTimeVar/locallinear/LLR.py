@@ -1842,6 +1842,8 @@ class LocalLinear:
         elif isinstance(tau, list):
             if min(tau) <= 0:
                 tau_index = np.array([int(0), int(max(tau) * self.n)])
+            elif tau[0] > 1 or tau[1] > 1:
+                raise ValueError('The elements of parameter tau are required to be smaller or equal to 1.')
             else:
                 tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
         else:
