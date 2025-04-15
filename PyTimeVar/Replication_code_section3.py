@@ -74,6 +74,6 @@ breaksmodel.plot()
 
 # illustrate Markov switching class
 from PyTimeVar import MarkovSwitching
-msmodel = MarkovSwitching(vY, mX = np.ones((len(vY), 1)), iS=2)
+msmodel = MarkovSwitching(vY[1:] - vY[:-1], mX = np.ones((len(vY)-1, 1)), iS=2)
 best_beta, best_sigma2, best_P, best_smoothed_probs = msmodel.fit()
 msmodel.plot_coefficients()

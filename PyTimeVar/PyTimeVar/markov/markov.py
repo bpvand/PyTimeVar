@@ -91,18 +91,17 @@ class MarkovSwitching:
         mProb_pred[:,0] /= np.sum(mProb_pred[:,0])
         mProb_smooth = np.zeros((self.iS, self.n))
 
-        # Initialization of predicted probabilities
-        mProb_pred[:, 0] = np.ones(self.iS) / self.iS  # Uniform initial probabilities
-
         # Filtering
         for t in range(self.n):
-            # 1. Prediction step
-            mProb_pred[:, t + 1] = mP.T @ mProb_filt[:, t] if t > 0 else mP.T @ mProb_pred[:, 0]
-            # 2. Calculate likelihood of observation y_t given each state
+            # 1. Calculate likelihood of observation y_t given each state
             vLikelihood = np.array([self._conditional_pdf_state(vBeta, dS2, s, t) for s in range(self.iS)])
-
-            # 3. Filtering step
-            mProb_filt[:, t] = self._inference_est(vLikelihood, mProb_pred[:, t + 1])
+            
+            # 2. Filtering step
+            mProb_filt[:, t] = self._inference_est(vLikelihood, mProb_pred[:, t])
+            
+            # 3. Prediction step
+            mProb_pred[:, t + 1] = mP.T @ mProb_filt[:, t] if t > 0 else mP.T @ mProb_pred[:, 0]
+            
 
         # Smoothing (Kim's algorithm)
         mProb_smooth[:, -1] = mProb_filt[:, -1]
@@ -111,8 +110,6 @@ class MarkovSwitching:
             vDenominator = mProb_pred[:, t + 1]
             vRatio = vNumerator / vDenominator
             mProb_smooth[:, t] = mProb_filt[:, t] * vRatio
-        
-        print(mProb_pred)
 
         return mProb_filt, mProb_pred, mProb_smooth
     
@@ -126,16 +123,12 @@ class MarkovSwitching:
 
         for s in range(self.iS):
             weights = mProb_smooth[s, :]
-            print(weights)
-            weighted_X = self.mX * weights
-            # print(np.linalg.inv(self.mX.T @ weighted_X))
-            # print((self.mX.T @ weighted_X))
+            weighted_X = self.mX * weights[:, None]
             vBeta_new[:, s] = np.linalg.inv(self.mX.T @ weighted_X) @ (self.mX.T @ (weights * self.vY))
-            # print(vBeta_new[:,s])
 
             residuals = self.vY - self.mX @ vBeta_new[:, s]
             dS2_new += np.sum(weights * residuals**2)
-
+ 
         dS2_new /= self.n
 
         # Update transition probabilities (closed form solution)
@@ -312,7 +305,7 @@ class MarkovSwitching:
             # Add vertical lines for break dates
             for break_point in regime_change_normalized:
                 if tau is None or (min(tau) <= break_point <= max(tau)):
-                    plt.axvline(x=break_point, color='r', linestyle='--', linewidth=0.8, label='Break Date')
+                    plt.axvline(x=break_point, color='r', linestyle='--', linewidth=0.8, label='Break date' if break_point == regime_change_normalized[0] else "")
     
             plt.grid(linestyle='dashed')
             plt.xlabel('$t/n$', fontsize="xx-large")
@@ -331,7 +324,7 @@ class MarkovSwitching:
                 # Add vertical lines for break dates
                 for break_point in regime_change_normalized:
                     if tau is None or (min(tau) <= break_point <= max(tau)):
-                        plt.axvline(x=break_point, color='r', linestyle='--', linewidth=0.8, label='Break Date')
+                        plt.axvline(x=break_point, color='r', linestyle='--', linewidth=0.8, label='Break date' if break_point == regime_change_normalized[0] else "")
     
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$', fontsize="xx-large")
