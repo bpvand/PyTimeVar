@@ -171,7 +171,7 @@ class GAS:
             
             # Run the local minimizer again at the best point found
             local_result = minimize(ftGAS_lh, vparaHat_tGAS, **min_kwargs)
-            self.inv_hessian = local_result.hess_inv
+            self.inv_hessian = local_result.hess_inv.todense()
             vparaHat_tGAS = local_result.x
 
             # construct betat estimate

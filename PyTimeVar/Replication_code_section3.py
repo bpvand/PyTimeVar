@@ -62,18 +62,94 @@ kalmanmodel.plot(individual=True, confidence_intervals=True)
 
 # # illustrate GAS model
 from PyTimeVar import GAS
-N_gasmodel = GAS(vY=vY, mX=mX, method='gaussian', niter=10)
+N_gasmodel = GAS(vY=vY, mX=mX, method='student', niter=10)
 N_GAStrend, N_GASparams = N_gasmodel.fit()
 N_gasmodel.plot(confidence_intervals=True)
 
-# illustrate srtuctural breaks class
-from PyTimeVar import Breaks
-breaksmodel = Breaks(vY, mX = np.ones((len(vY), 1)), iM=4)
-mBetaHat, glb, datevec = breaksmodel.fit()
-breaksmodel.plot()
+# # illustrate srtuctural breaks class
+# from PyTimeVar import Breaks
+# breaksmodel = Breaks(vY, mX = np.ones((len(vY), 1)), iM=4)
+# mBetaHat, glb, datevec = breaksmodel.fit()
+# breaksmodel.plot()
 
-# illustrate Markov switching class
-from PyTimeVar import MarkovSwitching
-msmodel = MarkovSwitching(vY[1:] - vY[:-1], mX = np.ones((len(vY)-1, 1)), iS=2)
-best_beta, best_sigma2, best_P, best_smoothed_probs = msmodel.fit()
-msmodel.plot_coefficients()
+# # illustrate Markov switching class
+# from PyTimeVar import MarkovSwitching
+# msmodel = MarkovSwitching(vY[1:] - vY[:-1], mX = np.ones((len(vY)-1, 1)), iS=2)
+# best_beta, best_sigma2, best_P, best_smoothed_probs = msmodel.fit()
+# msmodel.plot_coefficients()
+
+# ------ Simulation study for N-GAS model ---
+# initer = 10
+# iM = 1000
+# iT = 100
+# vN_cov, vN_length = np.zeros(initer), np.zeros(initer)
+# dbeta0 = 0
+# vparams = [0.03, 1, 0.2]
+# def sim_N_GAS(iT, dbeta0, vparams):
+#     vBeta_true_N = np.zeros(iT)
+#     vBeta_true_N[0] = dbeta0
+#     vY = np.zeros(iT)
+#     vEps = np.random.normal(0, 1, iT)
+#     for t in range(1, iT):
+#         yt = vY[t-1]
+#         epst = yt - vBeta_true_N[t-1]
+#         vxt = np.ones((1, 1))
+#         mNablat = vxt * epst
+#         vbetaNow = vparams[0] + vparams[1] * vBeta_true_N[t-1] + vparams[2] * mNablat.squeeze()
+#         vBeta_true_N[t] = vbetaNow
+#         vY[t] = vBeta_true_N[t] + vEps[t]
+#     return vY, vBeta_true_N
+
+import matplotlib.pyplot as plt
+# for i in range(initer):
+#     vY, vBeta_true_N = sim_N_GAS(iT, dbeta0, vparams)
+#     # plt.plot(vY,c='r')
+#     # plt.plot(vBeta_true_N, c='b')
+#     # plt.show()
+#     mX = np.ones((iT, 1))
+#     N_gasmodel = GAS(vY=vY, mX=mX, method='gaussian', niter=10)
+#     N_GAStrend, N_GASparams = N_gasmodel.fit()
+#     mCI_l, mCI_u = N_gasmodel._confidence_bands(alpha=0.05, iM=iM)
+#     vN_cov[i] = np.max((N_GAStrend <= mCI_u[:,0]) & (N_GAStrend >= mCI_l[:,0]))
+#     vN_length[i] = np.mean(mCI_u[:,0] - mCI_l[:,0])
+#     print(vN_cov[i], vN_length[i])
+
+
+# ------ Simulation study for t-GAS model ---
+initer = 10
+iM = 1000
+iT = 100
+vt_cov, vt_length = np.zeros(initer), np.zeros(initer)
+dbeta0 = 0
+vparams = [0.03, 1, 0.2, 4, 0.2]
+def sim_t_GAS(iT, dbeta0, vparams):
+    vBeta_true_N = np.zeros(iT)
+    vBeta_true_N[0] = dbeta0
+    vY = np.zeros(iT)
+    vEps = np.random.normal(0, 1, iT)
+    for t in range(1, iT):
+        yt = vY[t-1]
+        epst = yt - vBeta_true_N[t-1]
+        vxt = np.ones((1, 1))
+        temp1 = (1 + vparams[3]**(-1)) * (1 + vparams[3]**(-1)
+                                                * (epst / vparams[4])**2)**(-1)
+        mNablat = (1 + vparams[3])**(-1) * (3 + vparams[3]) * \
+                temp1 * vxt * epst
+        vbetaNow = vparams[0] + vparams[1] * vBeta_true_N[t-1] + vparams[2] * mNablat.squeeze()
+        vBeta_true_N[t] = vbetaNow
+        vY[t] = vBeta_true_N[t] + vEps[t]
+    return vY, vBeta_true_N
+
+for i in range(initer):
+    vY, vBeta_true_t = sim_t_GAS(iT, dbeta0, vparams)
+    mX = np.ones((iT, 1))
+    t_gasmodel = GAS(vY=vY, mX=mX, method='student', niter=10)
+    t_GAStrend, t_GASparams = t_gasmodel.fit()
+    mCI_l, mCI_u = t_gasmodel._confidence_bands(alpha=0.05, iM=iM)
+    vt_cov[i] = np.max((t_GAStrend <= mCI_u[:,0]) & (t_GAStrend >= mCI_l[:,0]))
+    vt_length[i] = np.mean(mCI_u[:,0] - mCI_l[:,0])
+    plt.plot(vBeta_true_t)
+    plt.plot(mCI_l[:,0])
+    plt.plot(mCI_u[:,0])
+    plt.show()
+    print(vt_cov[i], vt_length[i])
