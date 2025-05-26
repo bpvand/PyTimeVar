@@ -59,12 +59,13 @@ np.random.seed(123)
 
 # illustrate Kalman smoother
 from PyTimeVar import Kalman
-kalmanmodel = Kalman(vY=vY)
-[kl_filter, kl_predictor, kl_smoother] = kalmanmodel.fit('all')
-kalmanmodel.plot(individual=False)
+# kalmanmodel = Kalman(vY=vY)
+# [kl_filter, kl_predictor, kl_smoother] = kalmanmodel.fit('all')
+# kalmanmodel.plot(individual=False)
 
 sigma_u = 1/(1+np.exp(np.random.normal(0,1,len(vY))))
 kalmanmodel = Kalman(vY=vY, sigma_u = sigma_u)
+[kl_filter, kl_predictor, kl_smoother] = kalmanmodel.fit('all')
 kalmanmodel.plot(individual=True, confidence_intervals=True)
 
 # # illustrate GAS model

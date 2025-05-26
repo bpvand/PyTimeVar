@@ -633,12 +633,22 @@ class PowerLaw:
         C_LB_gamma = np.quantile(mGammaStar, alpha/2, axis=0)
         C_UB_gamma = np.quantile(mGammaStar, 1-alpha/2, axis=0)
 
-        print('Estimated parameters and confidence intervals:')
-        print('Coefficients')
-        print(f'Estimated: {self.coeffHat}')
-        print(f'Confidence interval: {C_LB_coeff} to {C_UB_coeff}')
-        print('Power parameters')
-        print(f'Estimated: {self.gammaHat}')
-        print(f'Confidence interval: {C_LB_gamma} to {C_UB_gamma}')
+        print('\n--- Power Law: Estimated Parameters and Confidence Intervals ---')
+
+        print('\nCoefficients (τ_i):')
+        for i in range(self.p):
+            print(f'  τ_{i+1}:')
+            print(f'    Estimated: {self.coeffHat[i][0]:.3f}')
+            print(f'    Confidence Interval: {C_LB_coeff[i]:.3f} to {C_UB_coeff[i]:.3f}')
+                
+        print('\n=============================================================')
+        
+        print('Power Parameters (γ_i):')
+        for i in range(self.p):
+            print(f'  γ_{i+1}:')
+            print(f'    Estimated: {self.gammaHat[0][i]:.3f}')
+            print(f'    Confidence Interval: {C_LB_gamma[i]:.3f} to {C_UB_gamma[i]:.3f}')
+        
+        print('\n=============================================================')
 
         return C_LB_coeff, C_UB_coeff, C_LB_gamma, C_UB_gamma

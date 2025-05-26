@@ -490,8 +490,7 @@ class Kalman:
                     if confidence_intervals:
                         vU_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],0,0])
                         vL_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],0,0])
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
+                        plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100}% confidence interval - smooth', color='grey', alpha=0.3)
                     
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
@@ -508,8 +507,7 @@ class Kalman:
                     if confidence_intervals:
                         vU_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P[1+tau_index[0]:tau_index[1],0,0])
                         vL_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P[1+tau_index[0]:tau_index[1],0,0])
-                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - predict', color='blue', linewidth=2, linestyle='dashed')
-                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
+                        plt.fill_between(x_vals[tau_index[0]+1:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100}% confidence interval - predict', color='grey', alpha=0.3)
                     
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
@@ -526,8 +524,7 @@ class Kalman:
                     if confidence_intervals:
                         vU_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
                         vL_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - filter', color='blue', linewidth=2, linestyle='dashed')
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
+                        plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100}% confidence interval - filter', color='grey', alpha=0.3)
                     
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
@@ -547,8 +544,7 @@ class Kalman:
                         if confidence_intervals:
                             vU_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],i,i])
                             vL_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],i,i])
-                            plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
-                            plt.plot(x_vals[tau_index[0]:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
+                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100}% confidence interval - smooth', color='grey', alpha=0.3)
                         
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
@@ -565,8 +561,7 @@ class Kalman:
                         if confidence_intervals:
                             vU_bound = self.pred[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],i,i])
                             vL_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],i,i])
-                            plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - predict', color='blue', linewidth=2, linestyle='dashed')
-                            plt.plot(x_vals[tau_index[0]:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
+                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100}% confidence interval - predict', color='grey', alpha=0.3)
                             
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
@@ -583,8 +578,7 @@ class Kalman:
                         if confidence_intervals:
                             vU_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
                             vL_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
-                            plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - filter', color='blue', linewidth=2, linestyle='dashed')
-                            plt.plot(x_vals[tau_index[0]:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
+                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100}% confidence interval - filter', color='grey', alpha=0.3)
                         
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
