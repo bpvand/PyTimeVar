@@ -762,7 +762,7 @@ class GAS:
                 plt.show()
 
                 plt.figure(figsize=(12, 6))
-                plt.plot(x_vals[tau_index[0]:tau_index[1]],self.sigma2_t,label='$\sigma^2_t$')
+                plt.plot(x_vals[tau_index[0]:tau_index[1]],self.sigma2_t,label='$\sigma^2_{u,t}$')
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")
 
@@ -789,7 +789,7 @@ class GAS:
                     plt.legend(fontsize="x-large")
                 plt.show()
                 plt.figure(figsize=(12, 6))
-                plt.plot(x_vals[tau_index[0]:tau_index[1]],self.sigma2_t,label='$\sigma^2_t$')
+                plt.plot(x_vals[tau_index[0]:tau_index[1]],self.sigma2_t,label='$\sigma^2_{u,t}$')
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")
 
