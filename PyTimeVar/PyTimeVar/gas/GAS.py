@@ -1,9 +1,10 @@
 import numpy as np
 from scipy.optimize import minimize
-from scipy.special import gammaln
+from scipy.special import gammaln, digamma
 from scipy.optimize import basinhopping
 import time
 import matplotlib.pyplot as plt
+from statsmodels.tools.numdiff import approx_hess2
 
 
 class GAS:
@@ -139,8 +140,8 @@ class GAS:
             
             # Run the local minimizer again at the best point found
             local_result = minimize(fgGAS_lh, vparaHat_gGAS, **min_kwargs)
-            self.inv_hessian = local_result.hess_inv.todense()
             vparaHat_gGAS = local_result.x
+            self.inv_hessian = np.linalg.pinv(approx_hess2(vparaHat_gGAS, fgGAS_lh, epsilon=1e-8))
             
             # construct betat estimate
             mBetaHat = self._g_filter(vbeta0, vparaHat_gGAS)
@@ -171,8 +172,8 @@ class GAS:
             
             # Run the local minimizer again at the best point found
             local_result = minimize(ftGAS_lh, vparaHat_tGAS, **min_kwargs)
-            self.inv_hessian = local_result.hess_inv.todense()
             vparaHat_tGAS = local_result.x
+            self.inv_hessian = np.linalg.pinv(approx_hess2(vparaHat_tGAS, ftGAS_lh, epsilon=1e-8))
 
             # construct betat estimate
             mBetaHat = self._t_filter(vbeta0, vparaHat_tGAS)

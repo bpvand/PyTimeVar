@@ -1658,7 +1658,6 @@ class LocalLinear:
         
         if B < 1299:
             print('Note: It is recommended to use at least B = 1299 iterations.\n')
-
         if bootstraptype not in bootstrap_functions:
             raise ValueError(
                 "Invalid bootstrap type. Choose one of 'SB','WB', 'SWB','MB' ,'LBWB', 'AWB'")
