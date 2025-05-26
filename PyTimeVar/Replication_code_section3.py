@@ -46,7 +46,7 @@ np.random.seed(123)
 # pwrTrend, pwrGamma = PwrLaw.fit()
 # PwrLaw.summary()
 # PwrLaw.plot()
-# PwrLaw.confidence_intervals(bootstraptype='LBWB', B=1299, C=2)
+# C_LB_coeff, C_UB_coeff, C_LB_gamma, C_UB_gamma = PwrLaw.confidence_intervals(bootstraptype='SWB', B=1299, C=2)
 
 
 # # # auxiliary power-law model to illustrate options
@@ -57,17 +57,21 @@ np.random.seed(123)
 # auxPwrTrend, auxPwrGamma = auxPwr.fit()
 # auxPwr.summary()
 
-# # illustrate Kalman smoother
-# from PyTimeVar import Kalman
-# kalmanmodel = Kalman(vY=vY)
-# [kl_filter, kl_predictor, kl_smoother] = kalmanmodel.fit('all')
-# kalmanmodel.plot(individual=True, confidence_intervals=True)
+# illustrate Kalman smoother
+from PyTimeVar import Kalman
+kalmanmodel = Kalman(vY=vY)
+[kl_filter, kl_predictor, kl_smoother] = kalmanmodel.fit('all')
+kalmanmodel.plot(individual=False)
+
+sigma_u = 1/(1+np.exp(np.random.normal(0,1,len(vY))))
+kalmanmodel = Kalman(vY=vY, sigma_u = sigma_u)
+kalmanmodel.plot(individual=True, confidence_intervals=True)
 
 # # illustrate GAS model
-from PyTimeVar import GAS
-N_gasmodel = GAS(vY=vY, mX=mX, method='student', niter=10)
-N_GAStrend, N_GASparams = N_gasmodel.fit()
-N_gasmodel.plot(confidence_intervals=True)
+# from PyTimeVar import GAS
+# N_gasmodel = GAS(vY=vY, mX=mX, method='student', niter=10)
+# N_GAStrend, N_GASparams = N_gasmodel.fit()
+# N_gasmodel.plot(confidence_intervals=True)
 
 # # illustrate srtuctural breaks class
 # from PyTimeVar import Breaks

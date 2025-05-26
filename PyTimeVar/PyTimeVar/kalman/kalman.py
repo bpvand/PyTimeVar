@@ -2,6 +2,7 @@ import numpy as np
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt
 import scipy.stats as st
+from scipy.linalg import eigvalsh
 
 
 class Kalman:
@@ -142,34 +143,52 @@ class Kalman:
 
         '''
         if self.bEst_H and self.bEst_Q:
-            vH_init, vQ_init = np.ones(1)*1, np.ones(self.p_dim**2)*1
+            vH_init, vQ_init = np.ones(1)*1, np.ones(self.p_dim*(self.p_dim+1)//2)
             vTheta = np.hstack([vH_init, vQ_init])
+            bnds = [(1e-8, None)] + [(None, None)] * (self.p_dim*(self.p_dim+1)//2)
         elif self.bEst_H and not self.bEst_Q:
             vTheta = np.ones(1)*1
             mQ = self.Q
+            bnds = [(1e-8, None)]
         elif not self.bEst_H and self.bEst_Q:
-            vTheta = np.ones(self.p_dim**2)*1
+            vTheta = np.ones(self.p_dim*(self.p_dim+1)//2)
             mH = self.H
+            bnds = [(None, None)] * (self.p_dim*(self.p_dim+1)//2)
         else:
             return self.H, self.Q
         
-        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='L-BFGS-B', bounds = ((1e-8, None),)*len(vTheta),options={'maxiter': 5e5})
+        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='L-BFGS-B', bounds = bnds, options={'maxiter': 5e5})
         if LL_model.success == False:
             print('Optimization failed')
         else:
             print('Optimization success')
 
         if self.bEst_H and self.bEst_Q:
-            mH, mQ = np.ones(self.n)*LL_model.x[0], LL_model.x[1:].reshape(self.p_dim, self.p_dim)
+            mH, mQ = np.ones(self.n)*LL_model.x[0], self._unpack_symmetric_matrix(LL_model.x[1:])
         elif self.bEst_H and not self.bEst_Q:
             mH = np.ones(self.n)*LL_model.x[0]
         elif not self.bEst_H and self.bEst_Q:
-            mQ = LL_model.x.reshape(self.p_dim, self.p_dim)
-        
-        k = self.T.shape[0]
-        mQ = np.array(mQ).reshape((k,k))
+            mQ = self._unpack_symmetric_matrix(LL_model.x)
         
         return mH, mQ
+    
+    def _get_symmetric_size(self, n_params):
+        k_float = (-1 + np.sqrt(1 + 8 * n_params)) / 2
+        k_int = int(k_float)
+        if k_float == k_int:
+            return k_int
+        
+    def _unpack_symmetric_matrix(self, v):
+        
+        k = self._get_symmetric_size(len(v))
+        matrix = np.zeros((k, k))
+        idx = 0
+        for i in range(k):
+            for j in range(i, k):
+                matrix[i, j] = v[idx]
+                matrix[j, i] = v[idx]
+                idx += 1
+        return matrix
 
     def _compute_likelihood_LL(self, vTheta):
         '''
@@ -186,12 +205,17 @@ class Kalman:
             The negative log-likelihood value.
 
         '''
+        
         if self.bEst_H and self.bEst_Q:
-            self.H, self.Q = np.ones(self.n)*vTheta[0], vTheta[1:].reshape(self.p_dim, self.p_dim)
+            self.H, self.Q = np.ones(self.n)*vTheta[0], self._unpack_symmetric_matrix(vTheta[1:])
         elif self.bEst_H and not self.bEst_Q:
             self.H = np.ones(self.n)*vTheta[0]
         elif not self.bEst_H and self.bEst_Q:
-            self.Q = vTheta.reshape(self.p_dim, self.p_dim)
+            self.Q = self._unpack_symmetric_matrix(vTheta)
+            
+        eigenvalues = eigvalsh(self.Q)
+        if np.any(eigenvalues < 0):
+            return 1E18
         
         a_filt, a_pred, P, P_filt, v, F, K = self._KalmanFilter()
         dLL = -(self.n*self.m_dim/2)*np.log(2*np.pi)
@@ -484,7 +508,7 @@ class Kalman:
                     if confidence_intervals:
                         vU_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P[1+tau_index[0]:tau_index[1],0,0])
                         vL_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P[1+tau_index[0]:tau_index[1],0,0])
-                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
+                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - predict', color='blue', linewidth=2, linestyle='dashed')
                         plt.plot(x_vals[tau_index[0]+1:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
                     
                     plt.grid(linestyle='dashed')
@@ -502,7 +526,7 @@ class Kalman:
                     if confidence_intervals:
                         vU_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
                         vL_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
+                        plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - filter', color='blue', linewidth=2, linestyle='dashed')
                         plt.plot(x_vals[tau_index[0]:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
                     
                     plt.grid(linestyle='dashed')
@@ -541,7 +565,7 @@ class Kalman:
                         if confidence_intervals:
                             vU_bound = self.pred[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],i,i])
                             vL_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],i,i])
-                            plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
+                            plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - predict', color='blue', linewidth=2, linestyle='dashed')
                             plt.plot(x_vals[tau_index[0]:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
                             
                         plt.grid(linestyle='dashed')
@@ -559,7 +583,7 @@ class Kalman:
                         if confidence_intervals:
                             vU_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
                             vL_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
-                            plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - smooth', color='blue', linewidth=2, linestyle='dashed')
+                            plt.plot(x_vals[tau_index[0]:tau_index[1]], vU_bound, label=f'{1-alpha}% confidence interval - filter', color='blue', linewidth=2, linestyle='dashed')
                             plt.plot(x_vals[tau_index[0]:tau_index[1]], vL_bound, color='blue', linewidth=2, linestyle='dashed')
                         
                         plt.grid(linestyle='dashed')
