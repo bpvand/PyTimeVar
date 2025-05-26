@@ -5,6 +5,8 @@ from scipy.optimize import basinhopping
 import time
 import matplotlib.pyplot as plt
 from statsmodels.tools.numdiff import approx_hess2
+import warnings
+warnings.filterwarnings("ignore")
 
 
 class GAS:
