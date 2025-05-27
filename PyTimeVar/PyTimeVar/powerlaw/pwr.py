@@ -89,18 +89,37 @@ class PowerLaw:
             return
         
         
-        tau_index=None
+        tau_index = np.array([None,None])
         x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
         if tau is None:
 
             tau_index=np.array([0,self.n])
         elif isinstance(tau, list):
-            if min(tau) <= 0:
-                tau_index = np.array([int(0), int(max(tau) * self.n)])
-            else:
-                tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+            if tau[0] == tau[1]:
+                raise ValueError("Invalid input: a and b cannot be equal.")
+
+            if tau[0] > 1 and tau[1] > 1:
+                raise ValueError("The values of tau must be in [0,1].")
+
+            if tau[0] < 0 and tau[1] < 0:
+                raise ValueError("The values of tau must be in [0,1].")
+
+
+            if tau[0] < 0 or tau[1] > 1:
+                print("Warning: The values of tau must be in [0,1]. Set to [0,1] automatically.")
+
+            tau[0] = max(0, min(tau[0], 1))
+            tau[1] = max(0, min(tau[1], 1))
+
+            if tau[0] > tau[1]:
+                print("Warning: tau[0] > tau[1]. Values are switched automatically.")
+                tau[0], tau[1] = tau[1], tau[0]
+
+            tau_index[0] = int(tau[0]*(self.n-1))
+            tau_index[1] = int(tau[1]*(self.n))
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
+        
 
         plt.figure(figsize=(12, 6))
         plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=1, color = 'black')
