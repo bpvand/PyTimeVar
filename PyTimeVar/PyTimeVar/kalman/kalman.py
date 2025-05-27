@@ -447,11 +447,14 @@ class Kalman:
 
 
             if tau[0] < 0 or tau[1] > 1:
-                print("Warning: The values of tau must be in [0,1]. Set to [0,1] automatically.")
+                print("Warning: The values of tau must be in [0,1].")
 
+            original_tau = tau.copy()
             tau[0] = max(0, min(tau[0], 1))
             tau[1] = max(0, min(tau[1], 1))
 
+            if original_tau != tau:
+                print(f"Set to {tau} automatically.")
             if tau[0] > tau[1]:
                 print("Warning: tau[0] > tau[1]. Values are switched automatically.")
                 tau[0], tau[1] = tau[1], tau[0]
