@@ -476,7 +476,7 @@ class LocalLinear:
 
     def fit(self):
         """
-        Fits the local linear regression model to the data.
+        Fits the linear model by local linear regression to the data.
 
         Returns
         -------

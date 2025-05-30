@@ -4,7 +4,7 @@ from scipy.special import gammaln, digamma
 from scipy.optimize import basinhopping
 import time
 import matplotlib.pyplot as plt
-from statsmodels.tools.numdiff import approx_hess2
+import numdifftools as nd
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -161,12 +161,14 @@ class GAS:
 
                 vparaHat_gGAS = result_bh.x
                 self.success = result_bh.success
-
+                hess_func = nd.Hessian(fgGAS_lh)
+                self.inv_hessian = np.linalg.pinv(hess_func(vparaHat_gGAS))
+                
                 # Run the local minimizer again at the best point found
-                min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
-                local_result = minimize(fgGAS_lh, vparaHat_gGAS, **min_kwargs,)
-                self.inv_hessian = local_result.hess_inv.todense()
-                vparaHat_gGAS = local_result.x
+                # min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
+                # local_result = minimize(fgGAS_lh, vparaHat_gGAS, **min_kwargs,)
+                # self.inv_hessian = local_result.hess_inv.todense()
+                # vparaHat_gGAS = local_result.x
 
                 # construct betat estimate
                 mBetaHat = self._g_filter(vbeta0, vparaHat_gGAS)
@@ -194,12 +196,14 @@ class GAS:
 
                 vparaHat_tGAS = result_bh.x
                 self.success = result_bh.success
+                hess_func = nd.Hessian(ftGAS_lh)
+                self.inv_hessian = np.linalg.pinv(hess_func(vparaHat_tGAS))
 
                 # Run the local minimizer again at the best point found
-                min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
-                local_result = minimize(ftGAS_lh, vparaHat_tGAS, **min_kwargs)
-                self.inv_hessian = local_result.hess_inv
-                vparaHat_tGAS = local_result.x
+                # min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
+                # local_result = minimize(ftGAS_lh, vparaHat_tGAS, **min_kwargs)
+                # self.inv_hessian = local_result.hess_inv.todense()
+                # vparaHat_tGAS = local_result.x
 
                 # construct betat estimate
                 mBetaHat = self._t_filter(vbeta0, vparaHat_tGAS)
@@ -255,7 +259,7 @@ class GAS:
                 min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
                 local_result = minimize(fgGAS_lh, vparaHat_gGAS,**min_kwargs)
                 # local_result = result_bh
-                # self.inv_hessian = local_result.hess_inv.todense()
+                self.inv_hessian = local_result.hess_inv.todense()
                 vparaHat_gGAS = local_result.x
 
                 # construct betat estimate
@@ -635,8 +639,9 @@ class GAS:
         
         mDraws = np.zeros((iM, len(self.params)))
         count = 0
+        mOmega = (-1/self.n)*self.inv_hessian
         while count < iM:
-            mSamples = np.random.multivariate_normal(self.params, (-1/self.n)*self.inv_hessian, size=iM)
+            mSamples = np.random.multivariate_normal(self.params, mOmega, size=iM)
             
             mMask = np.all((LB <= mSamples) & (mSamples <= UB), axis=1)
             mValid = mSamples[mMask]
@@ -736,8 +741,7 @@ class GAS:
                     plt.plot(x_vals[tau_index[0]:tau_index[1]], self.betas[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - gGAS", linestyle="--", linewidth=2)
 
                 if confidence_intervals:
-                    plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_u[tau_index[0]:tau_index[1],0], label=f'{1-alpha}% confidence interval', color='blue', linewidth=2, linestyle='dashed')
-                    plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],0], color='blue', linewidth=2, linestyle='dashed')
+                    plt.fill_between(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],0], mCI_u[tau_index[0]:tau_index[1],0], label=f'{(1-alpha)*100:.1f}% confidence interval', color='grey', alpha=0.3)
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")
 
@@ -756,8 +760,7 @@ class GAS:
                         plt.plot(x_vals[tau_index[0]:tau_index[1]], (self.betas[:, i])[tau_index[0]:tau_index[1]],
                                 label=f'Estimated $\\beta_{i} - GGAS$', color='black', linewidth=2)
                     if confidence_intervals:
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_u[tau_index[0]:tau_index[1],i], label=f'{1-alpha}% confidence interval', color='blue', linewidth=2, linestyle='dashed')
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],i], color='blue', linewidth=2, linestyle='dashed')
+                        plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],i], mCI_u[tau_index[0]:tau_index[1],i], label=f'{(1-alpha)*100:.1f}% confidence interval', color='grey', alpha=0.3)
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
 
@@ -775,8 +778,7 @@ class GAS:
                     plt.plot(x_vals[tau_index[0]:tau_index[1]], self.betas[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - gGAS", linestyle="--", linewidth=2)
                     # plt.plot(x_vals[tau_index[0]:tau_index[1]], self.sigma2_t[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - gGAS", linestyle="--", linewidth=2)
                 if confidence_intervals:
-                    plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_u[tau_index[0]:tau_index[1],0], label=f'{1-alpha}% confidence interval', color='blue', linewidth=2, linestyle='dashed')
-                    plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],0], color='blue', linewidth=2, linestyle='dashed')
+                    plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],0], mCI_u[tau_index[0]:tau_index[1],0], label=f'{(1-alpha)*100:.1f}% confidence interval', color='grey', alpha=0.3)
                 plt.grid(linestyle='dashed')
                 plt.xlabel('$t/n$',fontsize="xx-large")
 
@@ -806,8 +808,7 @@ class GAS:
                         plt.plot(x_vals[tau_index[0]:tau_index[1]], (self.betas[:, i])[tau_index[0]:tau_index[1]],
                                  label=f'Estimated $\\beta_{i} - GGAS$', color='black', linewidth=2)
                     if confidence_intervals:
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_u[tau_index[0]:tau_index[1],i], label=f'{1-alpha}% confidence interval', color='blue', linewidth=2, linestyle='dashed')
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],i], color='blue', linewidth=2, linestyle='dashed')
+                        plt.plot(x_vals[tau_index[0]:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],i], mCI_u[tau_index[0]:tau_index[1],i], label=f'{(1-alpha)*100:.1f}% confidence interval', color='grey', alpha=0.3)
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
 
