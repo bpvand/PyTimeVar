@@ -78,10 +78,10 @@ class GAS:
         self.if_hetero = if_hetero
 
         if self.vgamma0 is not None:
-            if self.method == 'gaussian' and len(self.vgamma0) == 3*self.n_est+1:
+            if self.method == 'gaussian' and len(self.vgamma0) != 3*self.n_est+1:
                 raise ValueError(
                     "Incorrect number of initial parameters are provided. Provide either 3*n_est + 1 or no initial parameters.")
-            if self.method == 'student' and len(self.vgamma0) == 3*self.n_est + 2:
+            if self.method == 'student' and len(self.vgamma0) != 3*self.n_est + 2:
                 raise ValueError(
                     "Incorrect number of initial parameters are provided. Provide either 3*n_est + 2 or no initial parameters.")
 
