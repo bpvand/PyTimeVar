@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt
+import scipy.stats as st
+from scipy.linalg import eigvalsh
 
 
 class Kalman:
@@ -44,7 +46,7 @@ class Kalman:
     Q : np.ndarray
         The transition covariance matrix of the state space model.
     H : np.ndarray
-        The observation noise variance of the state space model.
+        The observation noise variances of the state space model. Each entry corresponds to the observation noise variance at a time point.
     a_1 : np.ndarray, optional
         The initial mean of the state space model.
     P_1 : np.ndarray
@@ -70,7 +72,7 @@ class Kalman:
 
     def __init__(self, vY: np.ndarray = None, T: np.ndarray = None, R: np.ndarray = None, Q: np.ndarray = None, sigma_u: float = None, b_1: np.ndarray = None, P_1: np.ndarray = None, mX: np.ndarray = None):
         self.vY = vY.reshape(-1,1)
-        self.n = len(self.vY)
+        self.n = self.vY.shape[0]
         self.isReg = False
         self.T = T
         if mX is not None:
@@ -106,7 +108,7 @@ class Kalman:
             # Observation covariance matrix
             self.bEst_H = True
         else: 
-            self.H = np.array([sigma_u])
+            self.H = sigma_u*np.ones(self.n)
         self.a_1 = np.array(b_1).reshape(k,) if b_1 is not None else np.zeros(
             self.T.shape[0])            # Initial state mean
         self.P_1 = np.array(P_1).reshape((k,k)) if P_1 is not None else np.eye(
@@ -123,6 +125,10 @@ class Kalman:
         self.filt = None
         self.pred = None
         self.smooth = None
+        
+        self.P_filt = None
+        self.P = None
+        self.V = None
 
     def _estimate_ML(self):
         '''
@@ -137,35 +143,52 @@ class Kalman:
 
         '''
         if self.bEst_H and self.bEst_Q:
-            vH_init, vQ_init = np.ones(1)*1, np.ones(self.p_dim**2)*1
+            vH_init, vQ_init = np.ones(1)*0.4, np.ones(self.p_dim*(self.p_dim+1)//2)
             vTheta = np.hstack([vH_init, vQ_init])
+            bnds = [(1e-8, None)] + [(None, None)] * (self.p_dim*(self.p_dim+1)//2)
         elif self.bEst_H and not self.bEst_Q:
-            vTheta = np.ones(1)*1
+            vTheta = np.ones(1)
             mQ = self.Q
+            bnds = [(1e-8, None)]
         elif not self.bEst_H and self.bEst_Q:
-            vTheta = np.ones(self.p_dim**2)*1
+            vTheta = np.ones(self.p_dim*(self.p_dim+1)//2)
             mH = self.H
+            bnds = [(None, None)] * (self.p_dim*(self.p_dim+1)//2)
         else:
             return self.H, self.Q
         
-        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='L-BFGS-B', bounds = ((1e-8, None),)*len(vTheta),options={'maxiter': 5e5})
+        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='L-BFGS-B', bounds = bnds, options={'maxiter': 5e5})
         if LL_model.success == False:
             print('Optimization failed')
         else:
             print('Optimization success')
 
         if self.bEst_H and self.bEst_Q:
-            mH, mQ = LL_model.x[0].reshape(1, 1), LL_model.x[1:].reshape(self.p_dim, self.p_dim)
+            mH, mQ = np.ones(self.n)*LL_model.x[0], self._unpack_symmetric_matrix(LL_model.x[1:])
         elif self.bEst_H and not self.bEst_Q:
-            mH = LL_model.x.reshape(1,1)
+            mH = np.ones(self.n)*LL_model.x[0]
         elif not self.bEst_H and self.bEst_Q:
-            mQ = LL_model.x.reshape(self.p_dim, self.p_dim)
-        
-        k = self.T.shape[0]
-        mH = np.array(mH).reshape((1,1))
-        mQ = np.array(mQ).reshape((k,k))
+            mQ = self._unpack_symmetric_matrix(LL_model.x)
         
         return mH, mQ
+    
+    def _get_symmetric_size(self, n_params):
+        k_float = (-1 + np.sqrt(1 + 8 * n_params)) / 2
+        k_int = int(k_float)
+        if k_float == k_int:
+            return k_int
+        
+    def _unpack_symmetric_matrix(self, v):
+        
+        k = self._get_symmetric_size(len(v))
+        matrix = np.zeros((k, k))
+        idx = 0
+        for i in range(k):
+            for j in range(i, k):
+                matrix[i, j] = v[idx]
+                matrix[j, i] = v[idx]
+                idx += 1
+        return matrix
 
     def _compute_likelihood_LL(self, vTheta):
         '''
@@ -182,14 +205,19 @@ class Kalman:
             The negative log-likelihood value.
 
         '''
-        if self.bEst_H and self.bEst_Q:
-            self.H, self.Q = vTheta[0].reshape(1,1), vTheta[1:].reshape(self.p_dim, self.p_dim)
-        elif self.bEst_H and not self.bEst_Q:
-            self.H = vTheta.reshape(1,1)
-        elif not self.bEst_H and self.bEst_Q:
-            self.Q = vTheta.reshape(self.p_dim, self.p_dim)
         
-        a_filt, a_pred, P, v, F, K = self._KalmanFilter()
+        if self.bEst_H and self.bEst_Q:
+            self.H, self.Q = np.ones(self.n)*vTheta[0], self._unpack_symmetric_matrix(vTheta[1:])
+        elif self.bEst_H and not self.bEst_Q:
+            self.H = np.ones(self.n)*vTheta[0]
+        elif not self.bEst_H and self.bEst_Q:
+            self.Q = self._unpack_symmetric_matrix(vTheta)
+            
+        eigenvalues = eigvalsh(self.Q)
+        if np.any(eigenvalues < 0):
+            return 1E18
+        
+        a_filt, a_pred, P, P_filt, v, F, K = self._KalmanFilter()
         dLL = -(self.n*self.m_dim/2)*np.log(2*np.pi)
         for t in range(self.n):
             dLL = dLL - 0.5 * (np.log(np.linalg.det(F[t, :, :])) + v[t, :, :].T @
@@ -220,6 +248,7 @@ class Kalman:
         a_pred = np.zeros((self.n + 1, self.p_dim, 1))
         a_filt = np.zeros((self.n, self.p_dim, 1))
         P = np.zeros((self.n + 1, self.p_dim, self.p_dim))
+        P_filt = np.zeros((self.n, self.p_dim, self.p_dim))
         v = np.zeros((self.n, self.m_dim, 1))
         F = np.zeros((self.n, self.m_dim, self.m_dim))
         K = np.zeros((self.n, self.p_dim, self.m_dim))
@@ -229,25 +258,22 @@ class Kalman:
             if self.isReg:
                 self.Z = self.Z_reg[t].reshape(1, -1)
             v[t] = self.vY[t] - self.Z @ a_pred[t]
-            # print('H',self.H)
-            # print('P',self.Z @ P[t] @ self.Z.T)
-            # print('F',self.Z @ P[t] @ self.Z.T + self.H)
-            F[t] = self.Z @ P[t] @ self.Z.T + self.H
+            F[t] = self.Z @ P[t] @ self.Z.T + self.H[t]
             
             if not np.isnan(self.vY[t]):
                 mAux = P[t] @ self.Z.T @ np.linalg.inv(F[t])
                 K[t] = self.T @ mAux
                 a_filt[t] = a_pred[t] + mAux @ v[t]
-                a_pred[t + 1] = self.T @ a_pred[t] + K[t] @ v[t]
+                a_pred[t + 1] = self.T @ a_filt[t]
             else:
                 K[t] = 0
                 a_filt[t] = a_pred[t]
                 a_pred[t + 1] = self.T @ a_pred[t]
-
-            P[t + 1] = self.T @ P[t] @ (self.T - K[t]
-                                        @ self.Z).T + self.R @ self.Q @ self.R.T  
+                
+            P_filt[t] = P[t] - mAux @ self.Z @ P[t]
+            P[t + 1] = self.T @ P[t] @ self.T + self.R @ self.Q @ self.R.T - K[t] @ F[t] @ K[t].T  
         
-        return a_filt, a_pred, P, v, F, K
+        return a_filt, a_pred, P, P_filt, v, F, K
 
     def _filter(self):
         """
@@ -258,9 +284,9 @@ class Kalman:
         np.ndarray
             The filtered states at each time step.
         """
-        a_filt , _, _, _, _, _ = self._KalmanFilter()
+        a_filt, _, _, P_filt, _, _, _ = self._KalmanFilter()
 
-        return a_filt.squeeze()
+        return a_filt.squeeze(), P_filt
     
     def _predict(self):
         """
@@ -271,9 +297,9 @@ class Kalman:
         np.ndarray
             The one-step ahead predicted state means at each time step.
         """
-        a_filt , a_pred, _, _, _, _ = self._KalmanFilter()
+        a_filt , a_pred, P, _, _, _, _ = self._KalmanFilter()
 
-        return a_pred.squeeze()
+        return a_pred.squeeze(), P
     
 
     def _KalmanSmoother(self):
@@ -288,7 +314,7 @@ class Kalman:
             The smoothed state covariances at each time step.
         """
 
-        a_filt, a, P, v, F, K = self._KalmanFilter()
+        a_filt, a, P, P_filt, v, F, K = self._KalmanFilter()
         a = a[:-1]
         a_s = np.zeros((self.n, self.p_dim, 1))
         V_s = np.zeros((self.n, self.p_dim, self.p_dim))
@@ -325,8 +351,8 @@ class Kalman:
         np.ndarray
             The smoothed state means at each time step.
         """
-        a_s, _ = self._KalmanSmoother()
-        return a_s.squeeze()
+        a_s, V_s = self._KalmanSmoother()
+        return a_s.squeeze(), V_s
 
     def fit(self, option='filter'):
         '''
@@ -351,18 +377,18 @@ class Kalman:
 
         '''
         if option.lower() == 'filter':
-            self.filt = self._filter()
+            self.filt, self.P_filt = self._filter()
             return self.filt
         if option.lower() == 'predictor':
-            self.pred = self._predict()
+            self.pred, self.P = self._predict()
             return self.pred
         elif option.lower() == 'smoother':
-            self.smooth = self._smoother()
+            self.smooth, self.V = self._smoother()
             return self.smooth
         elif option.lower() == 'all':
-            self.filt = self._filter()
-            self.pred = self._predict()
-            self.smooth = self._smoother()
+            self.filt, self.P_filt = self._filter()
+            self.pred, self.P = self._predict()
+            self.smooth, self.V = self._smoother()
             return [self.filt, self.pred, self.smooth]
         else:
             raise ValueError(
@@ -381,7 +407,7 @@ class Kalman:
         print(f"T: {self.T}\n")
 
 
-    def plot(self, individual=False, tau: list = None):
+    def plot(self, individual=False, tau: list = None, confidence_intervals: bool = False, alpha = 0.05):
         """
         Plot the estimated beta coefficients over a normalized x-axis from 0 to 1 or over a date range.
         
@@ -392,6 +418,11 @@ class Kalman:
         tau : list, optional
             The list looks the  following: tau = [start,end].
             The function will plot all data and estimates between start and end.
+        confidence_intervals : bool, optional
+            If True, the confidence intervals will be plotted around the filtered states, the predictions, and smoothed states.
+            The confidence intervals are plotted for individual plots only, not for joint plots.
+        alpha : float
+            Significance level for confidence intervals.
             
         Raises
         ------
@@ -399,16 +430,40 @@ class Kalman:
             No valid tau is provided.
         
         """
-        tau_index = None
+        tau_index = np.array([None,None])
+        x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
         if tau is None:
+
             tau_index=np.array([0,self.n])
         elif isinstance(tau, list):
-            if min(tau) <= 0:
-                tau_index = np.array([int(0), int(max(tau) * self.n)])
-            else:
-                tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+            if tau[0] == tau[1]:
+                raise ValueError("Invalid input: a and b cannot be equal.")
+
+            if tau[0] > 1 and tau[1] > 1:
+                raise ValueError("The values of tau must be in [0,1].")
+
+            if tau[0] < 0 and tau[1] < 0:
+                raise ValueError("The values of tau must be in [0,1].")
+
+
+            if tau[0] < 0 or tau[1] > 1:
+                print("Warning: The values of tau must be in [0,1].")
+
+            original_tau = tau.copy()
+            tau[0] = max(0, min(tau[0], 1))
+            tau[1] = max(0, min(tau[1], 1))
+
+            if original_tau != tau:
+                print(f"Set to {tau} automatically.")
+            if tau[0] > tau[1]:
+                print("Warning: tau[0] > tau[1]. Values are switched automatically.")
+                tau[0], tau[1] = tau[1], tau[0]
+
+            tau_index[0] = int(tau[0]*(self.n-1))
+            tau_index[1] = int(tau[1]*(self.n))
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
+        
         
         x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
         
@@ -454,6 +509,12 @@ class Kalman:
                     plt.figure(figsize=(12, 6))
                     plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=1,color='black')
                     plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - Smoother", linestyle="--", linewidth=2)
+                    
+                    if confidence_intervals:
+                        vU_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],0,0])
+                        vL_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],0,0])
+                        plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.1f}% confidence interval - Smoother', color='grey', alpha=0.3)
+                    
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -465,6 +526,12 @@ class Kalman:
                     plt.figure(figsize=(12, 6))
                     plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=1,color='black')
                     plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1]], label="Estimated $\\beta_{0}$ - Predictor", linestyle="--", linewidth=2)
+                    
+                    if confidence_intervals:
+                        vU_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P[1+tau_index[0]:tau_index[1],0,0])
+                        vL_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P[1+tau_index[0]:tau_index[1],0,0])
+                        plt.fill_between(x_vals[tau_index[0]+1:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.1f}% confidence interval - Predictor', color='grey', alpha=0.3)
+                    
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -476,6 +543,12 @@ class Kalman:
                     plt.figure(figsize=(12, 6))
                     plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=1,color='black')
                     plt.plot(x_vals[tau_index[0]:tau_index[1]], self.filt[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$ - Filter", linestyle="--", linewidth=2)
+                    
+                    if confidence_intervals:
+                        vU_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
+                        vL_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
+                        plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.1f}% confidence interval - Filter', color='grey', alpha=0.3)
+                    
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -490,6 +563,12 @@ class Kalman:
                     for i in range(self.p_dim):
                         plt.subplot(self.p_dim, 1, i + 1)
                         plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[tau_index[0]:tau_index[1], i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
+                        
+                        if confidence_intervals:
+                            vU_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],i,i])
+                            vL_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],i,i])
+                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.1f}% confidence interval - Smoother', color='grey', alpha=0.3)
+                        
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -501,6 +580,12 @@ class Kalman:
                     for i in range(self.p_dim):
                         plt.subplot(self.p_dim, 1, i + 1)
                         plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1], i], label="Estimated $\\beta_{0}$ - Predictor", linestyle="--", linewidth=2)
+                        
+                        if confidence_intervals:
+                            vU_bound = self.pred[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],i,i])
+                            vL_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],i,i])
+                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.0f}% confidence interval - Predictor', color='grey', alpha=0.3)
+                            
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
         
@@ -512,11 +597,18 @@ class Kalman:
                     for i in range(self.p_dim):
                         plt.subplot(self.p_dim, 1, i + 1)
                         plt.plot(x_vals[tau_index[0]:tau_index[1]], self.filt[tau_index[0]:tau_index[1], i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="--", linewidth=2)
+                        
+                        if confidence_intervals:
+                            vU_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
+                            vL_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
+                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.0f}% confidence interval - Filter', color='grey', alpha=0.3)
+                        
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
         
                         plt.tick_params(axis='both', labelsize=16)
                         plt.legend(fontsize="x-large")
                     plt.show()
+        
 
             

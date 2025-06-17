@@ -476,7 +476,7 @@ class LocalLinear:
 
     def fit(self):
         """
-        Fits the local linear regression model to the data.
+        Fits the linear model by local linear regression to the data.
 
         Returns
         -------
@@ -1658,7 +1658,6 @@ class LocalLinear:
         
         if B < 1299:
             print('Note: It is recommended to use at least B = 1299 iterations.\n')
-
         if bootstraptype not in bootstrap_functions:
             raise ValueError(
                 "Invalid bootstrap type. Choose one of 'SB','WB', 'SWB','MB' ,'LBWB', 'AWB'")
@@ -1780,16 +1779,40 @@ class LocalLinear:
             No valid tau is provided.
         
         """
-        tau_index = None
+        tau_index = np.array([None,None])
+        x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
         if tau is None:
+
             tau_index=np.array([0,self.n])
         elif isinstance(tau, list):
-            if min(tau) <= 0:
-                tau_index = np.array([int(0), int(max(tau) * self.n)])
-            else:
-                tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+            if tau[0] == tau[1]:
+                raise ValueError("Invalid input: a and b cannot be equal.")
+
+            if tau[0] > 1 and tau[1] > 1:
+                raise ValueError("The values of tau must be in [0,1].")
+
+            if tau[0] < 0 and tau[1] < 0:
+                raise ValueError("The values of tau must be in [0,1].")
+
+
+            if tau[0] < 0 or tau[1] > 1:
+                print("Warning: The values of tau must be in [0,1].")
+                
+            original_tau = tau.copy()
+            tau[0] = max(0, min(tau[0], 1))
+            tau[1] = max(0, min(tau[1], 1))
+
+            if original_tau != tau:
+                print(f"Set to {tau} automatically.")
+            if tau[0] > tau[1]:
+                print("Warning: tau[0] > tau[1]. Values are switched automatically.")
+                tau[0], tau[1] = tau[1], tau[0]
+
+            tau_index[0] = int(tau[0]*(self.n-1))
+            tau_index[1] = int(tau[1]*(self.n))
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
+        
             
         x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
         
@@ -1836,16 +1859,39 @@ class LocalLinear:
             No valid tau is provided.
         
         """
-        tau_index = None
+        tau_index = np.array([None,None])
+        x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
         if tau is None:
+
             tau_index=np.array([0,self.n])
         elif isinstance(tau, list):
-            if min(tau) <= 0:
-                tau_index = np.array([int(0), int(max(tau) * self.n)])
-            else:
-                tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+            if tau[0] == tau[1]:
+                raise ValueError("Invalid input: a and b cannot be equal.")
+
+            if tau[0] > 1 and tau[1] > 1:
+                raise ValueError("The values of tau must be in [0,1].")
+
+            if tau[0] < 0 and tau[1] < 0:
+                raise ValueError("The values of tau must be in [0,1].")
+
+            
+            if tau[0] < 0 or tau[1] > 1:
+                print("Warning: The values of tau must be in [0,1].")
+            
+            original_tau = tau.copy()
+            tau[0] = max(0, min(tau[0], 1))
+            tau[1] = max(0, min(tau[1], 1))
+            if original_tau != tau:
+                print(f"Set to {tau} automatically.")
+            if tau[0] > tau[1]:
+                print("Warning: tau[0] > tau[1]. Values are switched automatically.")
+                tau[0], tau[1] = tau[1], tau[0]
+
+            tau_index[0] = int(tau[0]*(self.n-1))
+            tau_index[1] = int(tau[1]*(self.n))
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
+        
             
         plt.figure(figsize=(12, 6))
 
@@ -1886,16 +1932,40 @@ class LocalLinear:
         plt.figure(figsize=(12, 6))
 
         x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
-        tau_index = None
+        tau_index = np.array([None,None])
+        x_vals = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
         if tau is None:
+
             tau_index=np.array([0,self.n])
         elif isinstance(tau, list):
-            if min(tau) <= 0:
-                tau_index = np.array([int(0), int(max(tau) * self.n)])
-            else:
-                tau_index = np.array([int(min(tau)*self.n-1),int(max(tau)*self.n)])
+            if tau[0] == tau[1]:
+                raise ValueError("Invalid input: a and b cannot be equal.")
+
+            if tau[0] > 1 and tau[1] > 1:
+                raise ValueError("The values of tau must be in [0,1].")
+
+            if tau[0] < 0 and tau[1] < 0:
+                raise ValueError("The values of tau must be in [0,1].")
+
+
+            if tau[0] < 0 or tau[1] > 1:
+                print("Warning: The values of tau must be in [0,1].")
+                
+            original_tau = tau.copy()
+            tau[0] = max(0, min(tau[0], 1))
+            tau[1] = max(0, min(tau[1], 1))
+            
+            if original_tau != tau:
+                print(f"Set to {tau} automatically.")
+            if tau[0] > tau[1]:
+                print("Warning: tau[0] > tau[1]. Values are switched automatically.")
+                tau[0], tau[1] = tau[1], tau[0]
+
+            tau_index[0] = int(tau[0]*(self.n-1))
+            tau_index[1] = int(tau[1]*(self.n))
         else:
             raise ValueError('The optional parameter tau is required to be a list.')
+        
 
         plt.plot(x_vals[tau_index[0]:tau_index[1]], self.residuals[tau_index[0]:tau_index[1]],  linestyle="--", label="Residuals")       
         plt.grid(linestyle='dashed')
@@ -1913,7 +1983,7 @@ class LocalLinear:
                          gamma: float = None, ic: str = None, Gsubs=None,
                          Chtilde: float = 2, B: float = 1299, plots: bool = False):
         '''
-        
+        Compute and plot confidence bands.
 
         Parameters
         ----------
@@ -1934,7 +2004,7 @@ class LocalLinear:
             Default is 2, if none or negative is specified.
         B : int
             The number of bootstrap samples.
-            Deafult is 1299, if not provided by the user.
+            Default is 1299, if not provided by the user.
         plots : bool
             If True, plots are shown of the estimated coefficients and corresponding confidence bands.
             
