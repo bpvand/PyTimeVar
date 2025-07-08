@@ -4,6 +4,7 @@ from scipy.optimize import minimize
 from tqdm import tqdm
 from statsmodels.tsa.ar_model import ar_select_order
 from statsmodels.tsa.ar_model import AutoReg
+from scipy.optimize import basinhopping
 
 class PowerLaw:
     """
@@ -17,6 +18,8 @@ class PowerLaw:
         The number of powers.
     vgamma0 : np.ndarray
         The initial parameter vector.
+    bounds : tuple
+        Tuple to define parameter space. 
     options : dict
         Stopping criteria for optimization.
         
@@ -30,8 +33,8 @@ class PowerLaw:
         The number of powers. Default is set to 2.
     vgamma0 : np.ndarray
         The initial parameter vector.
-    bounds : list
-        List to define parameter space.
+    bounds : tuple
+        Tuple to define parameter space.
     cons : dict
         Dictionary that defines the constraints.
     trendHat : np.ndarray
@@ -184,6 +187,11 @@ class PowerLaw:
         '''
         res = minimize(self._construct_pwrlaw_ssr, self.vgamma0,
                        bounds=self.bounds, constraints=self.cons, options=self.options, args=(self.vY,))
+        
+        res = basinhopping(self._construct_pwrlaw_ssr, self.vgamma0,
+                                minimizer_kwargs={'method': 'L-BFGS-B', 'bounds': self.bounds, 'constraints': self.cons, 'options': self.options, 'args':(self.vY,)},
+                                niter=10)
+        
         self.gammaHat = res.x.reshape(1, self.p)
 
         trend = np.arange(1, self.n+1, 1).reshape(self.n, 1)
@@ -233,9 +241,8 @@ class PowerLaw:
         '''
         epsilon = 0.005
         c = []
-        for id1 in range(self.p-1):
-            for id2 in range(id1+1, self.p):
-                c.append(params[id1] - params[id2] + epsilon)
+        for id1 in range(self.p - 1):
+            c.append(params[id1 + 1] - params[id1] - epsilon)
         return c
 
     def _AR(self, zhat, T, ic=None):

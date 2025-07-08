@@ -29,6 +29,8 @@ class GAS:
         Stopping criteria for optimization.
     niter : int
         The number of basin-hopping iterations, for scipy.optimize.basinhopping()
+    if_hetero : bool
+        If True, a heteroskedastic specification is assumed. Filter additionally returns the estimated path of time-varying variance.
         
     Attributes
     ----------
@@ -50,6 +52,8 @@ class GAS:
         Stopping criteria for optimization.
     niter : int
         The number of basin-hopping iterations, for scipy.optimize.basinhopping()
+    if_hetero : bool
+        If True, a heteroskedastic specification is assumed. Filter additionally returns the estimated path of time-varying variance.
     success : bool
         If True, optimization was successful.
     betas : np.ndarray
@@ -153,6 +157,9 @@ class GAS:
 
                 def fgGAS_lh(vpara): return - \
                     self._construct_likelihood(vbeta0, vpara)
+                    
+                def fgGAS_lh_scaled(vpara): return - \
+                    self._construct_likelihood(vbeta0, vpara)*self.n
 
 
                 result_bh = basinhopping(fgGAS_lh, self.vgamma0,
@@ -160,15 +167,15 @@ class GAS:
                                          niter=10)
 
                 vparaHat_gGAS = result_bh.x
-                self.success = result_bh.success
-                hess_func = nd.Hessian(fgGAS_lh)
-                self.inv_hessian = np.linalg.pinv(hess_func(vparaHat_gGAS))
+                # self.success = result_bh.success
+                # hess_func = nd.Hessian(fgGAS_lh)
+                # self.inv_hessian = np.linalg.pinv(hess_func(vparaHat_gGAS))
                 
                 # Run the local minimizer again at the best point found
-                # min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
-                # local_result = minimize(fgGAS_lh, vparaHat_gGAS, **min_kwargs,)
-                # self.inv_hessian = local_result.hess_inv.todense()
-                # vparaHat_gGAS = local_result.x
+                min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
+                local_result = minimize(fgGAS_lh_scaled, vparaHat_gGAS, **min_kwargs,)
+                self.inv_hessian = local_result.hess_inv.todense()
+                vparaHat_gGAS = local_result.x
 
                 # construct betat estimate
                 mBetaHat = self._g_filter(vbeta0, vparaHat_gGAS)
@@ -511,7 +518,7 @@ class GAS:
                     mNablat = vxt * (yt - vbetaNow.T @ vxt)
                     vbetaNow = vomega + mB * vbetaNow + mA * mNablat.squeeze()
 
-                lhVal = -np.log(dsigmau) - 0.5 * lhVal / self.n
+                lhVal = (-np.log(dsigmau) - 0.5 * lhVal / self.n)#*self.n
 
 
             elif self.method == 'student':
@@ -534,8 +541,8 @@ class GAS:
                         temp1 * vxt * (yt - vbetaNow.T @ vxt)
                     vbetaNow = vomega + mB * vbetaNow + mA * mNablat.squeeze()
 
-                lhVal = -0.5 * (dnu + 1) * lhVal / self.n + gammaln((dnu + 1) / 2) - \
-                    gammaln(dnu / 2) - 0.5 * np.log(np.pi * dnu) - np.log(dsigmau)
+                lhVal = -0.5 * (dnu + 1) * lhVal + self.n*(gammaln((dnu + 1) / 2) - \
+                    gammaln(dnu / 2) - 0.5 * np.log(np.pi * dnu) - np.log(dsigmau))
 
         elif self.if_hetero == True:
             vbetaNow = vbeta0
@@ -573,7 +580,7 @@ class GAS:
 
                     if np.sqrt(sigma2_t) < 1e-6:
                         return  -1E10
-                lhVal=lhVal/self.n
+                lhVal=lhVal
 
             elif self.method == 'student':
                 dnu = vpara[0]
@@ -601,7 +608,7 @@ class GAS:
                     f_t = omega_f + B_f * f_t + A_f * score_f
                     sigma2_t = np.exp(f_t)
 
-                lhVal=lhVal/self.n
+                lhVal=lhVal
                 # lhVal = -0.5 * (dnu + 1) * lhVal / self.n + gammaln((dnu + 1) / 2) - \
                 #         gammaln(dnu / 2) - 0.5 * np.log(np.pi * dnu) - np.log(dsigmau)
         return lhVal
@@ -683,7 +690,7 @@ class GAS:
         alpha : float
             Significance level for confidence intervals.
         iM : int
-            The nunber of simulations for simulation-based confidence intervals.
+            The number of simulations for simulation-based confidence intervals.
             
         Raises
         ------
