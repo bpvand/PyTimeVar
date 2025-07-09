@@ -309,7 +309,7 @@ def sim_N_GAS(iT, dbeta0, vparams):
     vBeta_true_N = np.zeros(iT)
     vBeta_true_N[0] = dbeta0
     vY = np.zeros(iT)
-    vEps = np.random.normal(0, 2, iT) # Error term with std dev 2
+    vEps = np.random.normal(0, 1, iT) # Error term with std dev 2
     
     omega, A, B = vparams[0], vparams[1], vparams[2]
 
@@ -330,8 +330,8 @@ def sim_N_GAS(iT, dbeta0, vparams):
     return vY, vBeta_true_N
 
 # --- N-GAS Simulation Parameters ---
-initer = 50 # Number of independent simulations
-vT = [250, 500] # Time series lengths to simulate
+initer = 20 # Number of independent simulations
+vT = [100, 250] # Time series lengths to simulate
 dbeta0_N_GAS = 0
 vParams_N_GAS_true = np.array([0.03, 0.9, 0.2]) # True parameters [omega, A, B]
 

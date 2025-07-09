@@ -157,25 +157,23 @@ class GAS:
 
                 def fgGAS_lh(vpara): return - \
                     self._construct_likelihood(vbeta0, vpara)
-                    
-                def fgGAS_lh_scaled(vpara): return - \
-                    self._construct_likelihood(vbeta0, vpara)*self.n
 
 
                 result_bh = basinhopping(fgGAS_lh, self.vgamma0,
                                          minimizer_kwargs={'method': 'L-BFGS-B', 'bounds': self.bounds},
-                                         niter=10)
+                                         niter=20)
 
                 vparaHat_gGAS = result_bh.x
-                # self.success = result_bh.success
-                # hess_func = nd.Hessian(fgGAS_lh)
-                # self.inv_hessian = np.linalg.pinv(hess_func(vparaHat_gGAS))
+                self.success = result_bh.success
+                hess_func = nd.Hessian(fgGAS_lh)
+                mlHatInverse = hess_func(vparaHat_gGAS)
+                self.inv_hessian = np.linalg.pinv(mlHatInverse)
                 
                 # Run the local minimizer again at the best point found
-                min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
-                local_result = minimize(fgGAS_lh_scaled, vparaHat_gGAS, **min_kwargs,)
-                self.inv_hessian = local_result.hess_inv.todense()
-                vparaHat_gGAS = local_result.x
+                # min_kwargs = {"method": "L-BFGS-B", "bounds": self.bounds, "options": self.options}
+                # local_result = minimize(fgGAS_lh, vparaHat_gGAS, **min_kwargs,)
+                # self.inv_hessian = local_result.hess_inv.todense()
+                # vparaHat_gGAS = local_result.x
 
                 # construct betat estimate
                 mBetaHat = self._g_filter(vbeta0, vparaHat_gGAS)
@@ -334,7 +332,7 @@ class GAS:
         '''
         if self.if_hetero == False:
             vbetaNow = vbeta0
-            mBetaHat_gGAS = np.zeros((self.n_est, self.n))
+            mBetaHat_gGAS = np.zeros((self.n_est, self.n+1))
             vthetaHat_gGAS = vparams[1:]
             vomegaHat_gGAS = vthetaHat_gGAS[:self.n_est]
             mBHat_gGAS = vthetaHat_gGAS[self.n_est:2*self.n_est]
@@ -349,9 +347,9 @@ class GAS:
                 vbetaNow = vomegaHat_gGAS + mBHat_gGAS * \
                     vbetaNow + mAHat_gGAS * mNablat.squeeze()
 
-                mBetaHat_gGAS[:, id] = vbetaNow
+                mBetaHat_gGAS[:, id+1] = vbetaNow
 
-            mBetaHat = mBetaHat_gGAS.T
+            mBetaHat = mBetaHat_gGAS[:,:-1].T
 
             return mBetaHat
             
@@ -646,7 +644,7 @@ class GAS:
         
         mDraws = np.zeros((iM, len(self.params)))
         count = 0
-        mOmega = (-1/self.n)*self.inv_hessian
+        mOmega = (1/self.n)*self.inv_hessian
         while count < iM:
             mSamples = np.random.multivariate_normal(self.params, mOmega, size=iM)
             
