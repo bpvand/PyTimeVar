@@ -42,13 +42,13 @@ np.random.seed(123)
 # bHPmodel.plot()
 
 # illustrate power-law trend
-# from PyTimeVar import PowerLaw
-# PwrLaw = PowerLaw(vY=vY, n_powers=2)
-# pwrTrend, pwrGamma = PwrLaw.fit()
-# PwrLaw.summary()
-# PwrLaw.plot()
-# C_LB_coeff, C_UB_coeff, C_LB_gamma, C_UB_gamma, C_LB_trend, C_UB_trend = PwrLaw.confidence_intervals(bootstraptype='LBWB', B=1299, alpha=0.05, block_constant=2)
-
+from PyTimeVar import PowerLaw
+PwrLaw = PowerLaw(vY=vY, n_powers=2)
+pwrTrend, pwrGamma = PwrLaw.fit()
+PwrLaw.summary()
+PwrLaw.plot()
+C_LB_coeff, C_UB_coeff, C_LB_gamma, C_UB_gamma, C_LB_trend, C_UB_trend = PwrLaw.confidence_intervals(bootstraptype='LBWB', B=1299, alpha=0.05, block_constant=2)
+PwrLaw.plot(confidence_intervals=True)
 
 # # # auxiliary power-law model to illustrate options
 # vgamma0 = np.arange(0, 0.1, 0.05)
@@ -80,16 +80,16 @@ from PyTimeVar import GAS
 # In[]
 #### SIMULATION STUDIES ##################
 # ------------------- Simulation study for Power Law confidence intervals------
-def sim_PwrLaw(iT, vGamma, vCoeff):
-    vE = np.random.normal(0,0.25,iT)
-    trend = np.arange(1, iT+1, 1).reshape(iT, 1)
-    mP = trend ** vGamma
-    vPwrTrend = mP @ vCoeff
-    vY = vPwrTrend + vE
-    return vY, vPwrTrend
+# def sim_PwrLaw(iT, vGamma, vCoeff):
+#     vE = np.random.normal(0,0.25,iT)
+#     trend = np.arange(1, iT+1, 1).reshape(iT, 1)
+#     mP = trend ** vGamma
+#     vPwrTrend = mP @ vCoeff
+#     vY = vPwrTrend + vE
+#     return vY, vPwrTrend
 
-initer = 100
-vT = [100, 250]
+# initer = 1000
+# vT = [100, 250]
 
 # n_powers = 1
 # n_params = 3
@@ -169,7 +169,8 @@ vT = [100, 250]
 #     print(f"Results for Gamma = {gamma_val:.3f} saved to '{output_filepath}'")
 
 # print("\nAll simulation results saved.")
-        
+       
+# import pandas as pd
 # n_powers = 2
 # n_params = 5
 # lGamma = [np.array([0.7, 1.5]), np.array([0.7, 1.8]), np.array([0.7, 2])]
@@ -190,7 +191,7 @@ vT = [100, 250]
 #         mCov = np.zeros((initer, n_params))
 #         mLen = np.zeros((initer, n_params))
 #         for i in range(initer):
-#             if (i + 1) % (initer // 20 if initer >= 10 else 1) == 0 or i == 0 or i == initer - 1: # Corrected print frequency
+#             if (i + 1) % (initer // 100 if initer >= 10 else 1) == 0 or i == 0 or i == initer - 1: # Corrected print frequency
 #                 print(f'  Gamma={", ".join(map(str, vGamma_val))}, T={current_T_val}, Iteration {i+1}/{initer}')
             
 #             vY, vPwrTrend_true = sim_PwrLaw(current_T_val, vGamma_val, vCoeff)
@@ -232,6 +233,9 @@ vT = [100, 250]
 #                 mCov[i, 1 + n_powers + p] = (C_LB_gamma[p] <= vGamma_val[p]) & (C_UB_gamma[p] >= vGamma_val[p])
 #                 mLen[i, 1 + n_powers + p] = C_UB_gamma[p] - C_LB_gamma[p]
             
+#         pd.DataFrame(mCov).to_csv(r'C:\Users\bpvan\OneDrive - Erasmus University Rotterdam\Documents\PhD projects\JSS_filters\Cov_Pwrlaw_sims_T_{t_idx}_gamma_{vGamma_val}.csv')
+#         pd.DataFrame(mLen).to_csv(r'C:\Users\bpvan\OneDrive - Erasmus University Rotterdam\Documents\PhD projects\JSS_filters\Len_Pwrlaw_sims_T_{t_idx}_gamma_{vGamma_val}.csv')
+        
 #         mean_covs = np.mean(mCov, axis=0)
 #         mean_lens = np.mean(mLen, axis=0)
 
@@ -287,109 +291,109 @@ vT = [100, 250]
 # print("\nAll simulation results saved.")
 
 
-# In[]
-import matplotlib.pyplot as plt
-#### SIMULATION STUDIES GAS ##################
-iM = 1000
-### Simulation study for N-GAS model
-def sim_N_GAS(iT, dbeta0, vparams):
-    """
-    Simulates data from a Gaussian GAS (N-GAS) model.
+# # In[]
+# import matplotlib.pyplot as plt
+# #### SIMULATION STUDIES GAS ##################
+# iM = 1000
+# ### Simulation study for N-GAS model
+# def sim_N_GAS(iT, dbeta0, vparams):
+#     """
+#     Simulates data from a Gaussian GAS (N-GAS) model.
 
-    Args:
-        iT (int): Number of time points.
-        dbeta0 (float): Initial value for beta.
-        vparams (list): List of true parameters [omega, A, B].
+#     Args:
+#         iT (int): Number of time points.
+#         dbeta0 (float): Initial value for beta.
+#         vparams (list): List of true parameters [omega, A, B].
 
-    Returns:
-        tuple: (vY, vBeta_true_N)
-            vY (np.array): Simulated observations.
-            vBeta_true_N (np.array): True underlying beta trend.
-    """
-    vBeta_true_N = np.zeros(iT)
-    vBeta_true_N[0] = dbeta0
-    vY = np.zeros(iT)
-    vEps = np.random.normal(0, 1, iT) # Error term with std dev 2
+#     Returns:
+#         tuple: (vY, vBeta_true_N)
+#             vY (np.array): Simulated observations.
+#             vBeta_true_N (np.array): True underlying beta trend.
+#     """
+#     vBeta_true_N = np.zeros(iT)
+#     vBeta_true_N[0] = dbeta0
+#     vY = np.zeros(iT)
+#     vEps = np.random.normal(0, 1, iT) # Error term with std dev 2
     
-    omega, A, B = vparams[0], vparams[1], vparams[2]
+#     omega, A, B = vparams[0], vparams[1], vparams[2]
 
-    for t in range(1, iT):
-        yt_minus_1 = vY[t-1]
-        beta_true_t_minus_1 = vBeta_true_N[t-1]
-        epst = yt_minus_1 - beta_true_t_minus_1 
+#     for t in range(1, iT):
+#         yt_minus_1 = vY[t-1]
+#         beta_true_t_minus_1 = vBeta_true_N[t-1]
+#         epst = yt_minus_1 - beta_true_t_minus_1 
 
-        vxt = np.ones((1, 1)) # Exogenous variable (constant 1 for a simple model)
+#         vxt = np.ones((1, 1)) # Exogenous variable (constant 1 for a simple model)
         
-        # Score function (nabla_t) for Gaussian distribution is simply the error
-        mNablat = vxt * epst
+#         # Score function (nabla_t) for Gaussian distribution is simply the error
+#         mNablat = vxt * epst
 
-        # Update equation for beta
-        vbetaNow = omega + A * beta_true_t_minus_1 + B * mNablat.squeeze()
-        vBeta_true_N[t] = vbetaNow
-        vY[t] = vBeta_true_N[t] + vEps[t]
-    return vY, vBeta_true_N
+#         # Update equation for beta
+#         vbetaNow = omega + A * beta_true_t_minus_1 + B * mNablat.squeeze()
+#         vBeta_true_N[t] = vbetaNow
+#         vY[t] = vBeta_true_N[t] + vEps[t]
+#     return vY, vBeta_true_N
 
-# --- N-GAS Simulation Parameters ---
-initer = 20 # Number of independent simulations
-vT = [100, 250] # Time series lengths to simulate
-dbeta0_N_GAS = 0
-vParams_N_GAS_true = np.array([0.03, 0.9, 0.2]) # True parameters [omega, A, B]
+# # --- N-GAS Simulation Parameters ---
+# initer = 20 # Number of independent simulations
+# vT = [100, 250] # Time series lengths to simulate
+# dbeta0_N_GAS = 0
+# vParams_N_GAS_true = np.array([0.03, 0.9, 0.2]) # True parameters [omega, A, B]
 
-# Only 1 parameter for tracking: the Trend (index 0)
-n_tracked_params_N_GAS = 1 
-output_directory = r'C:\Users\bpvan\OneDrive - Erasmus University Rotterdam\Documents\PhD projects\JSS_filters\GAS_results' # Dedicated folder for GAS
-os.makedirs(output_directory, exist_ok=True)
+# # Only 1 parameter for tracking: the Trend (index 0)
+# n_tracked_params_N_GAS = 1 
+# output_directory = r'C:\Users\bpvan\OneDrive - Erasmus University Rotterdam\Documents\PhD projects\JSS_filters\GAS_results' # Dedicated folder for GAS
+# os.makedirs(output_directory, exist_ok=True)
 
-# List to store aggregated results (each element will be [coverage, length] for the trend at a given T)
-gas_results_for_trend_only = []
+# # List to store aggregated results (each element will be [coverage, length] for the trend at a given T)
+# gas_results_for_trend_only = []
 
-print(f'Starting N-GAS simulations for True Parameters = {", ".join(map(str, vParams_N_GAS_true))}')
+# print(f'Starting N-GAS simulations for True Parameters = {", ".join(map(str, vParams_N_GAS_true))}')
 
-for t_idx in range(len(vT)):
-    current_T_val = vT[t_idx]
-    print(f'\n--- Processing T = {current_T_val} for N-GAS ---')
-    # mCov and mLen now only need to store results for the trend
-    mCov = np.zeros((initer, n_tracked_params_N_GAS))
-    mLen = np.zeros((initer, n_tracked_params_N_GAS))
+# for t_idx in range(len(vT)):
+#     current_T_val = vT[t_idx]
+#     print(f'\n--- Processing T = {current_T_val} for N-GAS ---')
+#     # mCov and mLen now only need to store results for the trend
+#     mCov = np.zeros((initer, n_tracked_params_N_GAS))
+#     mLen = np.zeros((initer, n_tracked_params_N_GAS))
 
-    for i in range(initer):
-        if (i + 1) % (initer // 10 if initer >= 10 else 1) == 0 or i == 0 or i == initer - 1:
-            print(f'  N-GAS Parameters={", ".join(map(str, vParams_N_GAS_true))}, T={current_T_val}, Iteration {i+1}/{initer}')
+#     for i in range(initer):
+#         if (i + 1) % (initer // 10 if initer >= 10 else 1) == 0 or i == 0 or i == initer - 1:
+#             print(f'  N-GAS Parameters={", ".join(map(str, vParams_N_GAS_true))}, T={current_T_val}, Iteration {i+1}/{initer}')
 
-        vY, vBeta_true = sim_N_GAS(current_T_val, dbeta0_N_GAS, vParams_N_GAS_true)
-        mX = np.ones((current_T_val, 1))
+#         vY, vBeta_true = sim_N_GAS(current_T_val, dbeta0_N_GAS, vParams_N_GAS_true)
+#         mX = np.ones((current_T_val, 1))
 
-        gas_model = GAS(vY=vY, mX=mX, method='gaussian', niter=50000)
-        gas_trend_est, _ = gas_model.fit() # We only care about the trend_est here
+#         gas_model = GAS(vY=vY, mX=mX, method='gaussian', niter=50000)
+#         gas_trend_est, _ = gas_model.fit() # We only care about the trend_est here
         
-        print(gas_model.params)
+#         print(gas_model.params)
 
-        # Get confidence intervals for the trend only
-        C_LB_trend, C_UB_trend = gas_model._confidence_bands(alpha=0.05, iM=iM)
-        C_LB_trend = C_LB_trend[:,0]
-        C_UB_trend = C_UB_trend[:,0]
+#         # Get confidence intervals for the trend only
+#         C_LB_trend, C_UB_trend = gas_model._confidence_bands(alpha=0.05, iM=iM)
+#         C_LB_trend = C_LB_trend[:,0]
+#         C_UB_trend = C_UB_trend[:,0]
         
-        # plt.plot(vY, label='data', c='k')
-        plt.plot(vBeta_true, label='True', c='r')
-        plt.fill_between(np.arange(0,len(vY),1), C_LB_trend, C_UB_trend, label = 'CI', color='grey', alpha=0.2)
-        plt.plot(gas_trend_est, label='est')
-        plt.legend()
-        plt.show()
+#         # plt.plot(vY, label='data', c='k')
+#         plt.plot(vBeta_true, label='True', c='r')
+#         plt.fill_between(np.arange(0,len(vY),1), C_LB_trend, C_UB_trend, label = 'CI', color='grey', alpha=0.2)
+#         plt.plot(gas_trend_est, label='est')
+#         plt.legend()
+#         plt.show()
         
-        # Coverage and Length for the Trend (index 0)
-        mCov[i, 0] = np.mean((vBeta_true <= C_UB_trend) & (vBeta_true >= C_LB_trend))
-        mLen[i, 0] = np.mean(C_UB_trend - C_LB_trend)
+#         # Coverage and Length for the Trend (index 0)
+#         mCov[i, 0] = np.mean((vBeta_true <= C_UB_trend) & (vBeta_true >= C_LB_trend))
+#         mLen[i, 0] = np.mean(C_UB_trend - C_LB_trend)
         
-        # print('Cov:', mCov[i,0])
+#         # print('Cov:', mCov[i,0])
     
-    # Calculate mean coverage and mean length for the trend for this T
-    mean_cov_trend = np.mean(mCov[:, 0])
-    mean_len_trend = np.mean(mLen[:, 0])
+#     # Calculate mean coverage and mean length for the trend for this T
+#     mean_cov_trend = np.mean(mCov[:, 0])
+#     mean_len_trend = np.mean(mLen[:, 0])
 
-    # Append results for Trend
-    gas_results_for_trend_only.append([mean_cov_trend, mean_len_trend])
+#     # Append results for Trend
+#     gas_results_for_trend_only.append([mean_cov_trend, mean_len_trend])
         
-    print(mean_cov_trend, mean_len_trend)
+#     print(mean_cov_trend, mean_len_trend)
 # # --- Writing N-GAS Results to Files ---
 # print("\n--- Writing N-GAS results to text files ---")
 
