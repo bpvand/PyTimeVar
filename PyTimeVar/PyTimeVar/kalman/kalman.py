@@ -532,11 +532,11 @@ class Kalman:
                 for i in range(self.p_dim):
                     plt.subplot(self.p_dim, 1, i + 1)
                     if self.smooth is not None:
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[tau_index[0]:tau_index[1], i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
+                        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[tau_index[0]:tau_index[1], i], label="Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
                     if self.smooth is not None:
-                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1], i], label="Estimated $\\beta_{0}$ - Predictor", linestyle="-", linewidth=2)
+                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1], i], label="Estimated $\\beta_{i}$ - Predictor", linestyle="-", linewidth=2)
                     if self.filt is not None:
-                        plt.plot(x_vals, self.filt[tau_index[0]:tau_index[1], i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="-.", linewidth=2)
+                        plt.plot(x_vals, self.filt[tau_index[0]:tau_index[1], i], label="Estimated $\\beta{i}$ - Filter", linestyle="-.", linewidth=2)
     
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
@@ -604,7 +604,7 @@ class Kalman:
                     plt.figure(figsize=(10, 6 * self.p_dim))
                     for i in range(self.p_dim):
                         plt.subplot(self.p_dim, 1, i + 1)
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[tau_index[0]:tau_index[1], i], label=r"Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
+                        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.smooth[tau_index[0]:tau_index[1], i], label="Estimated $\\beta{i}$ - Smoother", linestyle="--", linewidth=2)
                         
                         if confidence_intervals:
                             vU_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],i,i])
@@ -621,7 +621,7 @@ class Kalman:
                     plt.figure(figsize=(10, 6 * self.p_dim))
                     for i in range(self.p_dim):
                         plt.subplot(self.p_dim, 1, i + 1)
-                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1], i], label="Estimated $\\beta_{0}$ - Predictor", linestyle="--", linewidth=2)
+                        plt.plot(x_vals[tau_index[0]+1:tau_index[1]], self.pred[tau_index[0]+1:tau_index[1], i], label="Estimated $\\beta_{i}$ - Predictor", linestyle="--", linewidth=2)
                         
                         if confidence_intervals:
                             vU_bound = self.pred[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],i,i])
@@ -638,7 +638,7 @@ class Kalman:
                     plt.figure(figsize=(10, 6 * self.p_dim))
                     for i in range(self.p_dim):
                         plt.subplot(self.p_dim, 1, i + 1)
-                        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.filt[tau_index[0]:tau_index[1], i], label=r"Estimated $\\beta{i}$ - Filter", linestyle="--", linewidth=2)
+                        plt.plot(x_vals[tau_index[0]:tau_index[1]], self.filt[tau_index[0]:tau_index[1], i], label="Estimated $\\beta{i}$ - Filter", linestyle="--", linewidth=2)
                         
                         if confidence_intervals:
                             vU_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
