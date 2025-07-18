@@ -555,7 +555,7 @@ class Kalman:
                     if confidence_intervals:
                         vU_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],0,0])
                         vL_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],0,0])
-                        plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.1f}% confidence interval - Smoother', color='grey', alpha=0.3)
+                        plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label='Pointwise - Smoother', color='grey', alpha=0.3)
                     
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
@@ -572,7 +572,7 @@ class Kalman:
                     if confidence_intervals:
                         vU_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P[1+tau_index[0]:tau_index[1],0,0])
                         vL_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P[1+tau_index[0]:tau_index[1],0,0])
-                        plt.fill_between(x_vals[tau_index[0]+1:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.1f}% confidence interval - Predictor', color='grey', alpha=0.3)
+                        plt.fill_between(x_vals[tau_index[0]+1:tau_index[1]], vL_bound, vU_bound, label='Pointwise - Predictor', color='grey', alpha=0.3)
                     
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
@@ -589,7 +589,7 @@ class Kalman:
                     if confidence_intervals:
                         vU_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
                         vL_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
-                        plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.1f}% confidence interval - Filter', color='grey', alpha=0.3)
+                        plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label='Pointwise - Filter', color='grey', alpha=0.3)
                     
                     plt.grid(linestyle='dashed')
                     plt.xlabel('$t/n$',fontsize="xx-large")
@@ -609,7 +609,7 @@ class Kalman:
                         if confidence_intervals:
                             vU_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],i,i])
                             vL_bound = self.smooth[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.V[tau_index[0]:tau_index[1],i,i])
-                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.1f}% confidence interval - Smoother', color='grey', alpha=0.3)
+                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label='Pointwise - Smoother', color='grey', alpha=0.3)
                         
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
@@ -626,7 +626,7 @@ class Kalman:
                         if confidence_intervals:
                             vU_bound = self.pred[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],i,i])
                             vL_bound = self.pred[tau_index[0]+1:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_pred[1+tau_index[0]:tau_index[1],i,i])
-                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.0f}% confidence interval - Predictor', color='grey', alpha=0.3)
+                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label='Pointwise - Predictor', color='grey', alpha=0.3)
                             
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
@@ -643,7 +643,7 @@ class Kalman:
                         if confidence_intervals:
                             vU_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(1-alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
                             vL_bound = self.filt[tau_index[0]:tau_index[1]] + st.norm.ppf(alpha)*np.sqrt(self.P_filt[tau_index[0]:tau_index[1],0,0])
-                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label=f'{(1-alpha)*100:.0f}% confidence interval - Filter', color='grey', alpha=0.3)
+                            plt.fill_between(x_vals[tau_index[0]:tau_index[1]], vL_bound, vU_bound, label='Pointwise - Filter', color='grey', alpha=0.3)
                         
                         plt.grid(linestyle='dashed')
                         plt.xlabel('$t/n$',fontsize="xx-large")
