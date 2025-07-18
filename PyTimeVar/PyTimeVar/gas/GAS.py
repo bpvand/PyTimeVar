@@ -784,7 +784,7 @@ class GAS:
                                 label=f'Estimated $\\beta_{i} - tGAS$', color='black', linewidth=2)
                     elif self.method=='gaussian':
                         plt.plot(x_vals[tau_index[0]+1:tau_index[1]], (self.betas[:, i])[tau_index[0]:tau_index[1]],
-                                label=f'Estimated $\\beta_{i} - GGAS$', color='black', linewidth=2)
+                                label=f'Estimated $\\beta_{i} - gGAS$', color='black', linewidth=2)
                     if confidence_intervals:
                         plt.fill_between(x_vals[tau_index[0]+1:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],i], mCI_u[tau_index[0]:tau_index[1],i], label=f'{(1-alpha)*100:.1f}% confidence interval', color='grey', alpha=0.3)
                     plt.grid(linestyle='dashed')
@@ -833,7 +833,7 @@ class GAS:
                                  label=f'Estimated $\\beta_{i} - tGAS$', color='black', linewidth=2)
                     elif self.method=='gaussian':
                         plt.plot(x_vals[tau_index[0]+1:tau_index[1]], (self.betas[:, i])[tau_index[0]:tau_index[1]],
-                                 label=f'Estimated $\\beta_{i} - GGAS$', color='black', linewidth=2)
+                                 label=f'Estimated $\\beta_{i} - gGAS$', color='black', linewidth=2)
                     if confidence_intervals:
                         plt.fill_between(x_vals[tau_index[0]+1:tau_index[1]], mCI_l[tau_index[0]:tau_index[1],i], mCI_u[tau_index[0]:tau_index[1],i], label=f'{(1-alpha)*100:.1f}% confidence interval', color='grey', alpha=0.3)
                     plt.grid(linestyle='dashed')
