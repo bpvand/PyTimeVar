@@ -29,7 +29,7 @@ class GAS:
     options : dict
         Stopping criteria for optimization.
     niter : int
-        The number of basin-hopping iterations, for scipy.optimize.basinhopping()
+        The number of optimization iterations, for scipy.optimize.basinhopping()
     if_hetero : bool
         If True, a heteroskedastic specification is assumed. Filter additionally returns the estimated path of time-varying variance.
         
@@ -52,7 +52,7 @@ class GAS:
     options : dict
         Stopping criteria for optimization.
     niter : int
-        The number of basin-hopping iterations, for scipy.optimize.basinhopping()
+        The number of optimization iterations, for scipy.optimize.basinhopping()
     if_hetero : bool
         If True, a heteroskedastic specification is assumed. Filter additionally returns the estimated path of time-varying variance.
     success : bool
@@ -61,9 +61,10 @@ class GAS:
         The estimated coefficients.
     params : np.ndarray
         The estimated GAS parameters.
+    sigma2_t : np.ndarray
+        The estimated path of time-varying variance. None for a homoskedastic specification.
     inv_hessian : np.ndarray
         The inverse Hessian after optimization.
-        
     
     Raises
     ------
@@ -128,6 +129,8 @@ class GAS:
             The estimated coefficients.
         vparaHat : np.ndarray
             The estimated GAS parameters.
+        sigma2_hat : np.ndarray
+            The path of estimated time-varying variance. Only returned if_hetero = True.
 
         '''
         if self.if_hetero == False:
@@ -326,6 +329,8 @@ class GAS:
         -------
         mBetaHat : np.ndarray
             The estimated coefficients.
+        np.ndarray
+            The estimated time-varying variance, under heteroskedastic specification.
 
         '''
         if self.if_hetero == False:
@@ -403,6 +408,8 @@ class GAS:
         -------
         mBetaHat : np.ndarray
             The estimated coefficients.
+        np.ndarray
+            The estimated time-varying variance, under heteroskedastic specification.
 
         '''
         if self.if_hetero == False:

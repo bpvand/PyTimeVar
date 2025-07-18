@@ -47,6 +47,8 @@ class PowerLaw:
         The lower bounds of the pointwise confidence intervals for the trend.
     C_UB_trend ; np.ndarray
         The upper bound of the pointwise confidence intervals for the trend.
+    alpha : float
+        The significance level for the confidence intervals.
         
     Raises
     ------
@@ -87,6 +89,9 @@ class PowerLaw:
         tau : list, optional
             The list looks the  following: tau = [start,end].
             The function will plot all data and estimates between start and end.
+        confidence_intervals : bool
+            If True, the estimated confidence intervals are displayed as well.
+            If the confidence intervals are not computed yet, no confidence intervals are displayed.
             
         Raises
         ------
@@ -97,12 +102,6 @@ class PowerLaw:
         if self.trendHat is None:
             print("Model is not fitted yet.")
             return
-        
-        if confidence_intervals:
-            if self.C_LB_trend == None:
-                print("Confidence intervals not computed yet.")
-                print('Run first .confidence_intervals() with desired settings.')
-                print('Plot is shown without confidence intervals.')
         
         
         tau_index = np.array([None,None])
@@ -143,6 +142,13 @@ class PowerLaw:
         plt.figure(figsize=(12, 6))
         plt.plot(x_vals[tau_index[0]:tau_index[1]], self.vY[tau_index[0]:tau_index[1]], label="True data", linewidth=1, color = 'black')
         plt.plot(x_vals[tau_index[0]:tau_index[1]], self.trendHat[tau_index[0]:tau_index[1]], label="Estimated $\\beta_{0}$", linestyle="--", linewidth=2)
+        if confidence_intervals:
+            if self.C_LB_trend is None:
+                print("Confidence intervals not computed yet.")
+                print('Run first .confidence_intervals() with desired settings.')
+                print('Plot is shown without confidence intervals.')
+            else:
+                plt.fill_between(x_vals[tau_index[0]:tau_index[1]], self.C_LB_trend[tau_index[0]:tau_index[1]], self.C_UB_trend[tau_index[0]:tau_index[1]], label=f'{(1-self.alpha)*100:.1f}% confidence interval', color='grey', alpha=0.3)
         
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
@@ -209,6 +215,8 @@ class PowerLaw:
         ----------
         vparams : np.ndarray
             The parameter vector.
+        vY : np.ndarray
+            The data vector.
 
         Returns
         -------
@@ -599,9 +607,11 @@ class PowerLaw:
         B : int
             The number of bootstrap samples.
             Deafult is 1299, if not provided by the user.
-        C : float
+        block_constant : float
             The constant to determine the window length for blocks bootstraps. 
             Default is 2.
+        verbose : bool
+            If True, a progress bar is displayed.
             
         Raises
         ------
@@ -611,11 +621,12 @@ class PowerLaw:
         Returns
         -------
         list of tuples
-            Each tuple contains pointwise lower and upper bands.
+            The pointwise lower and upper confidence intervals for the coefficients, powers, and trend, respectively.
         """
         if alpha is None or alpha <= 0 or alpha >= 1:
             alpha = 0.05
-
+            
+        self.alpha = alpha
 
         # Determine the appropriate bootstrap function
         bootstrap_functions = {

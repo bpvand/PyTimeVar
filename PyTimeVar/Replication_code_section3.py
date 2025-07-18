@@ -173,7 +173,7 @@ from PyTimeVar import GAS
 # import pandas as pd
 # n_powers = 2
 # n_params = 5
-# lGamma = [np.array([0.7, 1.5]), np.array([0.7, 1.8]), np.array([0.7, 2])]
+# lGamma = [np.array([0.7, 2])]#[np.array([0.7, 1.5]), np.array([0.7, 1.8]), np.array([0.7, 2])]
 # vCoeff = np.array([0.15, 0.005])
 
 # import matplotlib.pyplot as plt
@@ -215,12 +215,12 @@ from PyTimeVar import GAS
 #             # print('Coeff:', C_LB_coeff, C_UB_coeff)
 #             # print('Gamma:', C_LB_gamma, C_UB_gamma)
             
-#             # plt.plot(vY, label='data', c='k')
-#             # plt.plot(vPwrTrend_true, label='True', c='r')
-#             # plt.fill_between(np.arange(0,len(vY),1), C_LB_trend, C_UB_trend, color='grey', alpha=0.2)
-#             # plt.plot(pwrTrend, label='est')
-#             # plt.legend()
-#             # plt.show()
+#             plt.plot(vY, label='data', c='k')
+#             plt.plot(vPwrTrend_true, label='True', c='r')
+#             plt.fill_between(np.arange(0,len(vY),1), C_LB_trend, C_UB_trend, label='CI', color='grey', alpha=0.2)
+#             plt.plot(pwrTrend, label='est')
+#             plt.legend()
+#             plt.show()
             
 #             mCov[i, 0] = np.mean((vPwrTrend_true <= C_UB_trend) & (vPwrTrend_true >= C_LB_trend))
 #             mLen[i, 0] = np.mean(C_UB_trend - C_LB_trend)

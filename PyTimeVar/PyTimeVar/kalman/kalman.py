@@ -65,6 +65,12 @@ class Kalman:
         The predicted coefficients.
     smooth : 
         The smoothed coefficients.
+    P_filt : np.ndarray
+        The filtered state variances.
+    P : np.ndarray
+        The predicted state variances.
+    V : np.ndarray
+        The smoothed state variances.
     
     
     
@@ -173,12 +179,40 @@ class Kalman:
         return mH, mQ
     
     def _get_symmetric_size(self, n_params):
+        '''
+        Compute the dimensions for a symmetric, flattened matrix.        
+
+        Parameters
+        ----------
+        n_params : int
+            Total number of parameters.
+
+        Returns
+        -------
+        k_int : int
+            The size of the matrix.
+
+        '''
         k_float = (-1 + np.sqrt(1 + 8 * n_params)) / 2
         k_int = int(k_float)
         if k_float == k_int:
             return k_int
         
     def _unpack_symmetric_matrix(self, v):
+        '''
+        Unpack a matrix from flattened array.
+
+        Parameters
+        ----------
+        v : np.ndarray
+            The flattened matrix with parameters.
+
+        Returns
+        -------
+        matrix : np.ndarray
+            Unpacked matrix.
+
+        '''
         
         k = self._get_symmetric_size(len(v))
         matrix = np.zeros((k, k))
@@ -235,6 +269,8 @@ class Kalman:
         a_pred : np.ndarray
             The predicted state at each time step.
         P : np.ndarray
+            The predicted state covariances at each time step.
+        P_filt : np.ndarray
             The filtered state covariances at each time step.
         v : np.ndarray
             The prediction errors at each time step.
@@ -283,6 +319,8 @@ class Kalman:
         -------
         np.ndarray
             The filtered states at each time step.
+        np.ndarray
+            The filtered state covariances at each time step.
         """
         a_filt, _, _, P_filt, _, _, _ = self._KalmanFilter()
 
@@ -296,6 +334,8 @@ class Kalman:
         -------
         np.ndarray
             The one-step ahead predicted state means at each time step.
+        np.ndarray
+            The predicted state covariances at each time step.
         """
         a_filt , a_pred, P, _, _, _, _ = self._KalmanFilter()
 
@@ -350,6 +390,8 @@ class Kalman:
         -------
         np.ndarray
             The smoothed state means at each time step.
+        np.ndarray
+            The smoothed state covariances at each time step.
         """
         a_s, V_s = self._KalmanSmoother()
         return a_s.squeeze(), V_s

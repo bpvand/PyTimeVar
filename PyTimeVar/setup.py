@@ -20,7 +20,7 @@ setuptools.setup(
     packages=['PyTimeVar', 'PyTimeVar.bhpfilter', 'PyTimeVar.locallinear','PyTimeVar.kalman', 'PyTimeVar.powerlaw', 'PyTimeVar.gas', 'PyTimeVar.datasets', \
               'PyTimeVar.datasets.co2', 'PyTimeVar.datasets.inflation', 'PyTimeVar.datasets.herding','PyTimeVar.datasets.temperature', 'PyTimeVar.datasets.usd'],
     install_requires=['numpy', 'pandas', 'matplotlib',
-                      'scipy', 'statsmodels', 'tqdm'],
+                      'scipy', 'statsmodels', 'tqdm', 'numdifftools'],
     # long_description=read('README.md'),
     long_description=long_description,
     long_description_content_type='text/markdown',
