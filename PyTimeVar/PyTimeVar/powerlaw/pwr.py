@@ -148,7 +148,7 @@ class PowerLaw:
                 print('Run first .confidence_intervals() with desired settings.')
                 print('Plot is shown without confidence intervals.')
             else:
-                plt.fill_between(x_vals[tau_index[0]:tau_index[1]], self.C_LB_trend[tau_index[0]:tau_index[1]], self.C_UB_trend[tau_index[0]:tau_index[1]], label=f'{(1-self.alpha)*100:.1f}% confidence interval', color='grey', alpha=0.3)
+                plt.fill_between(x_vals[tau_index[0]:tau_index[1]], self.C_LB_trend[tau_index[0]:tau_index[1]], self.C_UB_trend[tau_index[0]:tau_index[1]], label='Pointwise', color='grey', alpha=0.3)
         
         plt.grid(linestyle='dashed')
         plt.xlabel('$t/n$',fontsize="xx-large")
