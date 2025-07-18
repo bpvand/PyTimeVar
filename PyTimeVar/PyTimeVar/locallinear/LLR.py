@@ -26,9 +26,6 @@ class LocalLinear:
         The name of the bandwidth selection method to be used.
         Choice between 'aic', 'gcv', 'lmcv-l' with l=0,2,4,6,etc., or 'all'.
         If not provided, it is set to 'all'.
-    tau : np.ndarray
-        The array of points at which predictions are made. 
-        If not provided, it is set to a linear space between 0 and 1 with the same length as `vY`.
     kernel : string
         The name of the kernel function used for estimation.
         If not provided, it is set to 'epanechnikov' for the Epanechnikov kernel.
@@ -51,18 +48,22 @@ class LocalLinear:
         Linearly spaced time points for the local regression.
     tau : np.ndarray
         Points at which the regression is evaluated.
+    tau_bw_selection : np.ndarray
+        Points at which the cross-validation is evaluated.
     n_est : int
         The number of coefficients.
     kernel : string
         The name of the kernel function.
     bw_selection : string
         The name of the bandwidth selection.
-    lmcv_type : float
+    lmcv_type : int
         If LMCV is used for bandwidth selection, this attribute denotes the l in leave-2*l+1-out.
     dict_bw : dict
         The dictionary that contains the optimnal bandwidth values for each individual method.
     h : float
         The bandwidth used for local linear regression.
+    h_gcv : string
+         The optimal bandwidth value according to Generalized CV method.
     betahat : np.ndarray
         The estimated coefficients.
     predicted_y : np.ndarray
@@ -82,10 +83,9 @@ class LocalLinear:
 
     References
     ----------
-    [1] Lin Y, Song M, van der Sluis B (2024), 
-        Bootstrap inference for linear time-varying coefficient models in locally stationary time series,
-        Journal of Computational and Graphical Statistics,
-        Forthcoming.
+    [1] Lin, Y., Song, M., & van der Sluis, B. (2025). 
+        Bootstrap inference for linear time-varying coefficient models in locally stationary time series. 
+        Journal of Computational and Graphical Statistics, 34(2), 654-667.
 
     """
 
@@ -106,10 +106,6 @@ class LocalLinear:
         self.times = np.arange(1 / self.n, ( self.n + 1) /  self.n, 1 /  self.n)
 
         self.tau = np.arange(1 / self.n, (self.n + 1) / self.n, 1 / self.n)
-        # self.tau_index = np.array([0, self.n])
-
-        # elif isinstance(tau, float):
-        #     self.tau = np.array([tau])
         self.tau_bw_selection = np.arange(1/self.n,(self.n+1)/self.n,1/self.n)
 
         if mX.ndim == 1:
@@ -139,9 +135,6 @@ class LocalLinear:
                         'Bandwidth selection method is invalid. \nPlease provide an expression from the following options: [\'all\', \'aic\', \'gcv\'] or use \'lmcv_l\'')
                 else:
                     self.lmcv_type=self.bw_selection[5]
-
-                    # if self.lmcv_type not in ['0','2','4','6']:
-                    #     self.lmcv_type = self.bw_selection
 
 
             if bw_selection is None:

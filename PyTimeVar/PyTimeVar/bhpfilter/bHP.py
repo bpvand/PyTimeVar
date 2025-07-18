@@ -51,20 +51,20 @@ class BoostedHP:
         Parameters
         ----------
         boost : bool
-            if True, boosting is used.
+            If True, boosting is used.
         stop : str
             Stopping criterion ('adf', 'bic', 'aic', 'hq').
         dAlpha : float
             The significance level for the stopping criterion 'adf'.
         verbose : bool
-            Whether to display a progress bar.
+            If True, a progress bar is displayed.
 
         Returns
         -------
         vbHP : np.ndarray
             The estimated trend.
         vCurrentRes : np.ndarray
-            The residuals.
+            The residuals after iMaxIter iterations.
         """
         self.dAlpha = dAlpha
         self.stop = stop
@@ -180,7 +180,7 @@ class BoostedHP:
         iMaxIter : int
             The maximum number of iterations.
         verbose : bool
-            Whether to display a progress bar.
+            If True, a progress bar is displayed.
 
         Returns
         -------
@@ -221,7 +221,7 @@ class BoostedHP:
         dAlpha : float
             The significance level for the stopping criterion.
         verbose: bool
-            Whether to display a progress bar.
+            If True, a progress bar is displayed.
 
         Returns
         -------
@@ -272,7 +272,7 @@ class BoostedHP:
         sStop : str
             Stopping criterion.
         verbose: bool
-            Whether to display a progress bar.
+            If True, a progress bar is displayed.
 
         Returns
         -------
@@ -332,7 +332,7 @@ class BoostedHP:
         sStop : str
             Stopping criterion.
         verbose: bool
-            Whether to display a progress bar.
+            If True, a progress bar is displayed.
 
         Returns
         -------
@@ -392,7 +392,7 @@ class BoostedHP:
         sStop : str
             Stopping criterion.
         verbose: bool
-            Whether to display a progress bar.
+            If True, a progress bar is displayed.
 
         Returns
         -------

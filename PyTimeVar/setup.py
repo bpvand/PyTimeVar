@@ -11,7 +11,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name='PyTimeVar',
-    version="1.0.0",
+    version="1.1.0",
     author='Mingxuan Song, Bernhard van der Sluis, Yicong Lin',
     author_email='678270ms@eur.nl, vandersluis@ese.eur.nl, yc.lin@vu.nl',
     description = ("The PyTimeVar package offers state-of-the-art estimation and statistical inference methods for time series regression models with flexible trends and/or time- varying coefficients."),
