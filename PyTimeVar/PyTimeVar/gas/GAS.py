@@ -173,9 +173,9 @@ class GAS:
                 vparaHat = vparaHat_gGAS
 
                 self.success = result_bh.success
-                hess_func = nd.Hessian(fgGAS_lh)
-                mlHatInverse = hess_func(vparaHat_gGAS)
-                self.inv_hessian = np.linalg.pinv(mlHatInverse)
+                # hess_func = nd.Hessian(fgGAS_lh)
+                # mlHatInverse = hess_func(vparaHat_gGAS)
+                # self.inv_hessian = np.linalg.pinv(mlHatInverse)
 
             elif self.method == 'student':  # MLE by t-GAS
                 LB = np.concatenate(([0.01], LB))
@@ -202,9 +202,9 @@ class GAS:
                 vparaHat = vparaHat_tGAS
 
                 self.success = result_bh.success
-                hess_func = nd.Hessian(ftGAS_lh)
-                mlHatInverse = hess_func(vparaHat_tGAS)
-                self.inv_hessian = np.linalg.pinv(mlHatInverse)
+                # hess_func = nd.Hessian(ftGAS_lh)
+                # mlHatInverse = hess_func(vparaHat_tGAS)
+                # self.inv_hessian = np.linalg.pinv(mlHatInverse)
 
             self.betas, self.params = mBetaHat, vparaHat
             print(f"\nTime taken: {time.time() - start_time:.2f} seconds")
@@ -263,9 +263,9 @@ class GAS:
                 vparaHat = vparaHat_gGAS
 
                 self.success = result_bh.success
-                hess_func = nd.Hessian(fgGAS_lh)
-                mlHatInverse = hess_func(vparaHat_gGAS)
-                self.inv_hessian = np.linalg.pinv(mlHatInverse)
+                # hess_func = nd.Hessian(fgGAS_lh)
+                # mlHatInverse = hess_func(vparaHat_gGAS)
+                # self.inv_hessian = np.linalg.pinv(mlHatInverse)
 
             elif self.method == 'student':  # MLE by t-GAS
                 LB = np.concatenate(([2], LB))
@@ -301,9 +301,9 @@ class GAS:
                 vparaHat = vparaHat_tGAS
 
                 self.success = result_bh.success
-                hess_func = nd.Hessian(ftGAS_lh)
-                mlHatInverse = hess_func(vparaHat_tGAS)
-                self.inv_hessian = np.linalg.pinv(mlHatInverse)
+                # hess_func = nd.Hessian(ftGAS_lh)
+                # mlHatInverse = hess_func(vparaHat_tGAS)
+                # self.inv_hessian = np.linalg.pinv(mlHatInverse)
 
 
             self.betas, self.params = mBetaHat, vparaHat
@@ -638,11 +638,20 @@ class GAS:
         '''
         
         
-        # draw iM parameter values
+        dnInitial = int(np.ceil(self.n / 10))
+        vbeta0 = np.linalg.inv((self.mX[:dnInitial, :]).T @ (self.mX[:dnInitial, :])) @ (
+                (self.mX[:dnInitial, :]).T @ self.vY[:dnInitial])
+        
+        def fGAS_lh_temp(vpara): return - \
+            self._construct_likelihood(vbeta0, vpara)
+        
+        hess_func = nd.Hessian(fGAS_lh_temp)
+        mlHatInverse = hess_func(self.params)
+        self.inv_hessian = np.linalg.pinv(mlHatInverse)
+        
 
 
         if self.if_hetero == False:
-
 
             LB = np.concatenate(([0.001], -10 * np.ones(self.n_est), -
                                 np.ones(self.n_est), -10 * np.ones(self.n_est)))
@@ -762,7 +771,13 @@ class GAS:
         
         
         if confidence_intervals:
-            mCI_l, mCI_u = self._confidence_bands(alpha, iM)
+            try:
+                mCI_l, mCI_u = self._confidence_bands(alpha, iM)
+            except:
+                print('Warning: Hessian cannot be inverted.')
+                print('As a result, no confidence intervals are computed.')
+                print('Consider a different model to compute confidence intervals')
+                print('============================================================')
         if self.if_hetero == False:
             if self.n_est == 1:
 
