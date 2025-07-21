@@ -9,11 +9,6 @@ data = temperature.load(
     regions=['World'], start_date='1961', end_date='2023')
 vY = data.values
 mX = np.ones_like(vY)
-# mX=np.ones(shape=(63,3))
-# mX[:,1] = temperature.load(
-#     regions=['Africa'], start_date='1961', end_date='2023').values.flatten()
-# mX[:,2] = temperature.load(
-#     regions=['Europe'], start_date='1961', end_date='2023').values.flatten()
 
 # set seed
 np.random.seed(123)
