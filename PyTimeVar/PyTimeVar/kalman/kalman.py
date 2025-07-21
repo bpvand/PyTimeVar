@@ -151,11 +151,11 @@ class Kalman:
         if self.bEst_H and self.bEst_Q:
             vH_init, vQ_init = np.ones(1)*0.4, np.ones(self.p_dim*(self.p_dim+1)//2)
             vTheta = np.hstack([vH_init, vQ_init])
-            bnds = [(1e-8, None)] + [(None, None)] * (self.p_dim*(self.p_dim+1)//2)
+            bnds = [(1e-11, None)] + [(None, None)] * (self.p_dim*(self.p_dim+1)//2)
         elif self.bEst_H and not self.bEst_Q:
             vTheta = np.ones(1)
             mQ = self.Q
-            bnds = [(1e-8, None)]
+            bnds = [(1e-11, None)]
         elif not self.bEst_H and self.bEst_Q:
             vTheta = np.ones(self.p_dim*(self.p_dim+1)//2)
             mH = self.H
@@ -443,7 +443,7 @@ class Kalman:
 
         print("State-space model specification")
         print('='*30)
-        print(f"H: {self.H}")
+        print(f"sigma_u: {self.H}")
         print(f"Q: {self.Q}")
         print(f"R: {self.R}")
         print(f"T: {self.T}\n")
