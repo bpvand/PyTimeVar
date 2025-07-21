@@ -21,7 +21,7 @@ vY = herd_data[['CSAD_AVG']].values
 mX = np.ones_like(vY)
 
 ############### Local linear estimation
-# LLr_model = LocalLinear(vY=vY, mX=mX, bw_selection='lmcv6') ##### this bandwidth selection function will cost around 48 mins
+# LLr_model = LocalLinear(vY=vY, mX=mX, bw_selection='lmcv_6') ##### this bandwidth selection function will cost around 48 mins
                                                               ##### so we use the resulted bandwidth directly in the next line
 LLr_model = LocalLinear(vY=vY, mX=mX, h=0.14)
 LLr_trend = LLr_model.fit()
