@@ -19,11 +19,11 @@ sys.path.insert(0, basedir)
 # -- Project information -----------------------------------------------------
 
 project = 'PyTimeVar'
-copyright = '2024, Mingxuan Song, Bernhard van der Sluis, Yicong Lin'
+copyright = '2025, Mingxuan Song, Bernhard van der Sluis, Yicong Lin'
 author = 'Mingxuan Song, Bernhard van der Sluis, Yicong Lin'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
+release = '1.1.0'
 
 
 # -- General configuration ---------------------------------------------------
