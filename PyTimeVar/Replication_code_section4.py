@@ -31,7 +31,7 @@ bHPmodel = BoostedHP(vY=vY, dLambda=1600, iMaxIter=100)
 bHPtrend, bHPresiduals = bHPmodel.fit(boost=True, stop="bic",dAlpha=0.05, verbose=False)
 
 ############### Kalman smoother
-kalmanmodel = Kalman(vY=vY, mX=mX)
+kalmanmodel = Kalman(vY=vY, mX=mX, Q=5e-06)
 Kalmansmooth_trend = kalmanmodel.fit('smoother')
 
 ############### t-GAS model                    
