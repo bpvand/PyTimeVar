@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyTimeVar.kalman package &mdash; PyTimeVar 1.0.0 documentation</title>
+  <title>PyTimeVar.kalman package &mdash; PyTimeVar 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/documentation_options.js?v=fc837d61"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -198,7 +198,7 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.H">
 <span class="sig-name descname"><span class="pre">H</span></span><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.H" title="Link to this definition"></a></dt>
-<dd><p>The observation noise variance of the state space model.</p>
+<dd><p>The observation noise variances of the state space model. Each entry corresponds to the observation noise variance at a time point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>np.ndarray</p>
@@ -300,6 +300,39 @@
 <dd><p>The smoothed coefficients.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.P_filt">
+<span class="sig-name descname"><span class="pre">P_filt</span></span><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.P_filt" title="Link to this definition"></a></dt>
+<dd><p>The filtered state variances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.P">
+<span class="sig-name descname"><span class="pre">P</span></span><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.P" title="Link to this definition"></a></dt>
+<dd><p>The predicted state variances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.V">
+<span class="sig-name descname"><span class="pre">V</span></span><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.V" title="Link to this definition"></a></dt>
+<dd><p>The smoothed state variances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'filter'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.fit" title="Link to this definition"></a></dt>
@@ -327,7 +360,7 @@ If option=’all’, a list of trends is returned:</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.kalman.kalman.Kalman.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.plot" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">individual</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_intervals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/kalman/kalman.html#Kalman.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.kalman.kalman.Kalman.plot" title="Link to this definition"></a></dt>
 <dd><p>Plot the estimated beta coefficients over a normalized x-axis from 0 to 1 or over a date range.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -335,6 +368,9 @@ If option=’all’, a list of trends is returned:</p>
 <li><p><strong>individual</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the filtered states, the predictions, and smoothed states are shown in separate figures.</p></li>
 <li><p><strong>tau</strong> (<em>list</em><em>, </em><em>optional</em>) – The list looks the  following: tau = [start,end].
 The function will plot all data and estimates between start and end.</p></li>
+<li><p><strong>confidence_intervals</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the confidence intervals will be plotted around the filtered states, the predictions, and smoothed states.
+The confidence intervals are plotted for individual plots only, not for joint plots.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Significance level for confidence intervals.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -368,7 +404,7 @@ The function will plot all data and estimates between start and end.</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.</p>
+    <p>&#169; Copyright 2025, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

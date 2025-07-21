@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Readme File &mdash; PyTimeVar 1.0.0 documentation</title>
+  <title>Readme File &mdash; PyTimeVar 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/documentation_options.js?v=fc837d61"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -107,11 +107,11 @@
 <section id="local-linear-kernel-estimation-and-bootstrap-inference">
 <h3>Local linear kernel estimation and bootstrap inference<a class="headerlink" href="#local-linear-kernel-estimation-and-bootstrap-inference" title="Link to this heading"></a></h3>
 <p>Friedrich and Lin (2024) (doi: <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2022.09.004">https://doi.org/10.1016/j.jeconom.2022.09.004</a>);
-Lin et al. (2024) (doi: <a class="reference external" href="https://doi.org/10.1080/10618600.2024.2403705">https://doi.org/10.1080/10618600.2024.2403705</a>);
+Lin et al. (2025) (doi: <a class="reference external" href="https://doi.org/10.1080/10618600.2024.2403705">https://doi.org/10.1080/10618600.2024.2403705</a>);
 Friedrich et al. (2020) (doi: <a class="reference external" href="https://doi.org/10.1016/j.jeconom.2019.05.006">https://doi.org/10.1016/j.jeconom.2019.05.006</a>);
 Smeekes and Urbain (2014) (doi: <a class="reference external" href="https://doi.org/10.26481/umagsb.2014008">https://doi.org/10.26481/umagsb.2014008</a>)
 Zhou and Wu (2010) (doi: <a class="reference external" href="https://doi.org/10.1111/j.1467-9868.2010.00743.x">https://doi.org/10.1111/j.1467-9868.2010.00743.x</a>);
-Bühlmann (1998) (doi: <a class="reference external" href="https://doi.org/10.1214/aos/1030563978">https://doi.org/10.1214/aos/1030563978</a>);</p>
+Buhlmann (1998) (doi: <a class="reference external" href="https://doi.org/10.1214/aos/1030563978">https://doi.org/10.1214/aos/1030563978</a>);</p>
 </section>
 <section id="boosted-hp-filter">
 <h3>Boosted HP filter<a class="headerlink" href="#boosted-hp-filter" title="Link to this heading"></a></h3>
@@ -121,7 +121,7 @@ Phillips and Shi (2021) (doi: <a class="reference external" href="https://doi.or
 </section>
 <section id="power-law-trend-models">
 <h3>Power-law trend models<a class="headerlink" href="#power-law-trend-models" title="Link to this heading"></a></h3>
-<p>Lin and Reuvers (2024) (doi: <a class="reference external" href="https://doi.org/10.1111/jtsa.12805">https://doi.org/10.1111/jtsa.12805</a>);
+<p>Lin and Reuvers (2025) (doi: <a class="reference external" href="https://doi.org/10.1111/jtsa.12805">https://doi.org/10.1111/jtsa.12805</a>);
 Robinson (2012) (doi: <a class="reference external" href="https://doi.org/10.3150/10-BEJ349">https://doi.org/10.3150/10-BEJ349</a>);</p>
 </section>
 <section id="state-space-models">
@@ -131,14 +131,16 @@ Robinson (2012) (doi: <a class="reference external" href="https://doi.org/10.315
 <section id="score-driven-models">
 <h3>Score-driven models<a class="headerlink" href="#score-driven-models" title="Link to this heading"></a></h3>
 <p>Creal et al. (2013) (doi: <a class="reference external" href="https://doi.org/10.1002/jae.1279">https://doi.org/10.1002/jae.1279</a>);
-Harvey (2013) (doi: <a class="reference external" href="https://doi.org/10.1017/CBO9781139540933">https://doi.org/10.1017/CBO9781139540933</a>);</p>
+Harvey (2013) (doi: <a class="reference external" href="https://doi.org/10.1017/CBO9781139540933">https://doi.org/10.1017/CBO9781139540933</a>);
+Harvey and Luati (2014) (doi: <a class="reference external" href="https://doi.org/10.1080/01621459.2014.887011">https://doi.org/10.1080/01621459.2014.887011</a>)
+Blasques et al. (2016) (doi: <a class="reference external" href="https://doi.org/10.1016/j.ijforecast.2015.11.018">https://doi.org/10.1016/j.ijforecast.2015.11.018</a>);</p>
 </section>
 </section>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Nonparametric estimation of time-varying time series models, along with various bootstrap-assisted methods for inference, including local blockwise wild bootstrap, wild bootstrap, sieve bootstrap, sieve wild bootstrap, autoregressive wild bootstrap.</p></li>
-<li><p>Alternative estimation methods for modeling trend and time-varying relationships, including boosted HP filter, power-law trend models, state-space, and score-driven models.</p></li>
+<li><p>Alternative estimation methods for modeling trend and time-varying relationships, including boosted HP filter, power-law trend models, state-space, and score-driven models. The package includes inference methods for power-law trend models, state-space models, and score-driven models.</p></li>
 <li><p>Unified framework for comparison of methods.</p></li>
 <li><p>Multiple datasets for illustration.</p></li>
 </ul>
@@ -171,7 +173,7 @@ Harvey (2013) (doi: <a class="reference external" href="https://doi.org/10.1017/
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.</p>
+    <p>&#169; Copyright 2025, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

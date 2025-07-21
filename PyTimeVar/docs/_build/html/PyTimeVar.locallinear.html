@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyTimeVar.locallinear package &mdash; PyTimeVar 1.0.0 documentation</title>
+  <title>PyTimeVar.locallinear package &mdash; PyTimeVar 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/documentation_options.js?v=fc837d61"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -116,8 +116,6 @@ If not provided, it is estimated as the average of all methods in the package.</
 <li><p><strong>bw_selection</strong> (<em>string</em>) – The name of the bandwidth selection method to be used.
 Choice between ‘aic’, ‘gcv’, ‘lmcv-l’ with l=0,2,4,6,etc., or ‘all’.
 If not provided, it is set to ‘all’.</p></li>
-<li><p><strong>tau</strong> (<em>np.ndarray</em>) – The array of points at which predictions are made.
-If not provided, it is set to a linear space between 0 and 1 with the same length as <cite>vY</cite>.</p></li>
 <li><p><strong>kernel</strong> (<em>string</em>) – The name of the kernel function used for estimation.
 If not provided, it is set to ‘epanechnikov’ for the Epanechnikov kernel.</p></li>
 <li><p><strong>LB_bw</strong> (<em>float</em>) – The lower bound for the bandwidth selection.
@@ -183,6 +181,17 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.tau_bw_selection">
+<span class="sig-name descname"><span class="pre">tau_bw_selection</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.tau_bw_selection" title="Link to this definition"></a></dt>
+<dd><p>Points at which the cross-validation is evaluated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.n_est">
 <span class="sig-name descname"><span class="pre">n_est</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.n_est" title="Link to this definition"></a></dt>
 <dd><p>The number of coefficients.</p>
@@ -221,7 +230,7 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 <dd><p>If LMCV is used for bandwidth selection, this attribute denotes the l in leave-2*l+1-out.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>int</p>
 </dd>
 </dl>
 </dd></dl>
@@ -244,6 +253,17 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.h_gcv">
+<span class="sig-name descname"><span class="pre">h_gcv</span></span><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.h_gcv" title="Link to this definition"></a></dt>
+<dd><p>The optimal bandwidth value according to Generalized CV method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>string</p>
 </dd>
 </dl>
 </dd></dl>
@@ -302,15 +322,15 @@ If not provided, it is set to 0.2 for LMCV-l and to 0.7 for AIC and GCV.</p></li
 The bandwidth <cite>h</cite> controls the degree of smoothing.</p>
 <p class="rubric">References</p>
 <dl class="simple">
-<dt>[1] Lin Y, Song M, van der Sluis B (2024),</dt><dd><p>Bootstrap inference for linear time-varying coefficient models in locally stationary time series,
-Journal of Computational and Graphical Statistics,
-Forthcoming.</p>
+<dt>[1] Lin, Y., Song, M., &amp; van der Sluis, B. (2025).</dt><dd><p>Bootstrap inference for linear time-varying coefficient models in locally stationary time series.
+Journal of Computational and Graphical Statistics, 34(2), 654-667.</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.confidence_bands">
 <span class="sig-name descname"><span class="pre">confidence_bands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bootstrap_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LBWB'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Gsubs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Chtilde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1299</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.confidence_bands"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.confidence_bands" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Compute and plot confidence bands.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>bootstraptype</strong> (<em>str</em>) – Type of bootstrap to use (‘SB’, ‘WB’, ‘SWB’, ‘MB’, ‘LBWB, ‘AWB’).</p></li>
@@ -323,7 +343,7 @@ Default is None, which uses the full range (0, T).</p></li>
 <li><p><strong>Chtilde</strong> (<em>float</em>) – Multiplication constant to determine size of oversmoothing bandwidth htilde.
 Default is 2, if none or negative is specified.</p></li>
 <li><p><strong>B</strong> (<em>int</em>) – The number of bootstrap samples.
-Deafult is 1299, if not provided by the user.</p></li>
+Default is 1299, if not provided by the user.</p></li>
 <li><p><strong>plots</strong> (<em>bool</em>) – If True, plots are shown of the estimated coefficients and corresponding confidence bands.</p></li>
 <li><p><strong>bootstrap_type</strong> (<em>str</em>)</p></li>
 </ul>
@@ -343,7 +363,7 @@ Deafult is 1299, if not provided by the user.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="PyTimeVar.locallinear.LLR.LocalLinear.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/PyTimeVar/locallinear/LLR.html#LocalLinear.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PyTimeVar.locallinear.LLR.LocalLinear.fit" title="Link to this definition"></a></dt>
-<dd><p>Fits the local linear regression model to the data.</p>
+<dd><p>Fits the linear model by local linear regression to the data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>self.betahat</strong> – The estimated coefficients.</p>
@@ -430,7 +450,7 @@ The function will plot all data and estimates between start and end.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.</p>
+    <p>&#169; Copyright 2025, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

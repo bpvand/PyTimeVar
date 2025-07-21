@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PyTimeVar package &mdash; PyTimeVar 1.0.0 documentation</title>
+  <title>PyTimeVar package &mdash; PyTimeVar 1.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/documentation_options.js?v=fc837d61"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -173,9 +173,12 @@
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.bounds"><code class="docutils literal notranslate"><span class="pre">GAS.bounds</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.options"><code class="docutils literal notranslate"><span class="pre">GAS.options</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.niter"><code class="docutils literal notranslate"><span class="pre">GAS.niter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.if_hetero"><code class="docutils literal notranslate"><span class="pre">GAS.if_hetero</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.success"><code class="docutils literal notranslate"><span class="pre">GAS.success</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.betas"><code class="docutils literal notranslate"><span class="pre">GAS.betas</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.params"><code class="docutils literal notranslate"><span class="pre">GAS.params</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.sigma2_t"><code class="docutils literal notranslate"><span class="pre">GAS.sigma2_t</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.inv_hessian"><code class="docutils literal notranslate"><span class="pre">GAS.inv_hessian</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.fit"><code class="docutils literal notranslate"><span class="pre">GAS.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.gas.html#PyTimeVar.gas.GAS.GAS.plot"><code class="docutils literal notranslate"><span class="pre">GAS.plot()</span></code></a></li>
 </ul>
@@ -206,6 +209,9 @@
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.filt"><code class="docutils literal notranslate"><span class="pre">Kalman.filt</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.pred"><code class="docutils literal notranslate"><span class="pre">Kalman.pred</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.smooth"><code class="docutils literal notranslate"><span class="pre">Kalman.smooth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.P_filt"><code class="docutils literal notranslate"><span class="pre">Kalman.P_filt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.P"><code class="docutils literal notranslate"><span class="pre">Kalman.P</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.V"><code class="docutils literal notranslate"><span class="pre">Kalman.V</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.fit"><code class="docutils literal notranslate"><span class="pre">Kalman.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.plot"><code class="docutils literal notranslate"><span class="pre">Kalman.plot()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.kalman.html#PyTimeVar.kalman.kalman.Kalman.summary"><code class="docutils literal notranslate"><span class="pre">Kalman.summary()</span></code></a></li>
@@ -225,12 +231,14 @@
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.n"><code class="docutils literal notranslate"><span class="pre">LocalLinear.n</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.times"><code class="docutils literal notranslate"><span class="pre">LocalLinear.times</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.tau"><code class="docutils literal notranslate"><span class="pre">LocalLinear.tau</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.tau_bw_selection"><code class="docutils literal notranslate"><span class="pre">LocalLinear.tau_bw_selection</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.n_est"><code class="docutils literal notranslate"><span class="pre">LocalLinear.n_est</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.kernel"><code class="docutils literal notranslate"><span class="pre">LocalLinear.kernel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.bw_selection"><code class="docutils literal notranslate"><span class="pre">LocalLinear.bw_selection</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.lmcv_type"><code class="docutils literal notranslate"><span class="pre">LocalLinear.lmcv_type</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.dict_bw"><code class="docutils literal notranslate"><span class="pre">LocalLinear.dict_bw</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.h"><code class="docutils literal notranslate"><span class="pre">LocalLinear.h</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.h_gcv"><code class="docutils literal notranslate"><span class="pre">LocalLinear.h_gcv</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.betahat"><code class="docutils literal notranslate"><span class="pre">LocalLinear.betahat</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.predicted_y"><code class="docutils literal notranslate"><span class="pre">LocalLinear.predicted_y</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.locallinear.html#PyTimeVar.locallinear.LLR.LocalLinear.residuals"><code class="docutils literal notranslate"><span class="pre">LocalLinear.residuals</span></code></a></li>
@@ -260,6 +268,9 @@
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.powerlaw.html#PyTimeVar.powerlaw.pwr.PowerLaw.trendHat"><code class="docutils literal notranslate"><span class="pre">PowerLaw.trendHat</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.powerlaw.html#PyTimeVar.powerlaw.pwr.PowerLaw.gammaHat"><code class="docutils literal notranslate"><span class="pre">PowerLaw.gammaHat</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.powerlaw.html#PyTimeVar.powerlaw.pwr.PowerLaw.coeffHat"><code class="docutils literal notranslate"><span class="pre">PowerLaw.coeffHat</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.powerlaw.html#PyTimeVar.powerlaw.pwr.PowerLaw.C_LB_trend"><code class="docutils literal notranslate"><span class="pre">PowerLaw.C_LB_trend</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.powerlaw.html#PyTimeVar.powerlaw.pwr.PowerLaw.alpha"><code class="docutils literal notranslate"><span class="pre">PowerLaw.alpha</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PyTimeVar.powerlaw.html#PyTimeVar.powerlaw.pwr.PowerLaw.confidence_intervals"><code class="docutils literal notranslate"><span class="pre">PowerLaw.confidence_intervals()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.powerlaw.html#PyTimeVar.powerlaw.pwr.PowerLaw.fit"><code class="docutils literal notranslate"><span class="pre">PowerLaw.fit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.powerlaw.html#PyTimeVar.powerlaw.pwr.PowerLaw.plot"><code class="docutils literal notranslate"><span class="pre">PowerLaw.plot()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="PyTimeVar.powerlaw.html#PyTimeVar.powerlaw.pwr.PowerLaw.summary"><code class="docutils literal notranslate"><span class="pre">PowerLaw.summary()</span></code></a></li>
@@ -289,7 +300,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.</p>
+    <p>&#169; Copyright 2025, Mingxuan Song, Bernhard van der Sluis, Yicong Lin.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
