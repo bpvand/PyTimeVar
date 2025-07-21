@@ -776,7 +776,7 @@ class GAS:
             except:
                 print('Warning: Hessian cannot be inverted.')
                 print('As a result, no confidence intervals are computed.')
-                print('Consider a different model to compute confidence intervals')
+                print('Consider a different model to compute confidence intervals.')
                 print('============================================================')
         if self.if_hetero == False:
             if self.n_est == 1:
