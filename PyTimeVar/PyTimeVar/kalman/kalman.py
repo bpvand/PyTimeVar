@@ -163,7 +163,7 @@ class Kalman:
         else:
             return self.H, self.Q
         
-        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='L-BFGS-B', bounds = bnds, options={'maxiter': 5e8, 'ftol': 1e-12})
+        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='L-BFGS-B', bounds = bnds, options={'maxiter': 5e8})
         if LL_model.success == False:
             print('Optimization failed')
         else:
