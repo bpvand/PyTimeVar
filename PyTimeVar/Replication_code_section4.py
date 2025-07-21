@@ -30,13 +30,13 @@ LLr_trend = LLr_model.fit()
 bHPmodel = BoostedHP(vY=vY, dLambda=1600, iMaxIter=100)
 bHPtrend, bHPresiduals = bHPmodel.fit(boost=True, stop="bic",dAlpha=0.05, verbose=False)
 
-############### t-GAS model                    
-gasmodel = GAS(vY=vY, mX=mX, method='student')
-tGAStrend, tGASparams = gasmodel.fit()                        ##### this function takes around 190 seconds
-
 ############### Kalman smoother
 kalmanmodel = Kalman(vY=vY, mX=mX)
 Kalmansmooth_trend = kalmanmodel.fit('smoother')
+
+############### t-GAS model                    
+gasmodel = GAS(vY=vY, mX=mX, method='student')
+tGAStrend, tGASparams = gasmodel.fit()                        ##### this function takes around 190 seconds
 
 ############### Replication code for Figure 9
 x_axis_trend = np.arange(1/len(vY),(len(vY)+1)/len(vY),1/len(vY))
@@ -56,7 +56,15 @@ plt.grid(linestyle='dashed')
 
 plt.show()
 
-################### Replication code for Figure 8 in Section 4.2 ###################
+################### Replication code for Figure 10 in Section 4.1 ###################
+
+############### t-GAS model (heteroskedasticity)
+gasmodel_hete = GAS(vY=vY, mX=mX, method='student', if_hetero=True)
+tGAStrend_hete, tGASparams_hete, tGASvol= gasmodel_hete.fit()
+gasmodel_hete.plot()                                          #### Figure 10
+
+
+################### Replication code for Figure 11 in Section 4.2 ###################
 
 ############### Importing data for replicating the results in Section 4.2 and Appendix A.5
 vY,mX = herding.load(data_replication=True)
@@ -68,26 +76,26 @@ np.random.seed(123)
 LLr_model = LocalLinear(vY=vY, mX=mX, h=0.0975)
 LLr_betahat = LLr_model.fit()
 
-############### The code below replicates Figure 8 in Section 4.2
-############### plot residuals, replication of 8a
+############### The code below replicates Figure 11 in Section 4.2
+############### plot residuals, replication of 11a
 residuals = LLr_model.plot_residuals()
 
-############### plot LBWB full sample bands, replication of 8b.
+############### plot LBWB full sample bands, replication of 11b.
 ############### Only the plot of beta_3 is reported in the paper (takes about 28 mins).
 S_LB_full, S_UB_full, P_LB_full, P_UB_full = LLr_model.confidence_bands(plots=True)
 
-############### plot LBWB G1 bands, replication of 8c.
+############### plot LBWB G1 bands, replication of 11c.
 ############### Only the plot of beta_3 is reported in the paper (takes about 8 mins).
 S_LB_G1, S_UB_G1, P_LB_G1, P_UB_G1 = LLr_model.confidence_bands(plots=True, Gsubs=[(0, breakindex_1)])
 
-############### plot LBWB G6 bands, replication of 8d.
+############### plot LBWB G6 bands, replication of 11d.
 ############### Only the plot of beta_3 is reported in the paper (takes about 9 mins).
 S_LB_G6, S_UB_G6, P_LB_G6, P_UB_G6 = LLr_model.confidence_bands(plots=True, Gsubs=[(breakindex_5, len(vY))])
 
-################### Replication code for Figure 9 in Appendix A.5 ###################
+################### Replication code for Figure 12 in Appendix B ###################
 
-############### Define the function to unify the format of plots as in Figure 9
-def plot_figure9(LLr_betahat, S_LB_full, S_UB_full, P_LB_full, P_UB_full):
+############### Define the function to unify the format of plots as in Figure 12
+def plot_figure12(LLr_betahat, S_LB_full, S_UB_full, P_LB_full, P_UB_full):
     x_axis=np.arange(0,1,1/len(vY))
     plt.figure(figsize=(7.5, 6))
     plt.plot(x_axis, LLr_betahat[3], color='black',  label='Estimated $\gamma_3$')
@@ -101,26 +109,26 @@ def plot_figure9(LLr_betahat, S_LB_full, S_UB_full, P_LB_full, P_UB_full):
     plt.legend(fontsize="x-large")
     plt.show()
 
-############### Sieve bootstrap (SB) bands, Figure 9a (takes about 35 mins)
+############### Sieve bootstrap (SB) bands, Figure 12a (takes about 35 mins)
 S_LB_full_SB, S_UB_full_SB, P_LB_full_SB, P_UB_full_SB = LLr_model.confidence_bands(plots=False, bootstrap_type="SB")
 
-############### replication code for Figure 9a
-plot_figure9(LLr_betahat, S_LB_full_SB, S_UB_full_SB, P_LB_full_SB, P_UB_full_SB)
+############### replication code for Figure 12a
+plot_figure12(LLr_betahat, S_LB_full_SB, S_UB_full_SB, P_LB_full_SB, P_UB_full_SB)
 
-############### Sieve wild bootstrap (SWB) bands, Figure 9b (takes about 33 mins)
+############### Sieve wild bootstrap (SWB) bands, Figure 12b (takes about 33 mins)
 S_LB_full_SWB, S_UB_full_SWB, P_LB_full_SWB, P_UB_full_SWB = LLr_model.confidence_bands(plots=False, bootstrap_type="SWB")
 
-############### replication code for Figure 9b
-plot_figure9(LLr_betahat, S_LB_full_SWB, S_UB_full_SWB, P_LB_full_SWB, P_UB_full_SWB)
+############### replication code for Figure 12b
+plot_figure12(LLr_betahat, S_LB_full_SWB, S_UB_full_SWB, P_LB_full_SWB, P_UB_full_SWB)
 
-############### Wild bootstrap (WB) bands, Figure 9c (takes about 28 mins)
+############### Wild bootstrap (WB) bands, Figure 12c (takes about 28 mins)
 S_LB_full_WB, S_UB_full_WB, P_LB_full_WB, P_UB_full_WB = LLr_model.confidence_bands(plots=False, bootstrap_type="WB")
 
-############### replication code for Figure 9c
-plot_figure9(LLr_betahat, S_LB_full_WB, S_UB_full_WB, P_LB_full_WB, P_UB_full_WB)
+############### replication code for Figure 12c
+plot_figure12(LLr_betahat, S_LB_full_WB, S_UB_full_WB, P_LB_full_WB, P_UB_full_WB)
 
-############### Autoregressive wild bootstrap (AWB) bands, Figure 9d (takes about 27 mins)
+############### Autoregressive wild bootstrap (AWB) bands, Figure 12d (takes about 27 mins)
 S_LB_full_AWB, S_UB_full_AWB, P_LB_full_AWB, P_UB_full_AWB = LLr_model.confidence_bands(plots=False, bootstrap_type="AWB")
 
-############### replication code for Figure 9d
-plot_figure9(LLr_betahat, S_LB_full_AWB, S_UB_full_AWB, P_LB_full_AWB, P_UB_full_AWB)
+############### replication code for Figure 12d
+plot_figure12(LLr_betahat, S_LB_full_AWB, S_UB_full_AWB, P_LB_full_AWB, P_UB_full_AWB)
