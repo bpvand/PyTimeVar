@@ -42,11 +42,11 @@ tGAStrend, tGASparams = gasmodel.fit()                        ##### this functio
 x_axis_trend = np.arange(1/len(vY),(len(vY)+1)/len(vY),1/len(vY))
 plt.figure(figsize=(14, 6))
 
-line2, = plt.plot(x_axis_trend, vY, label='True data',color='black')
-line4, = plt.plot(x_axis_trend, tGAStrend, label='Estimated $\\beta_{0}$ - tGAS',color='limegreen',linestyle='',marker='s',markersize=5,markevery=3)
-line5, = plt.plot(x_axis_trend, bHPtrend, label='Estimated $\\beta_{0}$ - bHP',color='darkorange',linestyle='--',linewidth=3)
-line1, = plt.plot(x_axis_trend, Kalmansmooth_trend, label='Estimated $\\beta_{0}$ - Kalman',color='dodgerblue',linestyle='',marker='p',markersize=7,markevery=5)
-line3, = plt.plot(x_axis_trend, LLr_trend[0], label='Estimated $\\beta_{0}$ - LLE',color='red', linewidth=2)
+line2, = plt.plot(x_axis_trend[1:], vY[1:], label='True data',color='black')
+line4, = plt.plot(x_axis_trend[1:], tGAStrend, label='Estimated $\\beta_{0}$ - tGAS',color='limegreen',linestyle='',marker='s',markersize=5,markevery=3)
+line5, = plt.plot(x_axis_trend[1:], bHPtrend[1:], label='Estimated $\\beta_{0}$ - bHP',color='darkorange',linestyle='--',linewidth=3)
+line1, = plt.plot(x_axis_trend[1:], Kalmansmooth_trend[1:], label='Estimated $\\beta_{0}$ - Kalman',color='dodgerblue',linestyle='',marker='p',markersize=7,markevery=5)
+line3, = plt.plot(x_axis_trend[1:], LLr_trend[0][1:], label='Estimated $\\beta_{0}$ - LLE',color='red', linewidth=2)
 
 # Customize the plot
 plt.legend(handles=[line2, line3, line5, line1, line4],fontsize="x-large")
