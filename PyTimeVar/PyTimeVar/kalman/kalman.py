@@ -149,7 +149,7 @@ class Kalman:
 
         '''
         if self.bEst_H and self.bEst_Q:
-            vH_init, vQ_init = np.ones(1), 0.1*np.ones(self.p_dim*(self.p_dim+1)//2)
+            vH_init, vQ_init = 0.4*np.ones(1), np.ones(self.p_dim*(self.p_dim+1)//2)
             vTheta = np.hstack([vH_init, vQ_init])
             bnds = [(1e-8, None)] + [(None, None)] * (self.p_dim*(self.p_dim+1)//2)
         elif self.bEst_H and not self.bEst_Q:
@@ -157,13 +157,13 @@ class Kalman:
             mQ = self.Q
             bnds = [(1e-8, None)]
         elif not self.bEst_H and self.bEst_Q:
-            vTheta = 0.1*np.ones(self.p_dim*(self.p_dim+1)//2)
+            vTheta = np.ones(self.p_dim*(self.p_dim+1)//2)
             mH = self.H
             bnds = [(None, None)] * (self.p_dim*(self.p_dim+1)//2)
         else:
             return self.H, self.Q
         
-        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='L-BFGS-B', bounds = bnds, options={'maxiter': 5e5})
+        LL_model = minimize(self._compute_likelihood_LL, vTheta, method='L-BFGS-B', bounds = bnds, options={'maxiter': 5e8, 'ftol': 1e-12})
         if LL_model.success == False:
             print('Optimization failed')
         else:
@@ -249,13 +249,14 @@ class Kalman:
             
         eigenvalues = eigvalsh(self.Q)
         if np.any(eigenvalues < 0):
-            return 1E18
+            return 1e18
         
         a_filt, a_pred, P, P_filt, v, F, K = self._KalmanFilter()
         dLL = -(self.n*self.m_dim/2)*np.log(2*np.pi)
         for t in range(self.n):
             dLL = dLL - 0.5 * (np.log(np.linalg.det(F[t, :, :])) + v[t, :, :].T @
                  np.linalg.inv(F[t, :, :])@v[t, :, :])
+        print(-dLL)
         return -dLL
 
     def _KalmanFilter(self):
