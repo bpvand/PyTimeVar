@@ -256,7 +256,6 @@ class Kalman:
         for t in range(self.n):
             dLL = dLL - 0.5 * (np.log(np.linalg.det(F[t, :, :])) + v[t, :, :].T @
                  np.linalg.inv(F[t, :, :])@v[t, :, :])
-        print(-dLL)
         return -dLL
 
     def _KalmanFilter(self):
