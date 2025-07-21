@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-################### Replication code for Figure 7 in Section 4.1 ###################
+################### Replication code for Figure 9 in Section 4.1 ###################
 
 ############### Importing data for replicating the results in Section 4.1
 np.random.seed(123)
@@ -23,7 +23,7 @@ mX = np.ones_like(vY)
 ############### Local linear estimation
 # LLr_model = LocalLinear(vY=vY, mX=mX, bw_selection='lmcv6') ##### this bandwidth selection function will cost around 48 mins
                                                               ##### so we use the resulted bandwidth directly in the next line
-LLr_model = LocalLinear(vY=vY, mX=mX, h=0.140)
+LLr_model = LocalLinear(vY=vY, mX=mX, h=0.14)
 LLr_trend = LLr_model.fit()
 
 ############### Boosted HP filter
@@ -36,16 +36,16 @@ tGAStrend, tGASparams = gasmodel.fit()                        ##### this functio
 
 ############### Kalman smoother
 kalmanmodel = Kalman(vY=vY, mX=mX)
-smooth_trend = kalmanmodel.fit('smoother')
+Kalmansmooth_trend = kalmanmodel.fit('smoother')
 
-############### Replication code for Figure 7
+############### Replication code for Figure 9
 x_axis_trend = np.arange(1/len(vY),(len(vY)+1)/len(vY),1/len(vY))
 plt.figure(figsize=(14, 6))
 
 line2, = plt.plot(x_axis_trend, vY, label='True data',color='black')
 line4, = plt.plot(x_axis_trend, tGAStrend, label='Estimated $\\beta_{0}$ - tGAS',color='limegreen',linestyle='',marker='s',markersize=5,markevery=3)
 line5, = plt.plot(x_axis_trend, bHPtrend, label='Estimated $\\beta_{0}$ - bHP',color='darkorange',linestyle='--',linewidth=3)
-line1, = plt.plot(x_axis_trend, smooth_trend, label='Estimated $\\beta_{0}$ - Kalman',color='dodgerblue',linestyle='',marker='p',markersize=7,markevery=5)
+line1, = plt.plot(x_axis_trend, Kalmansmooth_trend, label='Estimated $\\beta_{0}$ - Kalman',color='dodgerblue',linestyle='',marker='p',markersize=7,markevery=5)
 line3, = plt.plot(x_axis_trend, LLr_trend[0], label='Estimated $\\beta_{0}$ - LLE',color='red', linewidth=2)
 
 # Customize the plot

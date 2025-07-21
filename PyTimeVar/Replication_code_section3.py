@@ -2,12 +2,9 @@
 Section 3: illustration of code on Temperature dataset
 
 '''
-import os
 # Load data
 from PyTimeVar.datasets import temperature
 import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
 data = temperature.load(
     regions=['World'], start_date='1961', end_date='2023')
 vY = data.values
@@ -42,7 +39,7 @@ model.plot_predicted(tau=[0.6, 0.4])
 # model.plot_predicted(tau=[2, 3])
 
 # plot confidence bands using LBWB
-S_LB, S_UB, P_LB, P_UB = model.confidence_bands(bootstrap_type='SWB', Gsubs=None, plots=True)
+S_LB, S_UB, P_LB, P_UB = model.confidence_bands(bootstrap_type='LBWB', Gsubs=None, plots=True)
 
 # illustrate boosted HP filter
 from PyTimeVar import BoostedHP
@@ -68,7 +65,7 @@ bounds = ((0,0),(0.1, 5), )
 auxPwr = PowerLaw(vY, n_powers=2, vgamma0=vgamma0, bounds=bounds, options=options)
 auxPwrTrend, auxPwrGamma = auxPwr.fit()
 # auxPwr.summary()
-C_LB_coeff, C_UB_coeff, C_LB_gamma, C_UB_gamma, C_LB_trend, C_UB_trend = auxPwr.confidence_intervals(bootstraptype='WB',
+C_LB_coeff, C_UB_coeff, C_LB_gamma, C_UB_gamma, C_LB_trend, C_UB_trend = auxPwr.confidence_intervals(bootstraptype='SWB',
                                                                                                      B=1299, alpha=0.05, block_constant=2,verbose=True)
 auxPwr.plot(confidence_intervals=True)
 
