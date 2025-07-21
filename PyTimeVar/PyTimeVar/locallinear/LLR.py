@@ -134,7 +134,7 @@ class LocalLinear:
                     raise ValueError(
                         'Bandwidth selection method is invalid. \nPlease provide an expression from the following options: [\'all\', \'aic\', \'gcv\'] or use \'lmcv_l\'')
                 else:
-                    self.lmcv_type=self.bw_selection[4]
+                    self.lmcv_type=self.bw_selection[5]
 
 
             if bw_selection is None:
