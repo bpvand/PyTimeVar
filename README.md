@@ -21,7 +21,7 @@ Lin et al. (2024) (doi: https://doi.org/10.1080/10618600.2024.2403705);
 Friedrich et al. (2020) (doi: https://doi.org/10.1016/j.jeconom.2019.05.006);
 Smeekes and Urbain (2014) (doi: https://doi.org/10.26481/umagsb.2014008)
 Zhou and Wu (2010) (doi: https://doi.org/10.1111/j.1467-9868.2010.00743.x);
-Bühlmann (1998) (doi: https://doi.org/10.1214/aos/1030563978);
+Buhlmann (1998) (doi: https://doi.org/10.1214/aos/1030563978);
 
 
 ### Boosted HP filter
@@ -31,7 +31,7 @@ Phillips and Shi (2021) (doi: https://doi.org/10.1111/iere.12495);
 
 
 ### Power-law trend models
-Lin and Reuvers (2024) (doi: https://doi.org/10.1111/jtsa.12805);
+Lin and Reuvers (2025) (doi: https://doi.org/10.1111/jtsa.12805);
 Robinson (2012) (doi: https://doi.org/10.3150/10-BEJ349);
 
 
@@ -41,11 +41,13 @@ Durbin and Koopman (2012) (doi: https://doi.org/10.1093/acprof:oso/9780199641178
 ### Score-driven models
 Creal et al. (2013) (doi: https://doi.org/10.1002/jae.1279);
 Harvey (2013) (doi: https://doi.org/10.1017/CBO9781139540933);
+Harvey and Luati (2014) (doi: https://doi.org/10.1080/01621459.2014.887011)
+Blasques et al. (2016) (doi: https://doi.org/10.1016/j.ijforecast.2015.11.018);
 
 ## Features
 
 - Nonparametric estimation of time-varying time series models, along with various bootstrap-assisted methods for inference, including local blockwise wild bootstrap, wild bootstrap, sieve bootstrap, sieve wild bootstrap, autoregressive wild bootstrap.
-- Alternative estimation methods for modeling trend and time-varying relationships, including boosted HP filter, power-law trend models, state-space, and score-driven models.
+- Alternative estimation methods for modeling trend and time-varying relationships, including boosted HP filter, power-law trend models, state-space, and score-driven models. The package includes inference methods for power-law trend models, state-space models, and score-driven models.
 - Unified framework for comparison of methods.
 - Multiple datasets for illustration.
 
